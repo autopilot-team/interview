@@ -82,9 +82,6 @@ This project showcases our cutting-edge technology stack:
    - OpenAPI spec updates from backend API handlers
    - Protocol Buffer changes in backend services
 
-   All services feature hot reload capabilities, automatically rebuilding and
-   refreshing when code changes are detected.
-
 ## Architecture
 
 Our system follows a microservices architecture with clean, layered patterns in each service. Here's how requests flow through our system:
