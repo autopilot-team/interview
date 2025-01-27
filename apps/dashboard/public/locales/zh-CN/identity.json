@@ -1,0 +1,90 @@
+{
+	"errors": {
+		"signUp": {
+			"title": "错误",
+			"description": "无法注册。请重试。"
+		}
+	},
+	"success": {
+		"signUp": {
+			"title": "成功",
+			"description": "一封验证邮件已发送至您的邮箱。请检查您的邮箱并点击链接以验证您的账户。"
+		}
+	},
+	"signInForm": {
+		"title": "欢迎回来",
+		"email": "邮箱",
+		"emailPlaceholder": "name@company.com",
+		"password": "密码",
+		"passwordPlaceholder": "请输入密码",
+		"forgotPassword": "忘记密码？",
+		"signIn": "登录",
+		"noAccount": "首次使用 Autopilot？",
+		"signUp": "创建账号",
+		"termsText": "点击{button}即表示您同意我们的{terms}和{privacy}。",
+		"termsButton": "登录",
+		"termsOfService": "服务条款",
+		"privacyPolicy": "隐私政策",
+		"errors": {
+			"emailRequired": "请输入邮箱",
+			"emailInvalid": "请输入有效的邮箱",
+			"passwordRequired": "请输入密码",
+			"passwordMinLength": "密码长度至少为8位"
+		}
+	},
+	"signUpForm": {
+		"title": "创建账号",
+		"name": "姓名",
+		"namePlaceholder": "请输入姓名",
+		"email": "企业邮箱",
+		"emailPlaceholder": "name@company.com",
+		"password": "密码",
+		"passwordPlaceholder": "设置密码",
+		"confirmPassword": "确认密码",
+		"confirmPasswordPlaceholder": "再次输入密码",
+		"signUp": "创建账号",
+		"haveAccount": "已有账号？",
+		"signIn": "登录",
+		"termsText": "点击{button}即表示您同意我们的{terms}和{privacy}。",
+		"termsButton": "创建账号",
+		"termsOfService": "服务条款",
+		"privacyPolicy": "隐私政策",
+		"passwordStrength": {
+			"secure": "安全",
+			"moderate": "一般",
+			"weak": "弱",
+			"requirements": {
+				"minLength": "至少8位字符",
+				"mixCase": "需包含大小写字母",
+				"number": "需包含数字",
+				"special": "需包含特殊字符"
+			}
+		},
+		"errors": {
+			"nameRequired": "请输入姓名",
+			"nameMinLength": "请输入姓名",
+			"emailRequired": "请输入企业邮箱",
+			"emailInvalid": "请输入有效的邮箱",
+			"passwordRequired": "请设置密码",
+			"passwordMinLength": "密码长度至少为8位",
+			"passwordUppercase": "需包含大小写字母",
+			"passwordLowercase": "需包含大小写字母",
+			"passwordNumber": "需包含数字",
+			"passwordSpecial": "需包含特殊字符",
+			"confirmPasswordRequired": "请确认密码",
+			"confirmPasswordMatch": "两次输入的密码不一致"
+		}
+	},
+	"forgotPasswordForm": {
+		"title": "重置密码",
+		"description": "我们将发送重置链接至您的邮箱。",
+		"email": "邮箱",
+		"emailPlaceholder": "name@company.com",
+		"resetPassword": "发送重置链接",
+		"backToSignIn": "返回登录",
+		"errors": {
+			"emailRequired": "请输入邮箱",
+			"emailInvalid": "请输入有效的邮箱"
+		}
+	}
+}

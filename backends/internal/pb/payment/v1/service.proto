@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "payment/v1/messages.proto";
+
+// PaymentService defines the gRPC service for handling payments
+service PaymentService {
+  // GetPayment retrieves payment details
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse) {}
+}

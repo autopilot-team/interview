@@ -1,0 +1,12 @@
+{{t "welcome.header" "Name" .Name}}
+
+{{t "welcome.body" "AppName" .AppName}}
+
+{{t "welcome.verify_email_prompt"}}
+
+{{t "welcome.verify_alternative_prompt"}}
+{{.VerificationURL}}
+
+{{t "welcome.verify_expiry_notice"}}
+
+{{t "welcome.disclaimer"}}

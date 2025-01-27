@@ -1,0 +1,70 @@
+# Version Control
+.git
+.gitignore
+.github
+
+# Development
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+.env*
+!.env.example
+.editorconfig
+.pre-commit-config.yaml
+.cursorrules
+
+# Dependencies - keep package files but ignore installed modules
+node_modules
+**/node_modules
+**/**/node_modules
+vendor
+**/vendor
+
+# Build artifacts
+.react-router
+build
+tmp
+coverage
+*.log
+
+# Go specific
+**/*.test
+**/testdata
+**/*.out
+**/debug
+
+# TypeScript/JavaScript specific
+**/*.js.map
+**/*.d.ts.map
+.turbo
+.cache
+**/.cache
+.pnpm-store
+
+# Documentation and configs
+CHANGELOG.md
+README.md
+LICENSE
+docs
+*.md
+
+# Test files
+**/__tests__
+**/*.test.*
+**/*.spec.*
+**/test
+**/tests
+**/__mocks__
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Debug files
+debug.test
+*.pprof
+*.cpu
+*.mem

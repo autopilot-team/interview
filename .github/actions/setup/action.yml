@@ -1,0 +1,102 @@
+name: Setup
+
+description: Setup the environment for the project.
+
+inputs:
+  setup-compose:
+    description: 'Whether to setup Docker Compose cluster'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Install pkgx
+      uses: pkgxdev/setup@v2
+
+    - name: Generate pkgx Cache Key
+      id: pkgx-cache-key
+      shell: bash
+      run: echo "deps_hash=$(jq -r '.pkgx.dependencies' package.json | sha256sum | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+    - name: Cache pkgx Tools
+      uses: actions/cache@v4
+      with:
+        path: ~/.pkgx
+        key: ${{ runner.os }}-pkgx-${{ steps.pkgx-cache-key.outputs.deps_hash }}
+        restore-keys: |
+          ${{ runner.os }}-pkgx-
+
+    - name: Override NodeJS
+      working-directory: ${{ inputs.path }}
+      shell: bash
+      run: |
+        TMP="$(mktemp)"
+        pkgx --internal.activate "$PWD" > "$TMP"
+
+        if ! node --version >/dev/null 2>&1; then
+          eval "$(pkgx +node)"
+        fi
+
+        node "$GITHUB_ACTION_PATH"/parse.js "$TMP"
+
+    - name: Cache Go modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Cache PNPM modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.local/share/pnpm/store
+          node_modules
+          */*/node_modules
+        key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-
+
+    - name: Cache Docker images
+      if: inputs.setup-compose == 'true'
+      uses: actions/cache@v4
+      with:
+        path: /tmp/docker-cache
+        key: ${{ runner.os }}-docker-${{ hashFiles('compose.yml') }}-${{ hashFiles('Dockerfile*') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-${{ hashFiles('compose.yml') }}-
+          ${{ runner.os }}-docker-
+
+    - name: Load cached Docker images
+      if: inputs.setup-compose == 'true'
+      shell: bash
+      run: |
+        if [ -f /tmp/docker-cache/images.tar ]; then
+          docker load -i /tmp/docker-cache/images.tar
+        else
+          echo "No cached Docker images found"
+        fi
+
+    - name: Setup Docker Compose Cluster
+      if: inputs.setup-compose == 'true'
+      shell: bash
+      run: |
+        make reset
+
+    - name: Save Docker images to cache
+      if: inputs.setup-compose == 'true'
+      shell: bash
+      run: |
+        mkdir -p /tmp/docker-cache
+        docker images --format "{{.Repository}}:{{.Tag}}" | grep -v "<none>" | sort -u | xargs docker save -o /tmp/docker-cache/images.tar
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        go mod download
+        pnpm i --frozen-lockfile

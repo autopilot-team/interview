@@ -1,0 +1,25 @@
+{
+	"email": {
+		"title": "欢迎使用 {{.AppName}}",
+		"preview": "欢迎使用 {{.AppName}} - 您的全球支付编排平台",
+		"header": "标题",
+		"footer": "© {{.CurrentYear}} {{.AppName}}。保留所有权利。"
+	},
+	"welcome": {
+		"header": "{{.Name}}，欢迎您！",
+		"body": "感谢您加入 {{.AppName}}。我们很高兴有您的加入。",
+		"verify_email_prompt": "请验证您的电子邮箱地址，以确保账户安全并访问所有功能。",
+		"verify_button": "验证电子邮箱",
+		"verify_expiry_notice": "出于安全考虑，此验证链接将在{{t \"duration.hours\" .Duration}}后过期。",
+		"verify_alternative_prompt": "如果上面的按钮无法使用，您可以复制并粘贴此链接到浏览器：",
+		"disclaimer": "如果您没有创建账户，则无需采取任何操作。"
+	},
+	"duration": {
+		"minutes": "{{.Duration}}分钟",
+		"hours": "{{.Duration}}小时",
+		"days": "{{.Duration}}天",
+		"weeks": "{{.Duration}}周",
+		"months": "{{.Duration}}月",
+		"years": "{{.Duration}}年"
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"files": {
+		"ignore": [
+			".cursorrules",
+			".react-router/*",
+			"**/*.d.ts",
+			"backends/internal/pbgen/*",
+			"build/*",
+			"node_modules/*",
+			"packages/api/src/contracts/*.json",
+			"packages/api/src/contracts/*.ts",
+			"tmp/*"
+		],
+		"ignoreUnknown": true
+	},
+	"formatter": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"correctness": {
+				"noEmptyPattern": "off"
+			}
+		}
+	}
+}

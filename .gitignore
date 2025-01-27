@@ -1,0 +1,20 @@
+# Secrets
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# Build tools specific
+npm-debug.log
+yarn-error.log
+
+# Misc.
+.DS_Store
+.react-router
+build
+!**/testdata/
+node_modules
+internal/core/testdata/migrations/test/*_table.sql
+tmp
+
+*storybook.log

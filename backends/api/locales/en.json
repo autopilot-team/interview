@@ -1,0 +1,25 @@
+{
+	"email": {
+		"title": "Welcome to {{.AppName}}",
+		"preview": "Welcome to {{.AppName}} - Your global payment orchestration platform",
+		"header": "Header",
+		"footer": "© {{.CurrentYear}} {{.AppName}}. All rights reserved."
+	},
+	"welcome": {
+		"header": "Welcome {{.Name}}!",
+		"body": "Thank you for joining {{.AppName}}. We're excited to have you on board.",
+		"verify_email_prompt": "Please verify your email address to ensure the security of your account and access all features.",
+		"verify_button": "Verify Email Address",
+		"verify_expiry_notice": "This verification link will expire in {{t \"duration.hours\" .Duration}} for security reasons.",
+		"verify_alternative_prompt": "If the button above doesn't work, you can copy and paste this link into your browser:",
+		"disclaimer": "If you did not create an account, no further action is required."
+	},
+	"duration": {
+		"minutes": "{{.Duration}} minutes",
+		"hours": "{{.Duration}} hours",
+		"days": "{{.Duration}} days",
+		"weeks": "{{.Duration}} weeks",
+		"months": "{{.Duration}} months",
+		"years": "{{.Duration}} years"
+	}
+}

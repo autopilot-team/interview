@@ -1,0 +1,98 @@
+{
+	"errors": {
+		"signUp": {
+			"title": "Error",
+			"description": "Unable to sign up. Please try again."
+		}
+	},
+	"success": {
+		"signUp": {
+			"title": "Success",
+			"description": "An email has been sent to you. Please check your email and click the link to verify your account."
+		}
+	},
+	"verifyEmail": {
+		"verifying": "Verifying your email",
+		"verifyingDescription": "Please wait while we verify your email address...",
+		"success": "Email verified successfully",
+		"successDescription": "Your email has been verified. You can now sign in to your account.",
+		"error": "Invalid or expired verification link",
+		"errorDescription": "The verification link is invalid or has expired. Please try signing in or contact support if you need help."
+	},
+	"signInForm": {
+		"title": "Welcome back",
+		"email": "Email",
+		"emailPlaceholder": "name@company.com",
+		"password": "Password",
+		"passwordPlaceholder": "Enter your password",
+		"forgotPassword": "Forgot password?",
+		"signIn": "Sign in",
+		"noAccount": "New to Autopilot?",
+		"signUp": "Create account",
+		"termsText": "By clicking {button}, you agree to our {terms} and {privacy}.",
+		"termsButton": "Sign in",
+		"termsOfService": "Terms of Service",
+		"privacyPolicy": "Privacy Policy",
+		"errors": {
+			"emailRequired": "Enter your email",
+			"emailInvalid": "Enter a valid email",
+			"passwordRequired": "Enter your password",
+			"passwordMinLength": "Password must be at least 8 characters"
+		}
+	},
+	"signUpForm": {
+		"title": "Create your account",
+		"name": "Full name",
+		"namePlaceholder": "Full name",
+		"email": "Work email",
+		"emailPlaceholder": "name@company.com",
+		"password": "Password",
+		"passwordPlaceholder": "Create password",
+		"confirmPassword": "Confirm password",
+		"confirmPasswordPlaceholder": "Re-enter password",
+		"signUp": "Create account",
+		"haveAccount": "Already have an account?",
+		"signIn": "Sign in",
+		"termsText": "By clicking {button}, you agree to our {terms} and {privacy}.",
+		"termsButton": "Create account",
+		"termsOfService": "Terms of Service",
+		"privacyPolicy": "Privacy Policy",
+		"passwordStrength": {
+			"secure": "Secure",
+			"moderate": "Moderate",
+			"weak": "Weak",
+			"requirements": {
+				"minLength": "Minimum 8 characters required",
+				"mixCase": "Mix uppercase and lowercase letters",
+				"number": "Include a number",
+				"special": "Add a special character"
+			}
+		},
+		"errors": {
+			"nameRequired": "Enter your full name",
+			"nameMinLength": "Enter your full name",
+			"emailRequired": "Enter your work email",
+			"emailInvalid": "Enter a valid email",
+			"passwordRequired": "Create a password",
+			"passwordMinLength": "Minimum 8 characters required",
+			"passwordUppercase": "Mix uppercase and lowercase letters",
+			"passwordLowercase": "Mix uppercase and lowercase letters",
+			"passwordNumber": "Include a number",
+			"passwordSpecial": "Add a special character",
+			"confirmPasswordRequired": "Confirm your password",
+			"confirmPasswordMatch": "Passwords do not match"
+		}
+	},
+	"forgotPasswordForm": {
+		"title": "Reset password",
+		"description": "We'll send you a secure link to reset your password.",
+		"email": "Email",
+		"emailPlaceholder": "name@company.com",
+		"resetPassword": "Send reset link",
+		"backToSignIn": "Back to sign in",
+		"errors": {
+			"emailRequired": "Enter your email",
+			"emailInvalid": "Enter a valid email"
+		}
+	}
+}

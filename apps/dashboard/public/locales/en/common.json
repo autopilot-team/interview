@@ -1,0 +1,99 @@
+{
+	"nav": {
+		"overview": {
+			"title": "Overview",
+			"activity": "Activity",
+			"balances": "Balances",
+			"performance": "Performance",
+			"settings": "Settings"
+		},
+		"moneyIn": {
+			"title": "Money In",
+			"transactions": "Transactions",
+			"paymentMethods": "Payment Methods",
+			"checkout": "Checkout",
+			"subscriptions": "Subscriptions",
+			"products": "Products"
+		},
+		"moneyFlow": {
+			"title": "Money Flow",
+			"accounts": "Accounts",
+			"transfers": "Transfers",
+			"treasury": "Treasury",
+			"fx": "FX"
+		},
+		"moneyOut": {
+			"title": "Money Out",
+			"payouts": "Payouts",
+			"expenses": "Expenses",
+			"vendors": "Vendors",
+			"tax": "Tax"
+		},
+		"operations": {
+			"title": "Operations",
+			"processors": "Processors",
+			"ledger": "Ledger",
+			"reconciliation": "Reconciliation",
+			"reports": "Reports"
+		},
+		"risk": {
+			"title": "Risk & Security",
+			"monitoring": "Monitoring",
+			"prevention": "Fraud Prevention",
+			"disputes": "Disputes",
+			"compliance": "Compliance",
+			"vault": "Data Vault"
+		},
+		"intelligence": {
+			"title": "Intelligence",
+			"analytics": "Analytics",
+			"insights": "Insights",
+			"reports": "Reports",
+			"models": "Models"
+		},
+		"developer": {
+			"title": "Developer",
+			"apiKeys": "API Keys",
+			"webhooks": "Webhooks",
+			"documentation": "Documentation",
+			"status": "Status"
+		}
+	},
+	"entitySwitcher": {
+		"searchPlaceholder": "Search entities...",
+		"noEntities": "No entities found.",
+		"noMatchingEntities": "No matching entities found.",
+		"selectEntity": "Select entity",
+		"platforms": "Platforms",
+		"organizations": "Organizations",
+		"accounts": "Accounts",
+		"addEntity": "Add entity"
+	},
+	"navUser": {
+		"upgradeToPro": "Upgrade to Pro",
+		"account": "Account",
+		"billing": "Billing",
+		"notifications": "Notifications",
+		"logOut": "Log out"
+	},
+	"loading": {
+		"initializing": "Initializing..."
+	},
+	"error": {
+		"action": {
+			"home": "Home",
+			"back": "Back"
+		},
+		"notFound": {
+			"title": "Not found",
+			"description": "This page doesn't exist or you don't have access."
+		},
+		"support": {
+			"text": "If this error persists, please contact support."
+		},
+		"unexpected": {
+			"title": "Something went wrong",
+			"description": "We're working on fixing this issue."
+		}
+	}
+}

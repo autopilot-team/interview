@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "payment/v1/types.proto";
+
+// GetPaymentRequest represents the request to get payment details
+message GetPaymentRequest {
+  string id = 1;
+}
+
+// GetPaymentResponse represents the response containing payment details
+message GetPaymentResponse {
+  Payment payment = 1;
+}

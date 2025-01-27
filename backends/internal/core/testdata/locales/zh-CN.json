@@ -1,0 +1,10 @@
+{
+	"welcome": {
+		"header": "{{.Name}}，欢迎您！",
+		"body": "感谢您加入 {{.AppName}}。"
+	},
+	"notifications": {
+		"one": "您有{{.Count}}条通知",
+		"other": "您有{{.Count}}条通知"
+	}
+}

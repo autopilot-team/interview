@@ -1,0 +1,99 @@
+{
+	"nav": {
+		"overview": {
+			"title": "概覽",
+			"activity": "活動",
+			"balances": "餘額",
+			"performance": "表現",
+			"settings": "設定"
+		},
+		"moneyIn": {
+			"title": "收入",
+			"transactions": "交易",
+			"paymentMethods": "支付方式",
+			"checkout": "收銀台",
+			"subscriptions": "訂閱",
+			"products": "產品"
+		},
+		"moneyFlow": {
+			"title": "資金流",
+			"accounts": "帳戶",
+			"transfers": "轉帳",
+			"treasury": "資金",
+			"fx": "外匯"
+		},
+		"moneyOut": {
+			"title": "支出",
+			"payouts": "付款",
+			"expenses": "費用",
+			"vendors": "供應商",
+			"tax": "稅務"
+		},
+		"operations": {
+			"title": "營運",
+			"processors": "處理器",
+			"ledger": "帳本",
+			"reconciliation": "對帳",
+			"reports": "報表"
+		},
+		"risk": {
+			"title": "風險與安全",
+			"monitoring": "監控",
+			"prevention": "反詐欺",
+			"disputes": "爭議",
+			"compliance": "合規",
+			"vault": "資料保險箱"
+		},
+		"intelligence": {
+			"title": "智能",
+			"analytics": "分析",
+			"insights": "洞察",
+			"reports": "報表",
+			"models": "模型"
+		},
+		"developer": {
+			"title": "開發者",
+			"apiKeys": "API金鑰",
+			"webhooks": "Webhooks",
+			"documentation": "文件",
+			"status": "狀態"
+		}
+	},
+	"entitySwitcher": {
+		"searchPlaceholder": "搜尋實體...",
+		"noEntities": "未找到實體。",
+		"noMatchingEntities": "未找到相符的實體。",
+		"selectEntity": "選擇實體",
+		"platforms": "平台",
+		"organizations": "組織",
+		"accounts": "帳戶",
+		"addEntity": "新增實體"
+	},
+	"navUser": {
+		"upgradeToPro": "升級至專業版",
+		"account": "帳戶",
+		"billing": "帳單",
+		"notifications": "通知",
+		"logOut": "登出"
+	},
+	"loading": {
+		"initializing": "正在初始化..."
+	},
+	"error": {
+		"action": {
+			"home": "首頁",
+			"back": "返回"
+		},
+		"notFound": {
+			"title": "未找到",
+			"description": "此頁面不存在或您沒有存取權限。"
+		},
+		"support": {
+			"text": "如果此錯誤持續存在，請聯絡支援。"
+		},
+		"unexpected": {
+			"title": "發生錯誤",
+			"description": "處理您的請求時出現問題。"
+		}
+	}
+}

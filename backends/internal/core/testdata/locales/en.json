@@ -1,0 +1,10 @@
+{
+	"welcome": {
+		"header": "Welcome {{.Name}}!",
+		"body": "Thank you for joining {{.AppName}}."
+	},
+	"notifications": {
+		"one": "You have {{.Count}} notification",
+		"other": "You have {{.Count}} notifications"
+	}
+}

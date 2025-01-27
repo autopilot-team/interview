@@ -1,0 +1,99 @@
+{
+	"nav": {
+		"overview": {
+			"title": "概览",
+			"activity": "活动",
+			"balances": "余额",
+			"performance": "表现",
+			"settings": "设置"
+		},
+		"moneyIn": {
+			"title": "收入",
+			"transactions": "交易",
+			"paymentMethods": "支付方式",
+			"checkout": "收银台",
+			"subscriptions": "订阅",
+			"products": "产品"
+		},
+		"moneyFlow": {
+			"title": "资金流",
+			"accounts": "账户",
+			"transfers": "转账",
+			"treasury": "资金",
+			"fx": "外汇"
+		},
+		"moneyOut": {
+			"title": "支出",
+			"payouts": "付款",
+			"expenses": "费用",
+			"vendors": "供应商",
+			"tax": "税务"
+		},
+		"operations": {
+			"title": "运营",
+			"processors": "处理器",
+			"ledger": "账本",
+			"reconciliation": "对账",
+			"reports": "报表"
+		},
+		"risk": {
+			"title": "风险与安全",
+			"monitoring": "监控",
+			"prevention": "反欺诈",
+			"disputes": "争议",
+			"compliance": "合规",
+			"vault": "数据保险库"
+		},
+		"intelligence": {
+			"title": "智能",
+			"analytics": "分析",
+			"insights": "洞察",
+			"reports": "报表",
+			"models": "模型"
+		},
+		"developer": {
+			"title": "开发者",
+			"apiKeys": "API密钥",
+			"webhooks": "Webhooks",
+			"documentation": "文档",
+			"status": "状态"
+		}
+	},
+	"entitySwitcher": {
+		"searchPlaceholder": "搜索实体...",
+		"noEntities": "未找到实体。",
+		"noMatchingEntities": "未找到匹配的实体。",
+		"selectEntity": "选择实体",
+		"platforms": "平台",
+		"organizations": "组织",
+		"accounts": "账户",
+		"addEntity": "添加实体"
+	},
+	"navUser": {
+		"upgradeToPro": "升级至专业版",
+		"account": "账户",
+		"billing": "账单",
+		"notifications": "通知",
+		"logOut": "退出登录"
+	},
+	"loading": {
+		"initializing": "正在初始化..."
+	},
+	"error": {
+		"action": {
+			"home": "首页",
+			"back": "返回"
+		},
+		"notFound": {
+			"title": "未找到",
+			"description": "此页面不存在或您没有访问权限。"
+		},
+		"support": {
+			"text": "如果此错误持续存在，请联系支持。"
+		},
+		"unexpected": {
+			"title": "发生错误",
+			"description": "处理您的请求时出现问题。"
+		}
+	}
+}

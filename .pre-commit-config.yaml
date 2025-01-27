@@ -1,0 +1,26 @@
+repos:
+  - repo: local
+    hooks:
+      - id: lint-and-format
+        name: Lint and Format
+        entry: make check
+        language: system
+        pass_filenames: false
+        types: [file]
+        always_run: true
+
+      - id: security-checks
+        name: Security Checks
+        entry: pnpm audit
+        language: system
+        pass_filenames: false
+        types: [file]
+        always_run: true
+
+      - id: unit-tests
+        name: Unit Tests
+        entry: make test
+        language: system
+        pass_filenames: false
+        types: [file]
+        always_run: true

@@ -1,0 +1,24 @@
+{
+	"name": "@autopilot/api",
+	"description": "The Autopilot API client and types.",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"dependencies": {
+		"@tanstack/react-query": "^5.64.1",
+		"openapi-fetch": "^0.13.4",
+		"openapi-react-query": "^0.2.9"
+	},
+	"devDependencies": {
+		"@autopilot/typescript-config": "workspace:*",
+		"@types/react": "^19.0.7",
+		"openapi-typescript": "^7.5.2",
+		"vite": "^6.0.7"
+	},
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {
+		"gen": "for spec in $(ls ./src/contracts/*.json); do NODE_OPTIONS=--no-warnings openapi-typescript $spec -o ./src/contracts/$(basename $spec .json).ts; done"
+	}
+}

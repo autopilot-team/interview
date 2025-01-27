@@ -1,0 +1,25 @@
+{
+	"email": {
+		"title": "歡迎使用 {{.AppName}}",
+		"preview": "歡迎使用 {{.AppName}} - 您的全球支付編排平台",
+		"header": "標題",
+		"footer": "© {{.CurrentYear}} {{.AppName}}。保留所有權利。"
+	},
+	"welcome": {
+		"header": "{{.Name}}，歡迎您！",
+		"body": "感謝您加入 {{.AppName}}。我們很高興有您的加入。",
+		"verify_email_prompt": "請驗證您的電子郵箱地址，以確保帳戶安全並訪問所有功能。",
+		"verify_button": "驗證電子郵箱",
+		"verify_expiry_notice": "出於安全考慮，此驗證連結將在{{t \"duration.hours\" .Duration}}後過期。",
+		"verify_alternative_prompt": "如果上面的按鈕無法使用，您可以複製並貼上此連結到瀏覽器：",
+		"disclaimer": "如果您沒有創建帳戶，則無需採取任何操作。"
+	},
+	"duration": {
+		"minutes": "{{.Duration}}分鐘",
+		"hours": "{{.Duration}}小時",
+		"days": "{{.Duration}}天",
+		"weeks": "{{.Duration}}週",
+		"months": "{{.Duration}}月",
+		"years": "{{.Duration}}年"
+	}
+}

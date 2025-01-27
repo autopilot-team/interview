@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+jobs:
+  formatter-linter-checks:
+    name: Formatter/Linter Checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run Formatters/Linters
+        run: make check
+
+      - name: Check For Uncommitted Changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Found uncommitted changes after build/format:"
+            git status --porcelain
+            exit 1
+          fi
+
+  security-checks:
+    name: Security Checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run frontend audit
+        run: pnpm audit
+
+      - name: Run gosec
+        uses: securego/gosec@master
+        with:
+          args: ./...
+        continue-on-error: true
+
+      # TODO: Enable dependency review
+      # - name: Run dependency review
+      #   uses: actions/dependency-review-action@v4
+      #   if: github.event_name == 'pull_request'
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          setup-compose: true
+
+      - name: Run Tests
+        run: make test
+
+  ui-tests:
+    name: UI Tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: packages/ui

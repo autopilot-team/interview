@@ -1,0 +1,90 @@
+{
+	"errors": {
+		"signUp": {
+			"title": "錯誤",
+			"description": "無法註冊。請重試。"
+		}
+	},
+	"success": {
+		"signUp": {
+			"title": "成功",
+			"description": "一封驗證郵件已發送至您的信箱。請檢查您的信箱並點擊連結以驗證您的帳戶。"
+		}
+	},
+	"signInForm": {
+		"title": "歡迎回來",
+		"email": "電子郵件",
+		"emailPlaceholder": "name@company.com",
+		"password": "密碼",
+		"passwordPlaceholder": "請輸入密碼",
+		"forgotPassword": "忘記密碼？",
+		"signIn": "登入",
+		"noAccount": "首次使用 Autopilot？",
+		"signUp": "建立帳戶",
+		"termsText": "點擊{button}即表示您同意我們的{terms}和{privacy}。",
+		"termsButton": "登入",
+		"termsOfService": "服務條款",
+		"privacyPolicy": "隱私權政策",
+		"errors": {
+			"emailRequired": "請輸入電子郵件",
+			"emailInvalid": "請輸入有效的電子郵件",
+			"passwordRequired": "請輸入密碼",
+			"passwordMinLength": "密碼長度至少需要8個字元"
+		}
+	},
+	"signUpForm": {
+		"title": "建立您的帳戶",
+		"name": "全名",
+		"namePlaceholder": "請輸入全名",
+		"email": "公司電子郵件",
+		"emailPlaceholder": "name@company.com",
+		"password": "密碼",
+		"passwordPlaceholder": "建立密碼",
+		"confirmPassword": "確認密碼",
+		"confirmPasswordPlaceholder": "再次輸入密碼",
+		"signUp": "建立帳戶",
+		"haveAccount": "已經有帳戶？",
+		"signIn": "登入",
+		"termsText": "點擊{button}即表示您同意我們的{terms}和{privacy}。",
+		"termsButton": "建立帳戶",
+		"termsOfService": "服務條款",
+		"privacyPolicy": "隱私權政策",
+		"passwordStrength": {
+			"secure": "安全",
+			"moderate": "中等",
+			"weak": "偏弱",
+			"requirements": {
+				"minLength": "至少8個字元",
+				"mixCase": "需要大小寫字母",
+				"number": "需要數字",
+				"special": "需要特殊符號"
+			}
+		},
+		"errors": {
+			"nameRequired": "請輸入全名",
+			"nameMinLength": "請輸入全名",
+			"emailRequired": "請輸入公司電子郵件",
+			"emailInvalid": "請輸入有效的電子郵件",
+			"passwordRequired": "請建立密碼",
+			"passwordMinLength": "至少8個字元",
+			"passwordUppercase": "需要大小寫字母",
+			"passwordLowercase": "需要大小寫字母",
+			"passwordNumber": "需要數字",
+			"passwordSpecial": "需要特殊符號",
+			"confirmPasswordRequired": "請確認密碼",
+			"confirmPasswordMatch": "密碼不一致"
+		}
+	},
+	"forgotPasswordForm": {
+		"title": "重設密碼",
+		"description": "我們將發送安全連結至您的信箱以重設密碼。",
+		"email": "電子郵件",
+		"emailPlaceholder": "name@company.com",
+		"resetPassword": "發送重設連結",
+		"backToSignIn": "返回登入",
+		"errors": {
+			"emailRequired": "請輸入電子郵件",
+			"emailInvalid": "請輸入有效的電子郵件"
+		}
+	}
+}
