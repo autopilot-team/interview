@@ -87,3 +87,49 @@ services:
     profiles:
       - infra
     restart: on-failure
+
+  # Apps/Services
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.spa
+      args:
+        - APP_SERVICE=dashboard
+    ports:
+      - 3000:80
+    profiles:
+      - app
+    restart: on-failure
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_SERVICE=api
+    command: /app start --worker
+    environment:
+      - LIVE_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/api_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+      - TEST_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/api_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+      - PAYMENT_SERVICE_ADDR=payment:3000
+    ports:
+      - 3001:3000
+    profiles:
+      - app
+    restart: on-failure
+
+  payment:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_SERVICE=payment
+    command: /app start --worker
+    environment:
+      - LIVE_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/payment_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+      - TEST_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/payment_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+    ports:
+      - 3002:3000
+    profiles:
+      - app
+    restart: on-failure
