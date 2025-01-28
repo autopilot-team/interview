@@ -5,15 +5,15 @@
 	"type": "module",
 	"private": true,
 	"dependencies": {
-		"@tanstack/react-query": "^5.64.1",
+		"@tanstack/react-query": "^5.65.0",
 		"openapi-fetch": "^0.13.4",
-		"openapi-react-query": "^0.2.9"
+		"openapi-react-query": "^0.3.0"
 	},
 	"devDependencies": {
 		"@autopilot/typescript-config": "workspace:*",
-		"@types/react": "^19.0.7",
-		"openapi-typescript": "^7.5.2",
-		"vite": "^6.0.7"
+		"@types/react": "^19.0.8",
+		"openapi-typescript": "^7.6.0",
+		"vite": "^6.0.11"
 	},
 	"exports": {
 		".": "./src/index.ts"

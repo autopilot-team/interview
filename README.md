@@ -14,37 +14,52 @@ that closely resembles our production stack, allowing you to:
 - Work with the same tools and technologies we use daily
 - Demonstrate your problem-solving skills in a realistic setting
 
-## Tech Stack
+## ✨ Features
 
-This project showcases our cutting-edge technology stack:
+### 🚀 Modern Tech Stack
 
-### Frontend
-- [React 19](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/)
+- [React 19](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/) for type-safe development
 - [React Router v7](https://reactrouter.com/en/main) for client-side routing
-- [TailwindCSS v4](https://tailwindcss.com/) for styling
-- [Shadcn UI](https://ui.shadcn.com/) for beautiful, accessible components
+- [TailwindCSS v4](https://tailwindcss.com/) and [Shadcn UI](https://ui.shadcn.com/) for beautiful, accessible components
 - [Storybook](https://storybook.js.org/) for component development
 - [Vite](https://vitejs.dev/) for blazing-fast builds
-
-### Backend
 - [Go 1.23.4](https://go.dev/) for high-performance services
 - [PostgreSQL 17](https://www.postgresql.org/) for reliable data storage
 - [Redis](https://redis.io/) for caching
 - [OpenTelemetry](https://opentelemetry.io/) for observability
 - [River](https://github.com/riverqueue/river) for background job processing
 
+### 🛠️ Production-Grade Environment
+- **Microservices Architecture** with API Gateway pattern
+- **Comprehensive Monitoring** via OpenTelemetry
+- **Background Job Processing** using River
+- **Type-Safe API Contracts** across all services
+
+### 🔄 Enterprise-Level CI/CD
+- **Automated Quality Gates** for every pull request
+- **Comprehensive Testing** including unit and E2E tests
+- **Linear Canary Deployments** with automated rollbacks
+- **Security-First Approach** with dependency audits
+
+### 👩‍💻 Developer Experience
+- **Instant Setup** with one-command development environment
+- **Hot Reload** for both frontend and backend changes
+- **Component Library** with Storybook integration
+- **Clear Documentation** and best practices
+
 ## Project Structure
 
 ```
-├── apps/                       # Frontend applications
-│   └── dashboard/              # Main dashboard app
-├── backends/                   # Backend services
-│   ├── api/                    # API gateway
-│   └── payment/                # Payment service
-├── packages/                   # Shared packages
-│   ├── api/                    # API client library
-│   ├── ui/                     # UI component library
-│   └── typescript-config/      # Shared TS configs
+├── apps/                        # Frontend applications
+│    └── dashboard/              # Main dashboard app
+├── backends/                    # Backend services
+│    ├── api/                    # API gateway
+│    ├── internal/               # Common libraries
+│    └── payment/                # Payment service
+├── packages/                    # Shared packages
+│    ├── api/                    # API client library
+│    ├── ui/                     # UI component library
+│    └── typescript-config/      # Shared TS configs
 ```
 
 ## Getting Started
@@ -68,6 +83,7 @@ This project showcases our cutting-edge technology stack:
 
    # Start development servers
    make dev
+   ```
 
 3. **Development**
    The `make dev` command will start all necessary services. After starting,

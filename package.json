@@ -9,7 +9,7 @@
 	"devDependencies": {
 		"@autopilot/typescript-config": "workspace:*",
 		"@biomejs/biome": "^1.9.4",
-		"@types/node": "^22.10.10",
+		"@types/node": "^22.12.0",
 		"@types/react": "^19.0.8",
 		"@types/react-dom": "^19.0.3",
 		"chokidar-cli": "^3.0.0",
