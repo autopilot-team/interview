@@ -33,7 +33,7 @@ type Database struct {
 
 // Observability holds monitoring and logging configuration
 type Observability struct {
-	AxiomApiToken string `env:"AXIOM_API_TOKEN" envDefault:"xaat-6adbb824-ccc6-4267-8462-4fab18335352"`
+	AxiomApiToken string `env:"AXIOM_API_TOKEN" envDefault:"xaat-b1537b91-acb4-47ba-94e3-1e3c21b33919"`
 }
 
 // Config represents the complete application configuration
