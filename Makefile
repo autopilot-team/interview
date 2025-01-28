@@ -122,6 +122,10 @@ domains:
 	@echo "   • MinIO Admin:      http://localhost:9001"
 	@echo "─────────────────────────────────────────────────"
 
+# Stop and remove infrastructure containers
+down:
+	@docker compose --profile=infra down --remove-orphans --timeout 0
+
 # Generate all code (protobuf, OpenAPI, and API clients)
 gen:
 	@make gen-be
