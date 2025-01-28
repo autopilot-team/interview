@@ -1,6 +1,6 @@
 # Autopilot Interview
 
-Welcome to Autopilot's interview project! This repository is a production-grade
+Welcome to Autopilot's interview! This repository is a production-grade
 environment that mirrors our internal development stack, designed to give you a
 real taste of what it's like to work with us.
 
@@ -14,20 +14,76 @@ that closely resembles our production stack, allowing you to:
 - Work with the same tools and technologies we use daily
 - Demonstrate your problem-solving skills in a realistic setting
 
+## 🚀 Modern Tech Stack
+
+<table align="center">
+    <tbody>
+        <tr align="center">
+            <td width="25%">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" height="48" alt="React"><br>
+                <strong>React 19</strong><br>
+                Modern UI Library
+            </td>
+            <td width="25%">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" height="48" alt="TypeScript"><br>
+                <strong>TypeScript</strong><br>
+                Type-safe Dev
+            </td>
+            <td width="25%">
+                <img src="https://static-00.iconduck.com/assets.00/react-router-icon-1024x559-m9r1k9t4.png" height="48" alt="React Router"><br>
+                <strong>React Router v7</strong><br>
+                Single Page Apps
+            </td>
+            <td width="25%">
+                <img src="https://w7.pngwing.com/pngs/293/485/png-transparent-tailwind-css-hd-logo.png" height="48" alt="TailwindCSS"><br>
+                <strong>TailwindCSS v4</strong><br>
+                Utility-first CSS
+            </td>
+        </tr>
+        <tr align="center">
+            <td width="25%">
+                <img src="https://www.pngfind.com/pngs/m/493-4934627_storybook-icon-ddf01037-storybook-js-hd-png-download.png" height="48" alt="Storybook"><br>
+                <strong>Storybook</strong><br>
+                Component Dev
+            </td>
+            <td width="25%">
+                <img src="https://raw.githubusercontent.com/vitejs/vite/main/docs/public/logo.svg" height="48" alt="Vite"><br>
+                <strong>Vite</strong><br>
+                Frontend Tooling
+            </td>
+            <td width="25%">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" height="48" alt="Go"><br>
+                <strong>Go 1.23.4</strong><br>
+                Backend Services
+            </td>
+            <td width="25%">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg" height="48" alt="PostgreSQL"><br>
+                <strong>PostgreSQL 17</strong><br>
+                Reliable Database
+            </td>
+        </tr>
+        <tr align="center">
+            <td width="25%">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redis/redis-original.svg" height="48" alt="Redis"><br>
+                <strong>Redis</strong><br>
+                In-memory Caching
+            </td>
+            <td width="25%">
+                <img src="https://opentelemetry.io/img/logos/opentelemetry-horizontal-color.svg" height="48" alt="OpenTelemetry"><br>
+                <strong>OpenTelemetry</strong><br>
+                Observability
+            </td>
+            <td width="25%">
+                <img src="https://avatars.githubusercontent.com/u/136755925?v=4" height="48" alt="River"><br>
+                <strong>River</strong><br>
+                Background Worker
+            </td>
+            <td width="25%"></td>
+        </tr>
+    </tbody>
+</table>
+
 ## ✨ Features
-
-### 🚀 Modern Tech Stack
-
-- [React 19](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/) for type-safe development
-- [React Router v7](https://reactrouter.com/en/main) for client-side routing
-- [TailwindCSS v4](https://tailwindcss.com/) and [Shadcn UI](https://ui.shadcn.com/) for beautiful, accessible components
-- [Storybook](https://storybook.js.org/) for component development
-- [Vite](https://vitejs.dev/) for blazing-fast builds
-- [Go 1.23.4](https://go.dev/) for high-performance services
-- [PostgreSQL 17](https://www.postgresql.org/) for reliable data storage
-- [Redis](https://redis.io/) for caching
-- [OpenTelemetry](https://opentelemetry.io/) for observability
-- [River](https://github.com/riverqueue/river) for background job processing
 
 ### 🛠️ Production-Grade Environment
 - **Microservices Architecture** with API Gateway pattern
@@ -58,7 +114,7 @@ that closely resembles our production stack, allowing you to:
 │    └── payment/                # Payment service
 ├── packages/                    # Shared packages
 │    ├── api/                    # API client library
-│    ├── ui/                     # UI component library
+│    ├── ui/                    # UI component library
 │    └── typescript-config/      # Shared TS configs
 ```
 
