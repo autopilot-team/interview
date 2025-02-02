@@ -14,6 +14,32 @@ that closely resembles our production stack, allowing you to:
 - Work with the same tools and technologies we use daily
 - Demonstrate your problem-solving skills in a realistic setting
 
+## Our Interview Process
+
+1. Read the repository, familiarize yourself with the project.
+2. If you are comfortable and productive working with our tech stack, please
+proceed to our [Software Engineer JD](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
+3. We will get back to you within 72 hours to schedule an interview if your
+profile matches our requirements.
+
+## How To Prepare for the Interview
+
+During the interview, you'll work on implementing a mini feature end-to-end with
+our interviewer within 90 minutes, which might include:
+
+- Frontend component development
+- API implementation
+- Database schema changes
+- Testing and documentation
+
+We're interested in seeing:
+
+- Your problem-solving approach
+- Code quality and architecture decisions
+- Testing strategies, i.e. mocks/stubs/spies
+- Communication skills
+- Ability to work with new technologies
+
 ## 🚀 Modern Tech Stack
 
 <table align="center">
@@ -295,23 +321,6 @@ Our deployment pipeline ensures code quality and reliability through:
    - Continuous health monitoring
    - Automated rollback capabilities
    - Full release after successful validation
-
-## What to Expect
-
-During the interview, you'll work on implementing a feature end-to-end, which
-might include:
-
-- Frontend component development
-- API implementation
-- Database schema changes
-- Testing and documentation
-
-We're interested in seeing:
-
-- Your problem-solving approach
-- Code quality and architecture decisions
-- Testing strategies
-- Communication skills
 
 ## Best Practices
 
