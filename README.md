@@ -138,10 +138,10 @@ We're interested in seeing:
 │    ├── api/                    # API gateway
 │    ├── internal/               # Common libraries
 │    └── payment/                # Payment service
-├── packages/                    # Shared packages
-│    ├── api/                    # API client library
-│    ├── ui/                    # UI component library
-│    └── typescript-config/      # Shared TS configs
+└── packages/                    # Shared packages
+     ├── api/                    # API client library
+     ├── ui/                     # UI component library
+     └── typescript-config/      # Shared TS configs
 ```
 
 ## Getting Started
