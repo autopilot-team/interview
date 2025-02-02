@@ -2,7 +2,6 @@ package v1
 
 import (
 	paymentv1 "autopilot/backends/internal/pbgen/payment/v1"
-	"autopilot/backends/payment/internal/model"
 	"context"
 
 	"google.golang.org/grpc/codes"
@@ -10,7 +9,7 @@ import (
 )
 
 // GetPayment implements the GetPayment RPC method
-func (h *Handler) GetPayment(ctx context.Context, req *paymentv1.GetPaymentRequest) (*paymentv1.GetPaymentResponse, error) {
+func (h *V1) GetPayment(ctx context.Context, req *paymentv1.GetPaymentRequest) (*paymentv1.GetPaymentResponse, error) {
 	if req.Id == "" {
 		return nil, status.Error(codes.InvalidArgument, "id is required")
 	}
@@ -35,20 +34,4 @@ func (h *Handler) GetPayment(ctx context.Context, req *paymentv1.GetPaymentReque
 			UpdatedAt:   payment.UpdatedAt.Unix(),
 		},
 	}, nil
-}
-
-// convertPaymentStatus converts domain payment status to protobuf payment status
-func convertPaymentStatus(status model.PaymentStatus) paymentv1.PaymentStatus {
-	switch status {
-	case model.PaymentStatusPending:
-		return paymentv1.PaymentStatus_PAYMENT_STATUS_PENDING
-	case model.PaymentStatusProcessing:
-		return paymentv1.PaymentStatus_PAYMENT_STATUS_PROCESSING
-	case model.PaymentStatusSucceeded:
-		return paymentv1.PaymentStatus_PAYMENT_STATUS_COMPLETED
-	case model.PaymentStatusFailed:
-		return paymentv1.PaymentStatus_PAYMENT_STATUS_FAILED
-	default:
-		return paymentv1.PaymentStatus_PAYMENT_STATUS_UNSPECIFIED
-	}
 }

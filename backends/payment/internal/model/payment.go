@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// PaymentStatus represents the status of a payment.
 type PaymentStatus string
 
 const (
@@ -17,6 +18,7 @@ const (
 	PaymentStatusRefunded   PaymentStatus = "refunded"
 )
 
+// PaymentProvider represents the payment provider.
 type PaymentProvider string
 
 const (
@@ -32,6 +34,7 @@ const (
 	PaymentMethodTypeCrypto       PaymentMethodType = "crypto"
 )
 
+// Payment represents a payment.
 type Payment struct {
 	ID           uuid.UUID         `json:"id" db:"id"`
 	MerchantID   uuid.UUID         `json:"merchant_id" db:"merchant_id"`
@@ -49,6 +52,7 @@ type Payment struct {
 	CompletedAt  *time.Time        `json:"completed_at,omitempty" db:"completed_at"`
 }
 
+// PaymentIntent represents a payment intent.
 type PaymentIntent struct {
 	ID           uuid.UUID         `json:"id" db:"id"`
 	MerchantID   uuid.UUID         `json:"merchant_id" db:"merchant_id"`
@@ -66,6 +70,7 @@ type PaymentIntent struct {
 	ExpiresAt    time.Time         `json:"expires_at" db:"expires_at"`
 }
 
+// StoredPaymentMethod represents a stored payment method.
 type StoredPaymentMethod struct {
 	ID          uuid.UUID         `json:"id" db:"id"`
 	MerchantID  uuid.UUID         `json:"merchant_id" db:"merchant_id"`

@@ -3,29 +3,37 @@ package v1
 import (
 	paymentv1 "autopilot/backends/internal/pbgen/payment/v1"
 	"autopilot/backends/payment/internal/app"
+	"autopilot/backends/payment/internal/model"
 	"autopilot/backends/payment/internal/service"
-	"autopilot/backends/payment/internal/store"
 )
 
-// Handler implements the gRPC PaymentService server
-type Handler struct {
+// V1 implements the gRPC PaymentService server
+type V1 struct {
 	paymentv1.UnimplementedPaymentServiceServer
 	*app.Container
 	paymentService *service.Payment
 }
 
-// NewHandler creates a new Handler instance
-func NewHandler(container *app.Container) *Handler {
-	// Initialize repositories
-	paymentStore := store.NewPayment(container)
-
-	// Initialize payment service
-	paymentService := service.NewPayment(
-		paymentStore,
-	)
-
-	return &Handler{
+// New creates a new V1 instance
+func New(container *app.Container) *V1 {
+	return &V1{
 		Container:      container,
-		paymentService: paymentService,
+		paymentService: service.NewPayment(container),
+	}
+}
+
+// convertPaymentStatus converts domain payment status to protobuf payment status
+func convertPaymentStatus(status model.PaymentStatus) paymentv1.PaymentStatus {
+	switch status {
+	case model.PaymentStatusPending:
+		return paymentv1.PaymentStatus_PAYMENT_STATUS_PENDING
+	case model.PaymentStatusProcessing:
+		return paymentv1.PaymentStatus_PAYMENT_STATUS_PROCESSING
+	case model.PaymentStatusSucceeded:
+		return paymentv1.PaymentStatus_PAYMENT_STATUS_COMPLETED
+	case model.PaymentStatusFailed:
+		return paymentv1.PaymentStatus_PAYMENT_STATUS_FAILED
+	default:
+		return paymentv1.PaymentStatus_PAYMENT_STATUS_UNSPECIFIED
 	}
 }

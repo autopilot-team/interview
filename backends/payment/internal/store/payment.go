@@ -18,10 +18,12 @@ var (
 	ErrInvalidStatus   = errors.New("invalid payment status transition")
 )
 
+// Payment represents the payment store
 type Payment struct {
 	*app.Container
 }
 
+// NewPayment creates a new payment store
 func NewPayment(container *app.Container) *Payment {
 	return &Payment{container}
 }

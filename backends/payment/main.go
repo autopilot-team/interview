@@ -148,7 +148,7 @@ func initGrpcServer(container *app.Container) (*core.GrpcServer, error) {
 
 	paymentv1.RegisterPaymentServiceServer(
 		grpcServer,
-		v1.NewHandler(container),
+		v1.New(container),
 	)
 	reflection.Register(grpcServer)
 
