@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # For building the apps/services.
-FROM pkgxdev/pkgx:v1.3.1 AS base
+FROM pkgxdev/pkgx:v2.2.0 AS base
 
 ARG APP_SERVICE
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
