@@ -16,7 +16,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/nicksnyder/go-i18n/v2 v2.5.0
+	github.com/nicksnyder/go-i18n/v2 v2.5.1
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/riverqueue/river v0.16.0
 	github.com/riverqueue/river/riverdriver/riverpgxv5 v0.16.0
