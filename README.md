@@ -159,6 +159,9 @@ We're interested in seeing:
    git clone git@github.com:autopilot-team/interview.git
    cd interview
 
+   # Create "virtual environments" consisting of the project toolings (e.g. Go/NodeJS/etc.)
+   dev
+
    # Setup the development environment
    make setup   # Installs dependencies and configures services
    make reset   # Resets database state
