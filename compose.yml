@@ -1,5 +1,18 @@
 services:
   # Infrastructure
+  cache:
+    image: redis:7.4.1
+    healthcheck:
+      interval: 3s
+      retries: 5
+      test: ["CMD-SHELL", "redis-cli -a redis ping || exit 1"]
+      timeout: 5s
+    ports:
+      - 6379:6379
+    profiles:
+      - infra
+    restart: on-failure
+
   db:
     image: postgres:17.1
     command: >
@@ -40,15 +53,12 @@ services:
       - infra
     restart: on-failure
 
-  cache:
-    image: redis:7.4.1
-    healthcheck:
-      interval: 3s
-      retries: 5
-      test: ["CMD-SHELL", "redis-cli -a redis ping || exit 1"]
-      timeout: 5s
+  db-ui:
+    image: sosedoff/pgweb:0.16.2
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/api?sslmode=disable&search_path=public
     ports:
-      - 6379:6379
+      - 8081:8081
     profiles:
       - infra
     restart: on-failure
