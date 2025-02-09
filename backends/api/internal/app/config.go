@@ -8,13 +8,15 @@ import (
 
 // Application holds core application settings
 type Application struct {
-	BaseURL     string `env:"APP_BASE_URL" envDefault:"http://localhost:3001"`
-	CompanyName string `env:"APP_COMPANY_NAME" envDefault:"Autopilot Technologies Pte. Ltd."`
-	Domain      string `env:"APP_DOMAIN" envDefault:"localhost:3001"`
-	Environment string `env:"APP_ENV" envDefault:"development"`
-	Name        string `env:"APP_NAME" envDefault:"Autopilot"`
-	Service     string `env:"APP_SERVICE" envDefault:"api"`
-	Support     struct {
+	AssetsURL    string `env:"APP_ASSETS_URL" envDefault:"http://localhost:2998"`
+	BaseURL      string `env:"APP_BASE_URL" envDefault:"http://localhost:3001"`
+	DashboardURL string `env:"APP_DASHBOARD_URL" envDefault:"http://localhost:3000"`
+	CompanyName  string `env:"APP_COMPANY_NAME" envDefault:"Autopilot Technologies Pte. Ltd."`
+	Domain       string `env:"APP_DOMAIN" envDefault:"localhost:3001"`
+	Environment  string `env:"APP_ENV" envDefault:"development"`
+	Name         string `env:"APP_NAME" envDefault:"Autopilot"`
+	Service      string `env:"APP_SERVICE" envDefault:"api"`
+	Support      struct {
 		Email string `env:"APP_SUPPORT_EMAIL" envDefault:"support@autopilot.com"`
 		Name  string `env:"APP_SUPPORT_NAME" envDefault:"Autopilot Support"`
 		URL   string `env:"APP_SUPPORT_URL" envDefault:"mailto:support@autopilot.com"`

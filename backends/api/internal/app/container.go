@@ -1,6 +1,7 @@
 package app
 
 import (
+	"autopilot/backends/api/seeders"
 	"autopilot/backends/internal/core"
 	"autopilot/backends/internal/types"
 	"context"
@@ -154,6 +155,7 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 		MigrationsFS: opts.FS.Migrations,
 		WriterURL:    config.Database.PrimaryWriter,
 		ReaderURLs:   config.Database.PrimaryReaders,
+		Seeder:       seeders.Primary,
 	})
 	if err != nil {
 		return nil, err

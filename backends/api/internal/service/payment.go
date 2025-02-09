@@ -12,6 +12,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+// Paymenter is an interface that wraps the Payment methods
+type Paymenter interface {
+	GetPayment(ctx context.Context, payment *paymentv1.GetPaymentRequest) (*paymentv1.Payment, error)
+}
+
 type Payment struct {
 	*app.Container
 	v1Client paymentv1.PaymentServiceClient

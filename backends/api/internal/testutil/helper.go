@@ -4,10 +4,12 @@ import (
 	"autopilot/backends/api/internal/app"
 	"autopilot/backends/api/internal/handler"
 	"autopilot/backends/api/internal/middleware"
-	"autopilot/backends/api/internal/worker"
+	"autopilot/backends/api/internal/service"
+	"autopilot/backends/api/internal/store"
 	"autopilot/backends/internal/core"
 	"autopilot/backends/internal/types"
 	"context"
+	"fmt"
 	"html/template"
 	"path/filepath"
 	"strconv"
@@ -38,7 +40,7 @@ func NewMockTurnstile() *MockTurnstile {
 }
 
 // NewMocks creates a new mock container for testing
-func NewMocks(t *testing.T) (humatest.TestAPI, *app.Container) {
+func NewMocks(t *testing.T) (humatest.TestAPI, *app.Container, *service.Manager, *store.Manager) {
 	ctx := context.Background()
 	cleanUp := make([]func() error, 0)
 	mode := types.DebugMode
@@ -66,9 +68,10 @@ func NewMocks(t *testing.T) (humatest.TestAPI, *app.Container) {
 		PreviewData: map[string]map[string]interface{}{
 			"welcome": {
 				"AppName":         config.App.Name,
+				"AssetsURL":       config.App.AssetsURL,
 				"Duration":        (24 * time.Hour).Hours(),
 				"Name":            "John Doe",
-				"VerificationURL": "http://localhost:3000/verify-email?token=01948450-988e-7976-a454-7163b6f1c6c6",
+				"VerificationURL": fmt.Sprintf("%s/verify-email?token=01948450-988e-7976-a454-7163b6f1c6c6", config.App.DashboardURL),
 			},
 		},
 		SmtpUrl: config.Mailer.SmtpUrl,
@@ -123,10 +126,15 @@ func NewMocks(t *testing.T) (humatest.TestAPI, *app.Container) {
 		Turnstile:  &MockTurnstile{},
 	}
 
+	// Initialize the service and store manager
+	storeManager := store.NewManager(container.DB.Primary)
+	serviceManager, err := service.NewManager(container, storeManager)
+	assert.NoError(t, err)
+
 	// Initialize the background worker
 	worker, err := core.NewWorker(ctx, core.WorkerOptions{
 		Config: &river.Config{
-			Workers: worker.Register(container),
+			Workers: service.AddWorkers(container, serviceManager),
 		},
 		DbURL:  primaryDB.Options().WriterURL,
 		Logger: logger,
@@ -136,6 +144,10 @@ func NewMocks(t *testing.T) (humatest.TestAPI, *app.Container) {
 
 	_, api := humatest.New(t)
 	api.UseMiddleware(
+		func(ctx huma.Context, next func(huma.Context)) {
+			ctx = huma.WithContext(ctx, middleware.AttachRequestMetadata(ctx.Context(), ctx.Header("X-Forwarded-For"), ctx.RemoteAddr(), ctx.Header("User-Agent")))
+			next(ctx)
+		},
 		func(ctx huma.Context, next func(huma.Context)) {
 			ctx = huma.WithContext(ctx, middleware.AttachContainer(ctx.Context(), container))
 			next(ctx)
@@ -147,5 +159,5 @@ func NewMocks(t *testing.T) (humatest.TestAPI, *app.Container) {
 	)
 	huma.NewError = handler.NewCustomStatusError
 
-	return api, container
+	return api, container, serviceManager, storeManager
 }

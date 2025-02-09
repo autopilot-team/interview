@@ -4,7 +4,8 @@ import (
 	"autopilot/backends/api/internal/app"
 	"autopilot/backends/api/internal/handler"
 	v1 "autopilot/backends/api/internal/handler/v1"
-	"autopilot/backends/api/internal/worker"
+	"autopilot/backends/api/internal/service"
+	"autopilot/backends/api/internal/store"
 	"autopilot/backends/internal/cmd"
 	"autopilot/backends/internal/core"
 	"autopilot/backends/internal/http/middleware"
@@ -62,6 +63,15 @@ func main() {
 		log.Fatalf("Failed to initialize application: %v", err)
 	}
 
+	// Initialize the store manager
+	storeManager := store.NewManager(container.DB.Primary)
+
+	// Initialize the service manager
+	serviceManager, err := service.NewManager(container, storeManager)
+	if err != nil {
+		log.Fatalf("Failed to initialize service manager: %v", err)
+	}
+
 	// Initialize the HTTP server
 	httpServer, err := initHttpServer(container)
 	if err != nil {
@@ -76,7 +86,7 @@ func main() {
 					MaxWorkers: 100,
 				},
 			},
-			Workers: worker.Register(container),
+			Workers: service.AddWorkers(container, serviceManager),
 		},
 		DbURL:  container.Config.Database.Worker,
 		Logger: container.Logger,
@@ -95,7 +105,7 @@ func main() {
 
 	// Add debug commands if in debug mode
 	if mode == types.DebugMode {
-		addDebugCommands(rootCmd, container, httpServer)
+		addDebugCommands(ctx, rootCmd, container, httpServer)
 	}
 
 	addCommands(ctx, rootCmd, container, httpServer)
@@ -105,7 +115,12 @@ func main() {
 	}
 }
 
-func addDebugCommands(rootCmd *cobra.Command, container *app.Container, httpServer *core.HttpServer) {
+func addDebugCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Container, httpServer *core.HttpServer) {
+	rootCmd.AddCommand(cmd.NewDbSeedCmd(ctx, container.Logger,
+		[]core.DBer{
+			container.DB.Primary,
+		},
+	))
 	rootCmd.AddCommand(cmd.NewGenMigrationCmd(container.Logger, []core.DBer{container.DB.Primary}))
 	rootCmd.AddCommand(cmd.NewGenOpenapiCmd(container.Logger, httpServer))
 }

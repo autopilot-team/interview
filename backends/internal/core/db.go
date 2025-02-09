@@ -3,6 +3,7 @@ package core
 import (
 	"autopilot/backends/internal/types"
 	"context"
+	"database/sql"
 	"fmt"
 	"log/slog"
 	"math/rand"
@@ -28,16 +29,49 @@ const (
 	DbUrlTemplate = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
 )
 
+// Querier is an interface for database queries
+type Querier interface {
+	// Exec executes a query without returning any rows
+	Exec(query string, args ...interface{}) (sql.Result, error)
+
+	// ExecContext executes a query without returning any rows
+	ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error)
+
+	// PrepareContext creates a prepared statement for later queries or executions
+	PrepareContext(ctx context.Context, query string) (*sql.Stmt, error)
+
+	// Query executes a query that returns rows, typically a SELECT
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+
+	// QueryContext executes a query that returns rows, typically a SELECT
+	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
+
+	// QueryRow executes a query that is expected to return at most one row
+	QueryRow(query string, args ...interface{}) *sql.Row
+
+	// QueryRowContext executes a query that is expected to return at most one row
+	QueryRowContext(ctx context.Context, query string, args ...interface{}) *sql.Row
+}
+
 // DBer is a database connection pool
 type DBer interface {
 	// Close closes the database connections
 	Close()
+
+	// GenMigration creates a new migration file
+	GenMigration(name string) error
 
 	// HealthCheck checks the health of the database connections
 	HealthCheck(ctx context.Context) error
 
 	// Identifier is the identifier of the database which is used for displaying and identifying the migrations directory
 	Identifier() string
+
+	// Migrate runs all pending migrations
+	Migrate(ctx context.Context) error
+
+	// Status returns the number of pending migrations
+	MigrateStatus(ctx context.Context) (int64, error)
 
 	// DBName returns the name of the database
 	Name() string
@@ -49,6 +83,9 @@ type DBer interface {
 	// Falls back to writer if no replicas are available
 	Reader() *sqlx.DB
 
+	// Seed runs the seeders
+	Seed(ctx context.Context) error
+
 	// Writer returns the writer (primary) database connection
 	Writer() *sqlx.DB
 
@@ -57,15 +94,6 @@ type DBer interface {
 
 	// WithTxTimeout starts a transaction on the writer (primary) database with a timeout
 	WithTxTimeout(ctx context.Context, timeout time.Duration, fn func(ctx context.Context, tx *sqlx.Tx) error) error
-
-	// GenMigration creates a new migration file
-	GenMigration(name string) error
-
-	// Migrate runs all pending migrations
-	Migrate(ctx context.Context) error
-
-	// Status returns the number of pending migrations
-	MigrateStatus(ctx context.Context) (int64, error)
 }
 
 type DB struct {
@@ -77,6 +105,7 @@ type DB struct {
 	migrator   *dbmate.DB
 	name       string
 	readers    []*sqlx.DB
+	seeder     func(ctx context.Context, db DBer) error
 	writer     *sqlx.DB
 }
 
@@ -106,6 +135,9 @@ type DBOptions struct {
 
 	// ReaderURLs is a list of URLs for read replica database connections
 	ReaderURLs []string
+
+	// Seeder is a function that runs the seeders
+	Seeder func(ctx context.Context, db DBer) error
 }
 
 // NewDB creates a new database connection pool
@@ -195,7 +227,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 	migrator.MigrationsDir = []string{filepath.Join(opts.MigrationsDir, opts.Identifier)}
 	migrator.Log = NewDbMigrateLogger(opts.Logger)
 
-	return &DB{
+	db := &DB{
 		opts:       opts,
 		logger:     opts.Logger,
 		identifier: opts.Identifier,
@@ -204,7 +236,10 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		name:       strings.TrimPrefix(parsedUrl.Path, "/"),
 		writer:     writer,
 		readers:    readers,
-	}, nil
+		seeder:     opts.Seeder,
+	}
+
+	return db, nil
 }
 
 // Close closes the database connections
@@ -218,9 +253,20 @@ func (d *DB) Close() {
 	}
 }
 
-// Options returns the options of the database
-func (d *DB) Options() DBOptions {
-	return d.opts
+// GenMigration creates a new migration file
+func (d *DB) GenMigration(name string) error {
+	newMigrator := dbmate.New(&url.URL{})
+	newMigrator.Log = NewDbMigrateLogger(d.logger)
+	newMigrator.MigrationsDir = []string{
+		filepath.Join(filepath.Dir(d.mainFile), d.migrator.MigrationsDir[0]),
+	}
+
+	err := newMigrator.NewMigration(name)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // HealthCheck checks the health of the database connections
@@ -246,9 +292,39 @@ func (d *DB) Identifier() string {
 	return d.identifier
 }
 
+// Migrate runs all pending migrations
+func (d *DB) Migrate(ctx context.Context) error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	if err := d.migrator.Migrate(); err != nil {
+		return fmt.Errorf("failed to run migrations: %w", err)
+	}
+
+	return nil
+}
+
+// MigrateStatus returns the number of pending migrations
+func (d *DB) MigrateStatus(ctx context.Context) (int64, error) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+
+	pending, err := d.migrator.Status(true)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get migration status: %w", err)
+	}
+
+	return int64(pending), nil
+}
+
 // Name returns the name of the database
 func (d *DB) Name() string {
 	return d.name
+}
+
+// Options returns the options of the database
+func (d *DB) Options() DBOptions {
+	return d.opts
 }
 
 // Reader returns a connection from the read replica pool
@@ -260,6 +336,22 @@ func (d *DB) Reader() *sqlx.DB {
 		return d.writer
 	}
 	return d.readers[rand.Intn(len(d.readers))]
+}
+
+// Seed runs the seeders
+func (d *DB) Seed(ctx context.Context) error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	if d.seeder == nil {
+		return fmt.Errorf("seeder function not initialized")
+	}
+
+	if err := d.seeder(ctx, d); err != nil {
+		return fmt.Errorf("seeder failed: %w", err)
+	}
+
+	return nil
 }
 
 // Writer returns the writer (primary) database connection
@@ -302,46 +394,6 @@ func (d *DB) WithTxTimeout(ctx context.Context, timeout time.Duration, fn func(c
 	defer cancel()
 
 	return d.WithTx(ctx, fn)
-}
-
-// GenMigration creates a new migration file
-func (d *DB) GenMigration(name string) error {
-	newMigrator := dbmate.New(&url.URL{})
-	newMigrator.Log = NewDbMigrateLogger(d.logger)
-	newMigrator.MigrationsDir = []string{
-		filepath.Join(filepath.Dir(d.mainFile), d.migrator.MigrationsDir[0]),
-	}
-
-	err := newMigrator.NewMigration(name)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Migrate runs all pending migrations
-func (d *DB) Migrate(ctx context.Context) error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-
-	if err := d.migrator.Migrate(); err != nil {
-		return fmt.Errorf("failed to run migrations: %w", err)
-	}
-	return nil
-}
-
-// MigrateStatus returns the number of pending migrations
-func (d *DB) MigrateStatus(ctx context.Context) (int64, error) {
-	d.mu.RLock()
-	defer d.mu.RUnlock()
-
-	pending, err := d.migrator.Status(true)
-	if err != nil {
-		return 0, fmt.Errorf("failed to get migration status: %w", err)
-	}
-
-	return int64(pending), nil
 }
 
 // DbLogger implements tracelog.Logger interface

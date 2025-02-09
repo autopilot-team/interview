@@ -1,10 +1,9 @@
-package worker
+package service
 
 import (
 	"autopilot/backends/api/internal/app"
-	"context"
-
 	"autopilot/backends/internal/core"
+	"context"
 
 	"github.com/riverqueue/river"
 )
@@ -23,9 +22,10 @@ func (MailerArgs) Kind() string {
 	return "mailer"
 }
 
-// Mailer is a worker that sends emails
+// Mailer is a background worker that sends emails
 type Mailer struct {
 	*app.Container
+	service *Manager
 	river.WorkerDefaults[MailerArgs]
 }
 

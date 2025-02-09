@@ -102,7 +102,7 @@ func main() {
 
 	// Add debug commands if in debug mode
 	if mode == types.DebugMode {
-		addDebugCommands(rootCmd, container)
+		addDebugCommands(ctx, rootCmd, container)
 	}
 
 	addCommands(ctx, rootCmd, container, grpcServer)
@@ -112,7 +112,13 @@ func main() {
 	}
 }
 
-func addDebugCommands(rootCmd *cobra.Command, container *app.Container) {
+func addDebugCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Container) {
+	rootCmd.AddCommand(cmd.NewDbSeedCmd(ctx, container.Logger,
+		[]core.DBer{
+			container.Live.DB.Primary,
+			container.Test.DB.Primary,
+		},
+	))
 	rootCmd.AddCommand(cmd.NewGenMigrationCmd(container.Logger, []core.DBer{container.Live.DB.Primary}))
 }
 

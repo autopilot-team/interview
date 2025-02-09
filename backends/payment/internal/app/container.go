@@ -3,6 +3,7 @@ package app
 import (
 	"autopilot/backends/internal/core"
 	"autopilot/backends/internal/types"
+	"autopilot/backends/payment/seeders"
 	"context"
 
 	"github.com/redis/go-redis/v9"
@@ -117,6 +118,7 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 		MigrationsFS: opts.FS.Migrations,
 		WriterURL:    config.Database.LivePrimaryWriter,
 		ReaderURLs:   config.Database.LivePrimaryReaders,
+		Seeder:       seeders.Primary,
 	})
 	if err != nil {
 		return nil, err
@@ -133,6 +135,7 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 		MigrationsFS: opts.FS.Migrations,
 		WriterURL:    config.Database.TestPrimaryWriter,
 		ReaderURLs:   config.Database.TestPrimaryReaders,
+		Seeder:       seeders.Primary,
 	})
 	if err != nil {
 		return nil, err
