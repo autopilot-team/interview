@@ -126,6 +126,7 @@ domains:
 	@echo ""
 	@echo "🛠️  Infrastructure"
 	@echo "   • Postgres:         localhost:5432"
+	@echo "   • Postgres UI:      http://localhost:8081"
 	@echo "   • Redis:            localhost:6379"
 	@echo "   • Kafka:            localhost:9092"
 	@echo "   • Kafka UI:         http://localhost:8080"
