@@ -1,5 +1,3 @@
-# Autopilot Interview
-
 <table align="center">
     <tbody>
         <tr align="center">
@@ -66,6 +64,8 @@
         </tr>
     </tbody>
 </table>
+
+# Autopilot Interview
 
 Welcome to Autopilot's interview! This repository is a production-grade
 environment that mirrors our internal development stack, designed to give you a
