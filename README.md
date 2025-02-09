@@ -1,47 +1,5 @@
 # Autopilot Interview
 
-Welcome to Autopilot's interview! This repository is a production-grade
-environment that mirrors our internal development stack, designed to give you a
-real taste of what it's like to work with us.
-
-## Overview
-
-At Autopilot, we believe the best way to evaluate talent is through real-world
-scenarios. This repository provides you with a complete development environment
-that closely resembles our production stack, allowing you to:
-
-- Experience our modern, full-stack development workflow
-- Work with the same tools and technologies we use daily
-- Demonstrate your problem-solving skills in a realistic setting
-
-## Our Interview Process
-
-1. Read the repository, familiarize yourself with the project.
-2. If you are comfortable and productive working with our tech stack, please
-proceed to our [Software Engineer JD](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
-3. We will get back to you within 72 hours to schedule an interview if your
-profile matches our requirements.
-
-## How To Prepare for the Interview
-
-During the interview, you'll work on implementing a mini feature end-to-end with
-our interviewer within 90 minutes, which might include:
-
-- Frontend component development
-- API implementation
-- Database schema changes
-- Testing and documentation
-
-We're interested in seeing:
-
-- Your problem-solving approach
-- Code quality and architecture decisions
-- Testing strategies, i.e. mocks/stubs/spies
-- Communication skills
-- Ability to work with new technologies
-
-## 🚀 Modern Tech Stack
-
 <table align="center">
     <tbody>
         <tr align="center">
@@ -109,6 +67,11 @@ We're interested in seeing:
     </tbody>
 </table>
 
+Welcome to Autopilot's interview! This repository is a production-grade
+environment that mirrors our internal development stack, designed to give you a
+real taste of what it's like to work with us.
+
+
 ## ✨ Features
 
 ### 🛠️ Production-Grade Environment
@@ -128,6 +91,42 @@ We're interested in seeing:
 - **Hot Reload** for both frontend and backend changes
 - **Component Library** with Storybook integration
 - **Clear Documentation** and best practices
+  
+## Our Interview Process
+
+At Autopilot, we believe the best way to evaluate talent is through real-world
+scenarios. This repository provides you with a complete development environment
+that closely resembles our production stack, allowing you to:
+
+- Experience our modern, full-stack development workflow
+- Work with the same tools and technologies we use daily
+- Demonstrate your problem-solving skills in a realistic setting
+
+### How To Prepare
+
+1. Read the repository, familiarize yourself with the project.
+2. If you are comfortable and productive working with our tech stack, please
+proceed to our [Software Engineer JD](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
+3. We will get back to you within 72 hours to schedule an interview if your
+profile matches our requirements.
+
+### What To Expect
+
+During the interview, you'll work on implementing a mini feature end-to-end with
+our interviewer within 90 minutes, which might include:
+
+- Frontend component development
+- API implementation
+- Database schema changes
+- Testing and documentation
+
+### Evaluation
+
+- Your problem-solving approach
+- Code quality and architecture decisions
+- Testing strategies, i.e. mocks/stubs/spies
+- Communication skills
+- Ability to work with new technologies
 
 ## Project Structure
 
@@ -324,16 +323,6 @@ Our deployment pipeline ensures code quality and reliability through:
    - Continuous health monitoring
    - Automated rollback capabilities
    - Full release after successful validation
-
-## Best Practices
-
-We value:
-
-- Clean, maintainable code
-- Comprehensive testing
-- Clear documentation
-- Thoughtful git commits
-- Accessibility considerations
 
 ## Need Help?
 
