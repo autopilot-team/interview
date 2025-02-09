@@ -1,4 +1,4 @@
-package test
+package testutil
 
 import (
 	"autopilot/backends/api/internal/app"
