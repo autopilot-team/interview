@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "cross-env NODE_ENV=production react-router build",
-		"dev": "react-router typegen && react-router dev --port=3000"
+		"dev": "react-router typegen && react-router dev"
 	},
 	"dependencies": {
 		"@autopilot/api": "workspace:*",

@@ -3,6 +3,9 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+const host = "0.0.0.0";
+const port = 3000;
+
 export default defineConfig(async ({ mode }) => {
 	const devPlugins = [];
 
@@ -19,5 +22,9 @@ export default defineConfig(async ({ mode }) => {
 	return {
 		clearScreen: false,
 		plugins: [reactRouter(), tailwindcss(), tsconfigPaths()].concat(devPlugins),
+		server: {
+			host,
+			port,
+		},
 	};
 });
