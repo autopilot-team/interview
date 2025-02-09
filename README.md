@@ -102,17 +102,17 @@ that closely resembles our production stack, allowing you to:
 - Work with the same tools and technologies we use daily
 - Demonstrate your problem-solving skills in a realistic setting
 
-### How To Prepare
+### How To Apply
 
 1. Read the repository, familiarize yourself with the project.
-2. If you are comfortable and productive working with our tech stack, please
+2. If you are comfortable/productive working with our tech stack, please
 proceed to our [Software Engineer JD](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
 3. We will get back to you within 72 hours to schedule an interview if your
 profile matches our requirements.
 
 ### What To Expect
 
-During the interview, you'll work on implementing a mini feature end-to-end with
+During the interview, you'll be using this interview to implement a mini feature end-to-end with
 our interviewer within 90 minutes, which might include:
 
 - Frontend component development
