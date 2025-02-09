@@ -16,7 +16,7 @@ BUILD_DIR := ./tmp
 
 # Build flags
 GO_BUILD_FLAGS := -v  # Verbose Go build output
-GO_TEST_FLAGS := -race -v  # Go test flags with race detection
+GO_TEST_FLAGS := -count=1 -race -v  # Go test flags with race detection
 
 # CI-specific configurations
 ifeq ($(CI),true)
@@ -27,7 +27,7 @@ else
 	BIOME_FLAGS := --diagnostic-level=warn --write --unsafe
 endif
 
-.PHONY: all check check-be check-fe clean db-migrate dev dev-be dev-fe domains down gen gen-be gen-fe help preview reset setup test test-be up
+.PHONY: all check check-be check-fe clean db-migrate db-seed db-templates dev dev-be dev-fe domains down gen gen-be gen-fe help preview reset setup test test-be up
 
 # Default target - sets up environment and starts development
 all: setup dev
@@ -66,6 +66,18 @@ db-migrate:
 		go run ./$(BACKENDS_DIR)/$$service db:migrate; \
 	done
 	@echo "✅ All migrations completed"
+
+# Run database seeders for all services
+db-seed:
+	@echo "🔄 Running Database Seeders"
+	@for service in $(SERVICES); do \
+		echo ""; \
+		echo "──────────────────────────────────────────────────────────────────────────────"; \
+		echo "📦 Seeding '$$service' database..."; \
+		echo "──────────────────────────────────────────────────────────────────────────────"; \
+		go run ./$(BACKENDS_DIR)/$$service db:seed; \
+	done
+	@echo "✅ All seeders completed"
 
 # Create template databases for all services
 db-templates:
@@ -134,8 +146,7 @@ gen:
 # Generate backend code and contracts
 gen-be:
 	@buf generate --clean
-	@go run ./$(BACKENDS_DIR)/api gen:openapi
-	@pnpm --silent --filter=./packages/api gen
+	@mockery --config .mockery.yaml
 
 # Generate frontend code and types
 gen-fe:
@@ -173,6 +184,8 @@ help:
 	@echo ""
 	@echo "Database Commands:"
 	@echo "   • make db-migrate       - Run database migrations for all services"
+	@echo "   • make db-seed          - Run database seeders for all services"
+	@echo "   • make db-templates     - Create template databases for all services"
 	@echo ""
 	@echo "Other Commands:"
 	@echo "   • make setup            - Install dependencies and setup pre-commit hooks"
@@ -205,8 +218,11 @@ test-be:
 # Start infrastructure containers and run migrations
 up:
 	@docker compose --profile=infra up --wait
+	@docker compose --profile=infra stop db-ui
 	@make db-migrate
 	@make db-templates
+	@make db-seed
+	@docker compose --profile=infra start db-ui
 
 # Run individual services directly
 $(SERVICES):
