@@ -1,0 +1,18 @@
+all: true
+dir: "{{.InterfaceDir}}/mocks"
+filename: "{{.InterfaceName}}.go"
+inpackage: false
+issue-845-fix: true
+mockname: "Mock{{.InterfaceName}}"
+outpkg: "mocks"
+resolve-type-alias: false
+with-expecter: true
+
+packages:
+  autopilot/backends/api/internal/service:
+    config:
+      recursive: true
+
+  autopilot/backends/api/internal/store:
+    config:
+      recursive: true
