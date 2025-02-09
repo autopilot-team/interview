@@ -11,121 +11,73 @@ CREATE TABLE "users" (
     "locked_at" TIMESTAMPTZ,
     "password_changed_at" TIMESTAMPTZ,
     "password_hash" TEXT,
-    "two_factor_enabled" BOOLEAN DEFAULT FALSE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 COMMENT ON TABLE "users" IS 'Manage user information.';
 
-CREATE TABLE "platforms" (
+CREATE TABLE "entities" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
     "domain" TEXT,
     "logo" TEXT,
     "name" TEXT NOT NULL,
+    "parent_id" TEXT REFERENCES "entities" ("id") ON DELETE CASCADE,
     "slug" TEXT UNIQUE,
     "status" TEXT NOT NULL DEFAULT 'pending',
+    "type" TEXT NOT NULL DEFAULT 'account',
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT "valid_platform_status" CHECK (status IN ('pending', 'active', 'inactive', 'suspended'))
+    CONSTRAINT "valid_entity_status" CHECK (status IN ('pending', 'active', 'inactive', 'suspended')),
+    CONSTRAINT "valid_entity_type" CHECK (type IN ('account', 'organization', 'platform'))
 );
+CREATE INDEX idx_entities_parent_id ON entities(parent_id);
 
-COMMENT ON TABLE "platforms" IS 'Manage platforms.';
-
-CREATE TABLE "organizations" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
-    "domain" TEXT,
-    "logo" TEXT,
-    "name" TEXT NOT NULL,
-    "platform_id" TEXT REFERENCES "platforms" ("id") ON DELETE CASCADE,
-    "slug" TEXT UNIQUE,
-    "status" TEXT NOT NULL DEFAULT 'pending',
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT "valid_organization_status" CHECK (status IN ('pending', 'active', 'inactive', 'suspended'))
-);
-CREATE INDEX idx_organizations_platform_id ON organizations(platform_id);
-
-COMMENT ON TABLE "organizations" IS 'Manage organizations.';
-
-CREATE TABLE "accounts" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
-    "domain" TEXT,
-    "logo" TEXT,
-    "name" TEXT NOT NULL,
-    "organization_id" TEXT REFERENCES "organizations" ("id") ON DELETE CASCADE,
-    "status" TEXT NOT NULL DEFAULT 'pending',
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT "valid_account_status" CHECK (status IN ('pending', 'active', 'inactive', 'suspended'))
-);
-CREATE INDEX idx_accounts_organization_id ON accounts(organization_id);
-
-COMMENT ON TABLE "accounts" IS 'Manage business accounts.';
+COMMENT ON TABLE "entities" IS 'Manage entities.';
 
 CREATE TABLE "members" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
-    "account_id" TEXT REFERENCES "accounts" ("id") ON DELETE CASCADE,
-    "organization_id" TEXT REFERENCES "organizations" ("id") ON DELETE CASCADE,
-    "platform_id" TEXT REFERENCES "platforms" ("id") ON DELETE CASCADE,
+    "entity_id" TEXT REFERENCES "entities" ("id") ON DELETE CASCADE,
     "role" TEXT NOT NULL,
     "user_id" TEXT NOT NULL REFERENCES "users" ("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT member_entity_check CHECK (
-        (CASE WHEN account_id IS NOT NULL THEN 1 ELSE 0 END +
-         CASE WHEN organization_id IS NOT NULL THEN 1 ELSE 0 END +
-         CASE WHEN platform_id IS NOT NULL THEN 1 ELSE 0 END) = 1
-    )
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-CREATE INDEX idx_members_user_id ON members(user_id);
-CREATE INDEX idx_members_platform_id ON members(platform_id);
-CREATE INDEX idx_members_organization_id ON members(organization_id);
-CREATE INDEX idx_members_account_id ON members(account_id);
+CREATE INDEX idx_members_entity_id_user_id ON members(entity_id, user_id);
 
-COMMENT ON TABLE "members" IS 'Manage account/organization/platform members.';
+COMMENT ON TABLE "members" IS 'Manage entity members.';
 
 CREATE TABLE "invitations" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
     "email" TEXT NOT NULL,
+    "entity_id" TEXT REFERENCES "entities" ("id") ON DELETE CASCADE,
     "expires_at" TIMESTAMPTZ NOT NULL,
-    "account_id" TEXT REFERENCES "accounts" ("id") ON DELETE CASCADE,
-    "organization_id" TEXT REFERENCES "organizations" ("id") ON DELETE CASCADE,
-    "platform_id" TEXT REFERENCES "platforms" ("id") ON DELETE CASCADE,
     "inviter_id" TEXT NOT NULL REFERENCES "users" ("id") ON DELETE CASCADE,
     "role" TEXT,
     "status" TEXT NOT NULL DEFAULT 'pending',
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT "valid_invitation_status" CHECK (status IN ('pending', 'accepted', 'rejected', 'expired')),
-    CONSTRAINT "invitation_entity_check" CHECK (
-        (CASE WHEN account_id IS NOT NULL THEN 1 ELSE 0 END +
-         CASE WHEN organization_id IS NOT NULL THEN 1 ELSE 0 END +
-         CASE WHEN platform_id IS NOT NULL THEN 1 ELSE 0 END) = 1
-    )
+    CONSTRAINT "valid_invitation_status" CHECK (status IN ('pending', 'accepted', 'rejected', 'expired'))
 );
 CREATE INDEX idx_invitations_email ON invitations(email);
+CREATE INDEX idx_invitations_entity_id ON invitations(entity_id);
 CREATE INDEX idx_invitations_status ON invitations(status);
 
-COMMENT ON TABLE "invitations" IS 'Manage account/organization/platform invitations.';
+COMMENT ON TABLE "invitations" IS 'Manage entity invitations.';
 
 CREATE TABLE "sessions" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
-    "active_account_id" TEXT REFERENCES accounts(id),
-    "active_organization_id" TEXT REFERENCES organizations(id),
-    "active_platform_id" TEXT REFERENCES platforms(id),
+    "active_entity_id" TEXT REFERENCES entities(id),
     "expires_at" TIMESTAMPTZ NOT NULL,
     "ip_address" TEXT,
     "token" TEXT NOT NULL UNIQUE,
+    "refresh_token" TEXT NOT NULL UNIQUE,
+    "refresh_expires_at" TIMESTAMPTZ NOT NULL,
     "user_agent" TEXT,
     "user_id" TEXT NOT NULL REFERENCES "users" ("id") ON DELETE CASCADE,
+    "is_two_factor_pending" BOOLEAN NOT NULL DEFAULT FALSE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT active_entity_check CHECK (
-        (CASE WHEN active_account_id IS NOT NULL THEN 1 ELSE 0 END +
-         CASE WHEN active_organization_id IS NOT NULL THEN 1 ELSE 0 END +
-         CASE WHEN active_platform_id IS NOT NULL THEN 1 ELSE 0 END) <= 1
-    )
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX idx_sessions_user_id ON sessions(user_id);
 CREATE INDEX idx_sessions_expires_at ON sessions(expires_at);
@@ -134,6 +86,7 @@ COMMENT ON TABLE "sessions" IS 'Manage user authentication sessions.';
 
 CREATE TABLE "verifications" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
+    "context" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "expires_at" TIMESTAMPTZ NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -160,9 +113,13 @@ COMMENT ON TABLE "passkeys" IS 'Manage user passkeys.';
 
 CREATE TABLE "two_factors" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT uuid7(),
-    "backup_codes" TEXT NOT NULL,
+    "backup_codes" JSONB NOT NULL,
     "secret" TEXT NOT NULL,
     "user_id" TEXT NOT NULL REFERENCES "users" ("id") ON DELETE CASCADE,
+    "failed_attempts" INTEGER NOT NULL DEFAULT 0,
+    "last_failed_attempt_at" TIMESTAMPTZ,
+    "locked_until" TIMESTAMPTZ,
+    "enabled_at" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -214,6 +171,4 @@ DROP TABLE "members";
 DROP TABLE "invitations";
 DROP TABLE "compliance_records";
 DROP TABLE "users";
-DROP TABLE "organizations";
-DROP TABLE "platforms";
-DROP TABLE "accounts";
+DROP TABLE "entities";
