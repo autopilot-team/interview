@@ -28,10 +28,10 @@ runs:
         restore-keys: |
           ${{ runner.os }}-pkgx-
 
-    - name: Override NodeJS
+    - name: Setup pkgx tools
       working-directory: ${{ inputs.path }}
       shell: bash
-      run: eval "$(pkgx +node)"
+      run: pkgx dev integrate
 
     - name: Cache Go modules
       uses: actions/cache@v4
