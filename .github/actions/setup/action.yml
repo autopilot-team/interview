@@ -13,7 +13,7 @@ runs:
 
   steps:
     - name: Install pkgx
-      uses: pkgxdev/setup@v2
+      uses: pkgxdev/setup@v3
 
     - name: Generate pkgx Cache Key
       id: pkgx-cache-key
