@@ -55,7 +55,7 @@ importers:
         version: 7.1.5(react-router@7.1.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.3)
       '@scalar/api-reference-react':
         specifier: ^0.4.25
-        version: 0.4.25(@hyperjump/browser@1.2.0)(change-case@5.4.4)(react@19.0.0)(tailwindcss@4.0.5)(typescript@5.7.3)
+        version: 0.4.25(@hyperjump/browser@1.2.0)(change-case@5.4.4)(react@19.0.0)(tailwindcss@4.0.6)(typescript@5.7.3)
       i18next:
         specifier: ^24.2.2
         version: 24.2.2(typescript@5.7.3)
@@ -100,8 +100,8 @@ importers:
         specifier: ^0.8.4
         version: 0.8.4(react-router@7.1.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       tailwindcss:
-        specifier: ^4.0.5
-        version: 4.0.5
+        specifier: ^4.0.6
+        version: 4.0.6
       vite:
         specifier: ^6.1.0
         version: 6.1.0(@types/node@22.13.1)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.7.0)
@@ -278,7 +278,7 @@ importers:
         version: 3.0.1
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.5)
+        version: 1.0.7(tailwindcss@4.0.6)
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -320,8 +320,8 @@ importers:
         specifier: ^8.5.3
         version: 8.5.3(prettier@2.8.8)
       tailwindcss:
-        specifier: ^4.0.5
-        version: 4.0.5
+        specifier: ^4.0.6
+        version: 4.0.6
       vite:
         specifier: ^6.1.0
         version: 6.1.0(@types/node@22.13.1)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.7.0)
@@ -4315,6 +4315,9 @@ packages:
   tailwindcss@4.0.5:
     resolution: {integrity: sha512-DZZIKX3tA23LGTjHdnwlJOTxfICD1cPeykLLsYF1RQBI9QsCR3i0szohJfJDVjr6aNRAIio5WVO7FGB77fRHwg==}
 
+  tailwindcss@4.0.6:
+    resolution: {integrity: sha512-mysewHYJKaXgNOW6pp5xon/emCsfAMnO8WMaGKZZ35fomnR/T5gYnRg2/yRTTrtXiEl1tiVkeRt0eMO6HxEZqw==}
+
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
@@ -5182,9 +5185,9 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@headlessui/tailwindcss@0.2.2(tailwindcss@4.0.5)':
+  '@headlessui/tailwindcss@0.2.2(tailwindcss@4.0.6)':
     dependencies:
-      tailwindcss: 4.0.5
+      tailwindcss: 4.0.6
 
   '@headlessui/vue@1.7.23(vue@3.5.13(typescript@5.7.3))':
     dependencies:
@@ -6200,9 +6203,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.34.6':
     optional: true
 
-  '@scalar/api-client@2.2.45(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.5)(typescript@5.7.3)':
+  '@scalar/api-client@2.2.45(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.6)(typescript@5.7.3)':
     dependencies:
-      '@headlessui/tailwindcss': 0.2.2(tailwindcss@4.0.5)
+      '@headlessui/tailwindcss': 0.2.2(tailwindcss@4.0.6)
       '@headlessui/vue': 1.7.23(vue@3.5.13(typescript@5.7.3))
       '@scalar/components': 0.13.21(typescript@5.7.3)
       '@scalar/draggable': 0.1.8(typescript@5.7.3)
@@ -6250,9 +6253,9 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference-react@0.4.25(@hyperjump/browser@1.2.0)(change-case@5.4.4)(react@19.0.0)(tailwindcss@4.0.5)(typescript@5.7.3)':
+  '@scalar/api-reference-react@0.4.25(@hyperjump/browser@1.2.0)(change-case@5.4.4)(react@19.0.0)(tailwindcss@4.0.6)(typescript@5.7.3)':
     dependencies:
-      '@scalar/api-reference': 1.25.116(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.5)(typescript@5.7.3)
+      '@scalar/api-reference': 1.25.116(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.6)(typescript@5.7.3)
       react: 19.0.0
     transitivePeerDependencies:
       - '@hyperjump/browser'
@@ -6271,11 +6274,11 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference@1.25.116(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.5)(typescript@5.7.3)':
+  '@scalar/api-reference@1.25.116(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.6)(typescript@5.7.3)':
     dependencies:
       '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.7.3))
       '@headlessui/vue': 1.7.23(vue@3.5.13(typescript@5.7.3))
-      '@scalar/api-client': 2.2.45(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.5)(typescript@5.7.3)
+      '@scalar/api-client': 2.2.45(@hyperjump/browser@1.2.0)(change-case@5.4.4)(tailwindcss@4.0.6)(typescript@5.7.3)
       '@scalar/code-highlight': 0.0.20
       '@scalar/components': 0.13.21(typescript@5.7.3)
       '@scalar/oas-utils': 0.2.103(@hyperjump/browser@1.2.0)
@@ -9383,11 +9386,13 @@ snapshots:
 
   tailwind-merge@3.0.1: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.0.5):
+  tailwindcss-animate@1.0.7(tailwindcss@4.0.6):
     dependencies:
-      tailwindcss: 4.0.5
+      tailwindcss: 4.0.6
 
   tailwindcss@4.0.5: {}
+
+  tailwindcss@4.0.6: {}
 
   tapable@2.2.1: {}
 
