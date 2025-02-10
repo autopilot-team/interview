@@ -1,4 +1,82 @@
 {
+	"breadcrumbs": {
+		"overview": {
+			"title": "總覽",
+			"activity": "活動總覽",
+			"balances": "帳戶餘額",
+			"performance": "績效指標",
+			"settings": "帳戶設定"
+		},
+		"moneyIn": {
+			"title": "收款",
+			"transactions": "交易歷史",
+			"paymentMethods": "付款方式",
+			"checkout": "結帳設定",
+			"subscriptions": "訂閱管理",
+			"products": "商品目錄"
+		},
+		"moneyFlow": {
+			"title": "資金流",
+			"accounts": "帳戶管理",
+			"transfers": "轉帳歷史",
+			"treasury": "資金管理",
+			"fx": "外匯交易"
+		},
+		"moneyOut": {
+			"title": "付款",
+			"payouts": "付款管理",
+			"expenses": "支出追蹤",
+			"vendors": "供應商管理",
+			"tax": "稅務設定"
+		},
+		"operations": {
+			"title": "營運",
+			"processors": "支付處理器",
+			"ledger": "分類帳總覽",
+			"reconciliation": "對帳作業",
+			"reports": "報表與分析"
+		},
+		"risk": {
+			"title": "風險與安全",
+			"monitoring": "風險監控",
+			"prevention": "詐欺防範",
+			"disputes": "爭議管理",
+			"compliance": "合規設定",
+			"vault": "資料保險箱"
+		},
+		"intelligence": {
+			"title": "智能",
+			"analytics": "分析儀表板",
+			"insights": "業務洞察",
+			"reports": "自訂報表",
+			"models": "AI 模型"
+		},
+		"developer": {
+			"title": "開發者工具",
+			"apiKeys": "API 金鑰管理",
+			"webhooks": "Webhook 設定",
+			"documentation": "API 文件",
+			"status": "系統狀態"
+		},
+		"settings": {
+			"title": "設定",
+			"profile": {
+				"title": "個人資料設定",
+				"security": "安全設定",
+				"index": "個人資訊"
+			}
+		}
+	},
+	"entitySwitcher": {
+		"searchPlaceholder": "搜尋實體...",
+		"noEntities": "未找到實體。",
+		"noMatchingEntities": "未找到相符的實體。",
+		"selectEntity": "選擇實體",
+		"platforms": "平台",
+		"organizations": "組織",
+		"accounts": "帳戶",
+		"addEntity": "新增實體"
+	},
 	"nav": {
 		"overview": {
 			"title": "概覽",
@@ -59,22 +137,10 @@
 			"status": "狀態"
 		}
 	},
-	"entitySwitcher": {
-		"searchPlaceholder": "搜尋實體...",
-		"noEntities": "未找到實體。",
-		"noMatchingEntities": "未找到相符的實體。",
-		"selectEntity": "選擇實體",
-		"platforms": "平台",
-		"organizations": "組織",
-		"accounts": "帳戶",
-		"addEntity": "新增實體"
-	},
 	"navUser": {
-		"upgradeToPro": "升級至專業版",
-		"account": "帳戶",
 		"billing": "帳單",
-		"notifications": "通知",
-		"logOut": "登出"
+		"settings": "設定",
+		"signOut": "登出"
 	},
 	"loading": {
 		"initializing": "正在初始化..."
@@ -86,14 +152,50 @@
 		},
 		"notFound": {
 			"title": "未找到",
-			"description": "此頁面不存在或您沒有存取權限。"
+			"description": "此頁面不存在或您沒有訪問權限。"
 		},
 		"support": {
-			"text": "如果此錯誤持續存在，請聯絡支援。"
+			"text": "如果此錯誤持續存在，請聯繫支援。"
 		},
 		"unexpected": {
 			"title": "發生錯誤",
 			"description": "處理您的請求時出現問題。"
+		}
+	},
+	"settings": {
+		"title": "設定",
+		"description": "管理您的帳戶設定和偏好。",
+		"tabs": {
+			"profile": "個人資料",
+			"security": "安全",
+			"sessions": "會話"
+		},
+		"profile": {
+			"title": "個人資訊",
+			"description": "更新您的個人資訊。",
+			"email": "電子郵件",
+			"name": "姓名",
+			"updateProfile": "更新資料",
+			"errors": {
+				"nameRequired": "姓名為必填項",
+				"nameMinLength": "姓名至少需要2個字元"
+			},
+			"success": "個人資料更新成功",
+			"error": "更新個人資料失敗"
+		},
+		"sessions": {
+			"title": "活動會話",
+			"description": "管理您在各個裝置上的活動會話。",
+			"currentSession": "（目前）",
+			"revoke": "撤銷",
+			"revokeAll": "撤銷所有其他會話",
+			"browser": "瀏覽器",
+			"os": "作業系統",
+			"firstSeen": "首次使用",
+			"success": "會話撤銷成功",
+			"error": "撤銷會話失敗",
+			"revokeAllSuccess": "所有其他會話已撤銷",
+			"revokeAllError": "撤銷其他會話失敗"
 		}
 	}
 }

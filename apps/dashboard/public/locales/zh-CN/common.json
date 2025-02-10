@@ -1,4 +1,82 @@
 {
+	"breadcrumbs": {
+		"overview": {
+			"title": "概览",
+			"activity": "活动概览",
+			"balances": "账户余额",
+			"performance": "绩效指标",
+			"settings": "账户设置"
+		},
+		"moneyIn": {
+			"title": "收入",
+			"transactions": "交易历史",
+			"paymentMethods": "支付方式",
+			"checkout": "收银台设置",
+			"subscriptions": "订阅管理",
+			"products": "产品目录"
+		},
+		"moneyFlow": {
+			"title": "资金流",
+			"accounts": "账户管理",
+			"transfers": "转账历史",
+			"treasury": "资金管理",
+			"fx": "外汇交易"
+		},
+		"moneyOut": {
+			"title": "支出",
+			"payouts": "付款管理",
+			"expenses": "费用追踪",
+			"vendors": "供应商管理",
+			"tax": "税务设置"
+		},
+		"operations": {
+			"title": "运营",
+			"processors": "支付处理器",
+			"ledger": "账本概览",
+			"reconciliation": "对账操作",
+			"reports": "报表与分析"
+		},
+		"risk": {
+			"title": "风险与安全",
+			"monitoring": "风险监控",
+			"prevention": "欺诈防范",
+			"disputes": "争议管理",
+			"compliance": "合规设置",
+			"vault": "数据保险库"
+		},
+		"intelligence": {
+			"title": "智能",
+			"analytics": "分析仪表盘",
+			"insights": "业务洞察",
+			"reports": "自定义报表",
+			"models": "AI 模型"
+		},
+		"developer": {
+			"title": "开发者工具",
+			"apiKeys": "API 密钥管理",
+			"webhooks": "Webhook 配置",
+			"documentation": "API 文档",
+			"status": "系统状态"
+		},
+		"settings": {
+			"title": "设置",
+			"profile": {
+				"title": "个人资料设置",
+				"security": "安全设置",
+				"index": "个人信息"
+			}
+		}
+	},
+	"entitySwitcher": {
+		"searchPlaceholder": "搜索实体...",
+		"noEntities": "未找到实体。",
+		"noMatchingEntities": "未找到匹配的实体。",
+		"selectEntity": "选择实体",
+		"platforms": "平台",
+		"organizations": "组织",
+		"accounts": "账户",
+		"addEntity": "添加实体"
+	},
 	"nav": {
 		"overview": {
 			"title": "概览",
@@ -59,22 +137,10 @@
 			"status": "状态"
 		}
 	},
-	"entitySwitcher": {
-		"searchPlaceholder": "搜索实体...",
-		"noEntities": "未找到实体。",
-		"noMatchingEntities": "未找到匹配的实体。",
-		"selectEntity": "选择实体",
-		"platforms": "平台",
-		"organizations": "组织",
-		"accounts": "账户",
-		"addEntity": "添加实体"
-	},
 	"navUser": {
-		"upgradeToPro": "升级至专业版",
-		"account": "账户",
 		"billing": "账单",
-		"notifications": "通知",
-		"logOut": "退出登录"
+		"settings": "设置",
+		"signOut": "退出登录"
 	},
 	"loading": {
 		"initializing": "正在初始化..."
@@ -94,6 +160,42 @@
 		"unexpected": {
 			"title": "发生错误",
 			"description": "处理您的请求时出现问题。"
+		}
+	},
+	"settings": {
+		"title": "设置",
+		"description": "管理您的账户设置和偏好。",
+		"tabs": {
+			"profile": "个人资料",
+			"security": "安全",
+			"sessions": "会话"
+		},
+		"profile": {
+			"title": "个人信息",
+			"description": "更新您的个人信息。",
+			"email": "邮箱",
+			"name": "姓名",
+			"updateProfile": "更新资料",
+			"errors": {
+				"nameRequired": "姓名为必填项",
+				"nameMinLength": "姓名至少需要2个字符"
+			},
+			"success": "个人资料更新成功",
+			"error": "更新个人资料失败"
+		},
+		"sessions": {
+			"title": "活动会话",
+			"description": "管理您在各个设备上的活动会话。",
+			"currentSession": "（当前）",
+			"revoke": "撤销",
+			"revokeAll": "撤销所有其他会话",
+			"browser": "浏览器",
+			"os": "操作系统",
+			"firstSeen": "首次使用",
+			"success": "会话撤销成功",
+			"error": "撤销会话失败",
+			"revokeAllSuccess": "所有其他会话已撤销",
+			"revokeAllError": "撤销其他会话失败"
 		}
 	}
 }

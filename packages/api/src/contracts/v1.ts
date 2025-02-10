@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/v1/identity/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user session */
+        get: operations["get-session"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/identity/sign-in": {
         parameters: {
             query?: never;
@@ -13,9 +30,26 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Sign in to your account */
+        /** Authenticate and create a new session */
         post: operations["sign-in"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/identity/sign-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Terminate current session */
+        delete: operations["sign-out"];
         options?: never;
         head?: never;
         patch?: never;
@@ -35,6 +69,58 @@ export interface components {
             location: string;
             message: string;
             metadata?: components["schemas"]["ValidationMetadata"];
+        };
+        MeResponseBody: {
+            /** @description Whether two-factor authentication is pending */
+            isTwoFactorPending: boolean;
+            /** @description The user object */
+            user: components["schemas"]["SessionUser"];
+        };
+        SessionUser: {
+            /** @description The user's email address */
+            email: string;
+            /** @description The user's ID */
+            id: string;
+            /** @description The user's profile image URL */
+            image?: string;
+            /** @description Whether two-factor authentication is enabled */
+            isTwoFactorEnabled: boolean;
+            /** @description Whether the user's email is verified */
+            isVerified: boolean;
+            /**
+             * Format: date-time
+             * @description The user's last activity time
+             */
+            lastActiveAt?: string;
+            /**
+             * Format: date-time
+             * @description The user's last login time
+             */
+            lastLoggedInAt?: string;
+            /** @description The user's name */
+            name: string;
+            /**
+             * Format: date-time
+             * @description When the current session will expire
+             */
+            sessionExpiresAt: string;
+        };
+        SignInRequestBody: {
+            /** @description The Cloudflare Turnstile token */
+            cfTurnstileToken: string;
+            /**
+             * Format: email
+             * @description The user's email address
+             */
+            email: string;
+            /** @description The user's password */
+            password: string;
+        };
+        SignInResponseBody: {
+            /** @description Whether two-factor authentication is pending */
+            isTwoFactorPending: boolean;
+            /** @description The user object */
+            user: components["schemas"]["SessionUser"];
         };
         ValidationMetadata: {
             allowed_values?: string[] | null;
@@ -57,6 +143,38 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    "get-session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                /** @description The session cookie */
+                session?: string;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     "sign-in": {
         parameters: {
             query?: never;
@@ -64,15 +182,77 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignInRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    Domain?: string;
+                    Expires?: string;
+                    HttpOnly?: boolean;
+                    MaxAge?: number;
+                    Name?: string;
+                    Partitioned?: boolean;
+                    Path?: string;
+                    Quoted?: boolean;
+                    Raw?: string;
+                    RawExpires?: string;
+                    SameSite?: number;
+                    Secure?: boolean;
+                    "Set-Cookie"?: string;
+                    Unparsed?: string;
+                    Value?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignInResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "sign-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                /** @description The session cookie */
+                session?: string;
+            };
+        };
         requestBody?: never;
         responses: {
             /** @description No Content */
             204: {
                 headers: {
-                    AccessToken?: string;
-                    Email?: string;
-                    ID?: string;
-                    RefreshToken?: string;
+                    Domain?: string;
+                    Expires?: string;
+                    HttpOnly?: boolean;
+                    MaxAge?: number;
+                    Name?: string;
+                    Partitioned?: boolean;
+                    Path?: string;
+                    Quoted?: boolean;
+                    Raw?: string;
+                    RawExpires?: string;
+                    SameSite?: number;
+                    Secure?: boolean;
+                    "Set-Cookie"?: string;
+                    Unparsed?: string;
+                    Value?: string;
                     [name: string]: unknown;
                 };
                 content?: never;

@@ -7,11 +7,13 @@ import {
 	isRouteErrorResponse,
 } from "react-router";
 import "@autopilot/ui/globals.css";
+import { IdentityProvider, useIdentity } from "@/components/identity-provider";
 import { QueryClientProvider } from "@autopilot/api";
 import {
 	MessageCard,
 	type MessageCardVariant,
 } from "@autopilot/ui/components/message-card";
+import { Toaster as SonnerToaster } from "@autopilot/ui/components/sonner";
 import { Toaster } from "@autopilot/ui/components/toaster";
 import { useTranslation } from "react-i18next";
 import type { Route } from "./+types/root";
@@ -54,8 +56,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 			<body>
 				<QueryClientProvider>
-					{children}
-					<Toaster />
+					<IdentityProvider>
+						{children}
+						<SonnerToaster />
+						<Toaster />
+					</IdentityProvider>
 				</QueryClientProvider>
 				<ScrollRestoration />
 				<Scripts />
@@ -65,6 +70,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+	const { isInitializing, user } = useIdentity();
+	const { t, ready } = useTranslation(["common"]);
+
+	if (isInitializing || typeof user === "undefined") {
+		return (
+			<LoadingScreen
+				message={ready ? t("common:loading.initializing") : "Initializing..."}
+			/>
+		);
+	}
+
 	return <Outlet />;
 }
 

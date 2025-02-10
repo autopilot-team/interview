@@ -2,10 +2,10 @@ import { Button } from "@autopilot/ui/components/button";
 import {
 	Card,
 	CardContent,
+	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@autopilot/ui/components/card";
-import { Input } from "@autopilot/ui/components/input";
 import { Label } from "@autopilot/ui/components/label";
 import { Password } from "@autopilot/ui/components/password";
 import { cn } from "@autopilot/ui/lib/utils";
@@ -16,31 +16,21 @@ import { type UseFormReset, useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { z } from "zod";
 
-export type SignUpFormData = {
+type ResetPasswordFormData = {
 	cfTurnstileToken: string;
-	confirmPassword: string;
-	email: string;
-	name: string;
 	password: string;
+	confirmPassword: string;
 };
 
-export interface SignUpFormT {
+export interface ResetPasswordFormT {
 	title: string;
-	name: string;
-	namePlaceholder: string;
-	email: string;
-	emailPlaceholder: string;
+	description: string;
 	password: string;
 	passwordPlaceholder: string;
 	confirmPassword: string;
 	confirmPasswordPlaceholder: string;
-	signUp: string;
-	haveAccount: string;
-	signIn: string;
-	termsText: string;
-	termsButton: string;
-	termsOfService: string;
-	privacyPolicy: string;
+	resetPassword: string;
+	backToSignIn: string;
 	passwordStrength: {
 		secure: string;
 		moderate: string;
@@ -53,10 +43,6 @@ export interface SignUpFormT {
 		};
 	};
 	errors: {
-		nameRequired: string;
-		nameMinLength: string;
-		emailRequired: string;
-		emailInvalid: string;
 		passwordRequired: string;
 		passwordMinLength: string;
 		passwordUppercase: string;
@@ -68,42 +54,31 @@ export interface SignUpFormT {
 	};
 }
 
-export interface SignUpFormProps extends React.ComponentPropsWithoutRef<"div"> {
+export interface ResetPasswordFormProps
+	extends React.ComponentPropsWithoutRef<"div"> {
 	cfTurnstileSiteKey: string;
 	generalError?: string;
-	handleSignUp?: <T extends SignUpFormData>(
+	handleResetPassword?: <T extends ResetPasswordFormData>(
 		data: T,
 		reset: UseFormReset<T>,
 	) => Promise<void>;
 	isLoading?: boolean;
 	successMessage?: string;
-	t: SignUpFormT;
+	t: ResetPasswordFormT;
 }
 
-export function SignUpForm({
+export function ResetPasswordForm({
 	cfTurnstileSiteKey,
 	className,
 	generalError,
-	handleSignUp,
+	handleResetPassword,
 	isLoading = false,
 	successMessage,
 	t,
 	...props
-}: SignUpFormProps) {
-	const turnstileRef = useRef<TurnstileInstance>(null);
-	const [password, setPassword] = useState("");
-	const [currentError, setCurrentError] = useState(generalError);
-	const [currentSuccess, setCurrentSuccess] = useState(successMessage);
-	const signUpSchema = z
+}: ResetPasswordFormProps) {
+	const resetPasswordSchema = z
 		.object({
-			name: z
-				.string()
-				.min(1, t.errors.nameRequired)
-				.min(2, t.errors.nameMinLength),
-			email: z
-				.string()
-				.min(1, t.errors.emailRequired)
-				.email(t.errors.emailInvalid),
 			password: z
 				.string()
 				.min(1, t.errors.passwordRequired)
@@ -123,14 +98,18 @@ export function SignUpForm({
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<SignUpFormData>({
-		resolver: zodResolver(signUpSchema),
+	} = useForm<ResetPasswordFormData>({
+		resolver: zodResolver(resetPasswordSchema),
 	});
 	const onSubmit = handleSubmit(async (data) => {
 		data.cfTurnstileToken = turnstileRef.current?.getResponse() || "";
 		setPassword("");
-		await handleSignUp?.(data, reset);
+		await handleResetPassword?.(data, reset);
 	});
+	const [currentError, setCurrentError] = useState(generalError);
+	const [currentSuccess, setCurrentSuccess] = useState(successMessage);
+	const turnstileRef = useRef<TurnstileInstance>(null);
+	const [password, setPassword] = useState("");
 
 	// Update messages when props change
 	useEffect(() => {
@@ -148,6 +127,7 @@ export function SignUpForm({
 			<Card>
 				<CardHeader className="text-center">
 					<CardTitle className="text-xl">{t.title}</CardTitle>
+					<CardDescription>{t.description}</CardDescription>
 				</CardHeader>
 
 				<CardContent>
@@ -165,56 +145,6 @@ export function SignUpForm({
 						)}
 
 						<div className="space-y-4">
-							<div>
-								<Label htmlFor="name">{t.name}</Label>
-								<div className="mt-1 space-y-2">
-									<Input
-										{...register("name", {
-											onChange: clearMessages,
-										})}
-										type="text"
-										placeholder={t.namePlaceholder}
-										className={cn(
-											errors.name && "ring-2 ring-destructive ring-offset-2",
-										)}
-										disabled={isLoading}
-										aria-invalid={!!errors.name}
-										aria-describedby={errors.name ? "name-error" : undefined}
-									/>
-
-									{errors.name && (
-										<p className="text-sm font-medium text-destructive mt-2">
-											{errors.name.message}
-										</p>
-									)}
-								</div>
-							</div>
-
-							<div>
-								<Label htmlFor="email">{t.email}</Label>
-								<div className="mt-1 space-y-2">
-									<Input
-										{...register("email", {
-											onChange: clearMessages,
-										})}
-										type="email"
-										placeholder={t.emailPlaceholder}
-										className={cn(
-											errors.email && "ring-2 ring-destructive ring-offset-2",
-										)}
-										disabled={isLoading}
-										aria-invalid={!!errors.email}
-										aria-describedby={errors.email ? "email-error" : undefined}
-									/>
-
-									{errors.email && (
-										<p className="text-sm font-medium text-destructive mt-2">
-											{errors.email.message}
-										</p>
-									)}
-								</div>
-							</div>
-
 							<div>
 								<Label htmlFor="password">{t.password}</Label>
 								<div className="mt-1 space-y-2">
@@ -246,7 +176,7 @@ export function SignUpForm({
 								</div>
 							</div>
 
-							<div>
+							<div className="space-y-2">
 								<Label htmlFor="confirmPassword">{t.confirmPassword}</Label>
 								<div className="mt-1 space-y-2">
 									<Password
@@ -281,66 +211,24 @@ export function SignUpForm({
 								/>
 
 								<Button type="submit" className="w-full" disabled={isLoading}>
-									{t.signUp}
+									{t.resetPassword}
 								</Button>
 							</div>
 						</div>
 
 						<div className="text-center text-sm">
-							<span className="text-muted-foreground">{t.haveAccount}</span>{" "}
 							<Link
-								to="/sign-in"
-								className="font-medium text-primary hover:text-primary/90"
-								tabIndex={isLoading ? -1 : undefined}
 								aria-disabled={isLoading}
+								className="text-muted-foreground hover:text-foreground"
+								tabIndex={isLoading ? -1 : undefined}
+								to="/sign-in"
 							>
-								{t.signIn}
+								{t.backToSignIn}
 							</Link>
 						</div>
 					</form>
 				</CardContent>
 			</Card>
-
-			<div className="text-balance text-center text-xs text-muted-foreground">
-				{t.termsText.split(/\{(terms|privacy|button)\}/).map((part, index) => {
-					if (part === "terms") {
-						return (
-							<Link
-								key="terms"
-								to="/terms-of-service"
-								className="text-primary hover:text-primary/90"
-								tabIndex={isLoading ? -1 : undefined}
-								aria-disabled={isLoading}
-							>
-								{t.termsOfService}
-							</Link>
-						);
-					}
-					if (part === "privacy") {
-						return (
-							<Link
-								key="privacy"
-								to="/privacy-policy"
-								className="text-primary hover:text-primary/90"
-								tabIndex={isLoading ? -1 : undefined}
-								aria-disabled={isLoading}
-							>
-								{t.privacyPolicy}
-							</Link>
-						);
-					}
-
-					if (part === "button") {
-						return (
-							<span key="button" className="font-medium text-primary">
-								{t.termsButton}
-							</span>
-						);
-					}
-
-					return <span key={`text-${part}`}>{part}</span>;
-				})}
-			</div>
 		</div>
 	);
 }

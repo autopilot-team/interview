@@ -14,39 +14,41 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@autopilot/ui/components/dropdown-menu";
-import {
-	BadgeCheck,
-	Bell,
-	ChevronsUpDown,
-	CreditCard,
-	LogOut,
-	Sparkles,
-} from "@autopilot/ui/components/icons";
+import { ChevronsUpDown, LogOut } from "@autopilot/ui/components/icons";
+import type { LucideIcon } from "@autopilot/ui/components/icons";
 import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
 } from "@autopilot/ui/components/sidebar";
+import { Link } from "react-router";
+
+export interface NavUserItem {
+	title: string;
+	icon: LucideIcon;
+	url?: string;
+	onClick?: () => void;
+}
 
 export interface NavUserT {
-	upgradeToPro: string;
-	account: string;
-	billing: string;
-	notifications: string;
-	logOut: string;
+	signOut: string;
 }
 
 export function NavUser({
 	user,
 	t,
+	onSignOutClick,
+	items = [],
 }: {
 	user: {
 		name: string;
 		email: string;
-		avatar: string;
+		image?: string;
 	};
 	t: NavUserT;
+	onSignOutClick?: () => void;
+	items?: NavUserItem[];
 }) {
 	const { isMobile } = useSidebar();
 
@@ -60,7 +62,7 @@ export function NavUser({
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
-								<AvatarImage src={user.avatar} alt={user.name} />
+								<AvatarImage src={user.image} alt={user.name} />
 								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 							</Avatar>
 
@@ -81,7 +83,7 @@ export function NavUser({
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage src={user.avatar} alt={user.name} />
+									<AvatarImage src={user.image} alt={user.name} />
 									<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
@@ -94,34 +96,32 @@ export function NavUser({
 						<DropdownMenuSeparator />
 
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<Sparkles />
-								{t.upgradeToPro}
-							</DropdownMenuItem>
+							{items.map((item) => (
+								<DropdownMenuItem
+									key={item.title}
+									onClick={item.onClick}
+									asChild={Boolean(item.url)}
+								>
+									{item.url ? (
+										<Link to={item.url}>
+											<item.icon className="size-4" />
+											{item.title}
+										</Link>
+									) : (
+										<>
+											<item.icon className="size-4" />
+											{item.title}
+										</>
+									)}
+								</DropdownMenuItem>
+							))}
 						</DropdownMenuGroup>
 
 						<DropdownMenuSeparator />
 
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheck />
-								{t.account}
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<CreditCard />
-								{t.billing}
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Bell />
-								{t.notifications}
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-
-						<DropdownMenuSeparator />
-
-						<DropdownMenuItem>
+						<DropdownMenuItem onClick={onSignOutClick}>
 							<LogOut />
-							{t.logOut}
+							{t.signOut}
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

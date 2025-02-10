@@ -14,7 +14,7 @@ import {
 	type EntitySwitcherT,
 } from "./entity-switcher.js";
 import { NavMain, type NavMainItem } from "./nav-main.js";
-import { NavUser, type NavUserT } from "./nav-user.js";
+import { NavUser, type NavUserItem, type NavUserT } from "./nav-user.js";
 
 export interface NavigationT {
 	overview: {
@@ -80,7 +80,7 @@ export interface NavigationT {
 export interface User {
 	name: string;
 	email: string;
-	avatar: string;
+	image?: string;
 }
 
 export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -92,9 +92,11 @@ export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 	entities: Entity[];
 	currentEntity?: Entity;
 	onEntityChange?: (entity: Entity | undefined) => void;
-	onCreateEntity?: () => void;
+	onCreateEntity?: () => Promise<void>;
+	onSignOutClick?: () => Promise<void>;
 	user: User;
 	navigation: NavMainItem[];
+	userNavigation?: NavUserItem[];
 }
 
 export function AppSidebar({
@@ -103,8 +105,10 @@ export function AppSidebar({
 	currentEntity,
 	onEntityChange,
 	onCreateEntity,
+	onSignOutClick,
 	user,
 	navigation,
+	userNavigation,
 	...props
 }: AppSidebarProps) {
 	if (!t) return null;
@@ -127,7 +131,12 @@ export function AppSidebar({
 			</SidebarContent>
 
 			<SidebarFooter>
-				<NavUser user={user} t={t.navUser} />
+				<NavUser
+					items={userNavigation}
+					onSignOutClick={onSignOutClick}
+					t={t.navUser}
+					user={user}
+				/>
 			</SidebarFooter>
 
 			<SidebarRail />

@@ -1,98 +1,241 @@
 {
 	"errors": {
-		"signUp": {
-			"title": "Error",
-			"description": "Unable to sign up. Please try again."
-		}
-	},
-	"success": {
-		"signUp": {
-			"title": "Success",
-			"description": "An email has been sent to you. Please check your email and click the link to verify your account."
-		}
-	},
-	"verifyEmail": {
-		"verifying": "Verifying your email",
-		"verifyingDescription": "Please wait while we verify your email address...",
-		"success": "Email verified successfully",
-		"successDescription": "Your email has been verified. You can now sign in to your account.",
-		"error": "Invalid or expired verification link",
-		"errorDescription": "The verification link is invalid or has expired. Please try signing in or contact support if you need help."
-	},
-	"signInForm": {
-		"title": "Welcome back",
-		"email": "Email",
-		"emailPlaceholder": "name@company.com",
-		"password": "Password",
-		"passwordPlaceholder": "Enter your password",
-		"forgotPassword": "Forgot password?",
-		"signIn": "Sign in",
-		"noAccount": "New to Autopilot?",
-		"signUp": "Create account",
-		"termsText": "By clicking {button}, you agree to our {terms} and {privacy}.",
-		"termsButton": "Sign in",
-		"termsOfService": "Terms of Service",
-		"privacyPolicy": "Privacy Policy",
-		"errors": {
-			"emailRequired": "Enter your email",
-			"emailInvalid": "Enter a valid email",
-			"passwordRequired": "Enter your password",
-			"passwordMinLength": "Password must be at least 8 characters"
-		}
-	},
-	"signUpForm": {
-		"title": "Create your account",
-		"name": "Full name",
-		"namePlaceholder": "Full name",
-		"email": "Work email",
-		"emailPlaceholder": "name@company.com",
-		"password": "Password",
-		"passwordPlaceholder": "Create password",
-		"confirmPassword": "Confirm password",
-		"confirmPasswordPlaceholder": "Re-enter password",
-		"signUp": "Create account",
-		"haveAccount": "Already have an account?",
-		"signIn": "Sign in",
-		"termsText": "By clicking {button}, you agree to our {terms} and {privacy}.",
-		"termsButton": "Create account",
-		"termsOfService": "Terms of Service",
-		"privacyPolicy": "Privacy Policy",
-		"passwordStrength": {
-			"secure": "Secure",
-			"moderate": "Moderate",
-			"weak": "Weak",
-			"requirements": {
-				"minLength": "Minimum 8 characters required",
-				"mixCase": "Mix uppercase and lowercase letters",
-				"number": "Include a number",
-				"special": "Add a special character"
-			}
+		"forgotPassword": {
+			"description": "Unable to send password reset link. Please try again.",
+			"title": "Error"
 		},
-		"errors": {
-			"nameRequired": "Enter your full name",
-			"nameMinLength": "Enter your full name",
-			"emailRequired": "Enter your work email",
-			"emailInvalid": "Enter a valid email",
-			"passwordRequired": "Create a password",
-			"passwordMinLength": "Minimum 8 characters required",
-			"passwordUppercase": "Mix uppercase and lowercase letters",
-			"passwordLowercase": "Mix uppercase and lowercase letters",
-			"passwordNumber": "Include a number",
-			"passwordSpecial": "Add a special character",
-			"confirmPasswordRequired": "Confirm your password",
-			"confirmPasswordMatch": "Passwords do not match"
+		"resetPassword": {
+			"invalidToken": "Reset token is invalid or has expired. Please request a new password reset link.",
+			"title": "Error"
+		},
+		"signIn": {
+			"accountLocked": "Your account has been temporarily locked. Please click the forgot password option below to reset your password and regain access immediately.",
+			"description": "Unable to sign in. Please try again.",
+			"emailNotVerified": "Please verify your email address before signing in. Check your inbox for a verification link.",
+			"invalidCredentials": "Invalid email or password. Please try again.",
+			"invalidSession": "Your session has expired. Please sign in again.",
+			"title": "Error"
+		},
+		"signUp": {
+			"description": "Unable to sign up. Please try again.",
+			"title": "Error"
+		},
+		"twoFactor": {
+			"codeExpired": "Code has expired, please try again.",
+			"description": "Unable to verify code, please try again.",
+			"invalidCode": "Invalid code, please try again.",
+			"title": "Error"
 		}
 	},
 	"forgotPasswordForm": {
-		"title": "Reset password",
+		"backToSignIn": "Back to sign in",
 		"description": "We'll send you a secure link to reset your password.",
 		"email": "Email",
 		"emailPlaceholder": "name@company.com",
-		"resetPassword": "Send reset link",
-		"backToSignIn": "Back to sign in",
 		"errors": {
-			"emailRequired": "Enter your email",
-			"emailInvalid": "Enter a valid email"
+			"emailInvalid": "Please enter a valid email",
+			"emailRequired": "Please enter your email"
+		},
+		"resetPassword": "Send reset link",
+		"title": "Reset password"
+	},
+	"passwordStrength": {
+		"moderate": "Moderate",
+		"requirements": {
+			"minLength": "At least 8 characters",
+			"mixCase": "Mix of uppercase & lowercase letters",
+			"number": "At least one number",
+			"special": "At least one special character"
+		},
+		"secure": "Secure",
+		"weak": "Weak"
+	},
+	"resetPasswordForm": {
+		"backToSignIn": "Back to sign in",
+		"confirmPassword": "Confirm new password",
+		"confirmPasswordPlaceholder": "Re-enter new password",
+		"description": "Please enter and confirm your new password below.",
+		"errors": {
+			"confirmPasswordMatch": "Passwords do not match",
+			"confirmPasswordRequired": "Please confirm your new password",
+			"passwordLowercase": "Mix of uppercase & lowercase letters required",
+			"passwordMinLength": "Password must be at least 8 characters",
+			"passwordNumber": "At least one number required",
+			"passwordRequired": "Please create a new password",
+			"passwordSpecial": "At least one special character required",
+			"passwordUppercase": "Mix of uppercase & lowercase letters required"
+		},
+		"password": "New password",
+		"passwordPlaceholder": "Create new password",
+		"resetPassword": "Reset password",
+		"title": "Create new password"
+	},
+	"security": {
+		"password": {
+			"confirmPassword": "Confirm new password",
+			"currentPassword": "Current password",
+			"description": "Update your password to ensure your account is secure.",
+			"error": "Failed to update password",
+			"errors": {
+				"confirmPasswordRequired": "Confirm password is required",
+				"currentPasswordRequired": "Current password is required",
+				"invalidPassword": "Invalid password",
+				"newPasswordRequired": "New password is required",
+				"passwordLowercase": "Password must contain at least one lowercase letter",
+				"passwordMinLength": "Password must be at least 8 characters",
+				"passwordNumber": "Password must contain at least one number",
+				"passwordSpecial": "Password must contain at least one special character",
+				"passwordUppercase": "Password must contain at least one uppercase letter",
+				"passwordsDoNotMatch": "Passwords do not match"
+			},
+			"newPassword": "New password",
+			"success": "Password updated successfully",
+			"title": "Change password",
+			"updatePassword": "Update password"
+		},
+		"twoFactor": {
+			"backupCodes": {
+				"copied": "Copied!",
+				"copyAll": "Copy all",
+				"description": "Keep these backup codes in a safe place. You can use them to access your account if you can't use your authenticator device.",
+				"title": "Backup codes"
+			},
+			"cancel": "Cancel",
+			"code": "Code",
+			"description": "Add an extra layer of security to your account by enabling two-factor authentication.",
+			"disable": {
+				"confirm": "Disable",
+				"description": "You are about to disable two-factor authentication for your account.",
+				"title": "Disable two-factor authentication",
+				"warning": {
+					"description": "Disabling two-factor authentication will make your account less secure.",
+					"title": "Warning"
+				}
+			},
+			"disableError": "Failed to disable two-factor authentication",
+			"disableSuccess": "Two-factor authentication has been disabled. Your account now uses password-only authentication.",
+			"disabled": "Two-factor authentication is disabled.",
+			"enable": {
+				"confirm": "Enable",
+				"description": "Follow the steps below to enable two-factor authentication for your account.",
+				"next": "Next",
+				"title": "Enable two-factor authentication",
+				"verify": "Verify"
+			},
+			"enableError": "Failed to enable two-factor authentication",
+			"enableSuccess": "Two-factor authentication has been enabled successfully. Your account is now more secure.",
+			"enabled": "Two-factor authentication is enabled.",
+			"error": "Failed to update two-factor authentication",
+			"errors": {
+				"codeRequired": "Code is required",
+				"passwordRequired": "Password is required"
+			},
+			"label": "Two-factor authentication",
+			"retry": "Try again",
+			"scanQrCode": "Scan this QR code with your authenticator app",
+			"title": "Two-factor authentication",
+			"verify": "Enter the 6-digit code generated by your authenticator app"
 		}
+	},
+	"signInForm": {
+		"email": "Email",
+		"emailPlaceholder": "name@company.com",
+		"errors": {
+			"emailInvalid": "Please enter a valid email",
+			"emailRequired": "Please enter your email",
+			"passwordMinLength": "Password must be at least 8 characters",
+			"passwordRequired": "Please enter your password"
+		},
+		"forgotPassword": "Forgot password?",
+		"noAccount": "New to Autopilot?",
+		"password": "Password",
+		"passwordPlaceholder": "Enter your password",
+		"privacyPolicy": "Privacy Policy",
+		"signIn": "Sign in",
+		"signUp": "Create account",
+		"termsButton": "Sign in",
+		"termsOfService": "Terms of Service",
+		"termsText": "By clicking {button}, you agree to our {terms} and {privacy}.",
+		"title": "Welcome back"
+	},
+	"signUpForm": {
+		"confirmPassword": "Confirm password",
+		"confirmPasswordPlaceholder": "Re-enter password",
+		"email": "Work email",
+		"emailPlaceholder": "name@company.com",
+		"errors": {
+			"confirmPasswordMatch": "Passwords do not match",
+			"confirmPasswordRequired": "Please confirm your password",
+			"emailInvalid": "Please enter a valid email",
+			"emailRequired": "Please enter your work email",
+			"nameMinLength": "Please enter your full name",
+			"nameRequired": "Please enter your full name",
+			"passwordLowercase": "Mix of uppercase & lowercase letters required",
+			"passwordMinLength": "Password must be at least 8 characters",
+			"passwordNumber": "At least one number required",
+			"passwordRequired": "Please create a password",
+			"passwordSpecial": "At least one special character required",
+			"passwordUppercase": "Mix of uppercase & lowercase letters required"
+		},
+		"haveAccount": "Already have an account?",
+		"name": "Full name",
+		"namePlaceholder": "Full name",
+		"password": "Password",
+		"passwordPlaceholder": "Create password",
+		"privacyPolicy": "Privacy Policy",
+		"signIn": "Sign in",
+		"signUp": "Create account",
+		"termsButton": "Create account",
+		"termsOfService": "Terms of Service",
+		"termsText": "By clicking {button}, you agree to our {terms} and {privacy}.",
+		"title": "Create your account"
+	},
+	"success": {
+		"forgotPassword": {
+			"description": "If an account exists with this email, we'll send you a password reset link. Please check your email.",
+			"title": "Success"
+		},
+		"resetPassword": {
+			"description": "Your password has been reset successfully. You can now sign in with your new password.",
+			"title": "Success"
+		},
+		"signUp": {
+			"description": "We've sent you an email. Please check your inbox and click the link to verify your account.",
+			"title": "Success"
+		}
+	},
+	"twoFactorForm": {
+		"backupCodeInstructions": "Please enter your 10-character backup code. Note that each backup code can only be used once.",
+		"backupCodePlaceholder": "Enter 10-character backup code",
+		"code": "Please enter the 6-digit code generated by your authenticator app to continue.",
+		"codePlaceholder": "Enter 6-digit code",
+		"errors": {
+			"backupCodeLength": "Backup code must be 10 characters",
+			"codeLength": "Code must be 6 digits",
+			"codeRequired": "Please enter a code"
+		},
+		"title": "Two-factor authentication",
+		"useAuthenticator": "Use authenticator app",
+		"useBackupCode": "Use backup code",
+		"verify": "Verify"
+	},
+	"verifyEmail": {
+		"error": "Invalid or expired verification link",
+		"errorDescription": "The verification link is invalid or has expired. Please try signing in or contact support for help.",
+		"success": "Email verified successfully",
+		"successDescription": "Your email has been verified successfully. You can now sign in to your account.",
+		"verifying": "Verifying your email",
+		"verifyingDescription": "Please wait while we verify your email address..."
+	},
+	"verifyPassword": {
+		"cancel": "Cancel",
+		"description": "For security purposes, please enter your password to verify your identity.",
+		"errors": {
+			"invalidPassword": "Invalid password",
+			"passwordRequired": "Password is required"
+		},
+		"label": "Password",
+		"next": "Next",
+		"title": "Verify password"
 	}
 }

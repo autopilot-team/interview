@@ -7,12 +7,12 @@ import {
 } from "@autopilot/ui/components/card";
 import { Input } from "@autopilot/ui/components/input";
 import { Label } from "@autopilot/ui/components/label";
+import { Password } from "@autopilot/ui/components/password";
 import { cn } from "@autopilot/ui/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { type UseFormReset, useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { z } from "zod";
 
@@ -46,21 +46,30 @@ export interface SignInFormT {
 
 export interface SignInFormProps extends React.ComponentPropsWithoutRef<"div"> {
 	cfTurnstileSiteKey: string;
-	t: SignInFormT;
+	generalError?: string;
+	handleSignIn?: <T extends SignInFormData>(
+		data: T,
+		reset: UseFormReset<T>,
+	) => Promise<void>;
 	isLoading?: boolean;
-	handleSignIn?: (data: SignInFormData) => void;
+	successMessage?: string;
+	t: SignInFormT;
 }
 
 export function SignInForm({
 	cfTurnstileSiteKey,
 	className,
-	t,
-	isLoading = false,
+	generalError,
 	handleSignIn,
+	isLoading = false,
+	successMessage,
+	t,
 	...props
 }: SignInFormProps) {
 	const turnstileRef = useRef<TurnstileInstance>(null);
 	const [showPassword, setShowPassword] = useState(false);
+	const [currentError, setCurrentError] = useState(generalError);
+	const [currentSuccess, setCurrentSuccess] = useState(successMessage);
 	const signInSchema = z.object({
 		email: z
 			.string()
@@ -72,16 +81,28 @@ export function SignInForm({
 			.min(8, t.errors.passwordMinLength),
 	});
 	const {
-		register,
-		handleSubmit,
 		formState: { errors },
+		handleSubmit,
+		register,
+		reset,
 	} = useForm<SignInFormData>({
 		resolver: zodResolver(signInSchema),
 	});
-	const onSubmit = handleSubmit((data) => {
+	const onSubmit = handleSubmit(async (data) => {
 		data.cfTurnstileToken = turnstileRef.current?.getResponse() || "";
-		handleSignIn?.(data);
+		await handleSignIn?.(data, reset);
 	});
+
+	// Update messages when props change
+	useEffect(() => {
+		setCurrentError(generalError);
+		setCurrentSuccess(successMessage);
+	}, [generalError, successMessage]);
+
+	const clearMessages = () => {
+		setCurrentError("");
+		setCurrentSuccess("");
+	};
 
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -92,12 +113,26 @@ export function SignInForm({
 
 				<CardContent>
 					<form onSubmit={onSubmit} className="space-y-6">
+						{currentError && (
+							<div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+								{currentError}
+							</div>
+						)}
+
+						{currentSuccess && (
+							<div className="rounded-md bg-green-500/15 p-3 text-sm text-green-600 dark:text-green-500">
+								{currentSuccess}
+							</div>
+						)}
+
 						<div className="space-y-4">
-							<div className="space-y-2">
+							<div>
 								<Label htmlFor="email">{t.email}</Label>
-								<div className="space-y-2">
+								<div className="mt-1 space-y-2">
 									<Input
-										{...register("email")}
+										{...register("email", {
+											onChange: clearMessages,
+										})}
 										type="email"
 										placeholder={t.emailPlaceholder}
 										className={cn(
@@ -107,6 +142,7 @@ export function SignInForm({
 										aria-invalid={!!errors.email}
 										aria-describedby={errors.email ? "email-error" : undefined}
 									/>
+
 									{errors.email && (
 										<p className="text-sm font-medium text-destructive mt-2">
 											{errors.email.message}
@@ -119,49 +155,29 @@ export function SignInForm({
 								<div className="flex items-center justify-between">
 									<Label htmlFor="password">{t.password}</Label>
 									<Link
-										to="/forgot-password"
-										className="text-sm text-muted-foreground hover:text-foreground"
-										tabIndex={isLoading ? -1 : undefined}
 										aria-disabled={isLoading}
+										className="text-sm text-muted-foreground hover:text-foreground"
+										tabIndex={-1}
+										to="/forgot-password"
 									>
 										{t.forgotPassword}
 									</Link>
 								</div>
 
-								<div className="space-y-2">
-									<div className="relative">
-										<Input
-											{...register("password")}
-											type={showPassword ? "text" : "password"}
-											className={cn(
-												errors.password &&
-													"ring-2 ring-destructive ring-offset-2",
-											)}
-											placeholder={t.passwordPlaceholder}
-											disabled={isLoading}
-											aria-invalid={!!errors.password}
-											aria-describedby={
-												errors.password ? "password-error" : undefined
-											}
-										/>
-										<Button
-											type="button"
-											variant="ghost"
-											size="sm"
-											className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-											onClick={() => setShowPassword(!showPassword)}
-											disabled={isLoading}
-											aria-label={
-												showPassword ? "Hide password" : "Show password"
-											}
-										>
-											{showPassword ? (
-												<EyeOffIcon className="h-4 w-4 text-muted-foreground" />
-											) : (
-												<EyeIcon className="h-4 w-4 text-muted-foreground" />
-											)}
-										</Button>
-									</div>
+								<div>
+									<Password
+										aria-describedby={
+											errors.password ? "password-error" : undefined
+										}
+										aria-invalid={!!errors.password}
+										disabled={isLoading}
+										error={!!errors.password}
+										isNewPassword={false}
+										placeholder={t.passwordPlaceholder}
+										registration={register("password", {
+											onChange: clearMessages,
+										})}
+									/>
 
 									{errors.password && (
 										<p className="text-sm font-medium text-destructive mt-2">

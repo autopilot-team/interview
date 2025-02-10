@@ -11,8 +11,8 @@ import { Label } from "@autopilot/ui/components/label";
 import { cn } from "@autopilot/ui/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { type UseFormReset, useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { z } from "zod";
 
@@ -37,17 +37,24 @@ export interface ForgotPasswordFormT {
 export interface ForgotPasswordFormProps
 	extends React.ComponentPropsWithoutRef<"div"> {
 	cfTurnstileSiteKey: string;
-	t: ForgotPasswordFormT;
+	generalError?: string;
+	handleForgotPassword?: <T extends ForgotPasswordFormData>(
+		data: T,
+		reset: UseFormReset<T>,
+	) => Promise<void>;
 	isLoading?: boolean;
-	handleForgotPassword?: (data: ForgotPasswordFormData) => void;
+	successMessage?: string;
+	t: ForgotPasswordFormT;
 }
 
 export function ForgotPasswordForm({
 	cfTurnstileSiteKey,
 	className,
-	t,
-	isLoading = false,
+	generalError,
 	handleForgotPassword,
+	isLoading = false,
+	successMessage,
+	t,
 	...props
 }: ForgotPasswordFormProps) {
 	const forgotPasswordSchema = z.object({
@@ -60,14 +67,28 @@ export function ForgotPasswordForm({
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<ForgotPasswordFormData>({
 		resolver: zodResolver(forgotPasswordSchema),
 	});
-	const onSubmit = handleSubmit((data) => {
+	const onSubmit = handleSubmit(async (data) => {
 		data.cfTurnstileToken = turnstileRef.current?.getResponse() || "";
-		handleForgotPassword?.(data);
+		await handleForgotPassword?.(data, reset);
 	});
+	const [currentError, setCurrentError] = useState(generalError);
+	const [currentSuccess, setCurrentSuccess] = useState(successMessage);
 	const turnstileRef = useRef<TurnstileInstance>(null);
+
+	// Update messages when props change
+	useEffect(() => {
+		setCurrentError(generalError);
+		setCurrentSuccess(successMessage);
+	}, [generalError, successMessage]);
+
+	const clearMessages = () => {
+		setCurrentError("");
+		setCurrentSuccess("");
+	};
 
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -79,12 +100,26 @@ export function ForgotPasswordForm({
 
 				<CardContent>
 					<form onSubmit={onSubmit} className="space-y-6">
+						{currentError && (
+							<div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+								{currentError}
+							</div>
+						)}
+
+						{currentSuccess && (
+							<div className="rounded-md bg-green-500/15 p-3 text-sm text-green-600 dark:text-green-500">
+								{currentSuccess}
+							</div>
+						)}
+
 						<div className="space-y-4">
-							<div className="space-y-2">
+							<div>
 								<Label htmlFor="email">{t.email}</Label>
-								<div className="space-y-2">
+								<div className="mt-1 space-y-2">
 									<Input
-										{...register("email")}
+										{...register("email", {
+											onChange: clearMessages,
+										})}
 										type="email"
 										placeholder={t.emailPlaceholder}
 										className={cn(
@@ -118,10 +153,10 @@ export function ForgotPasswordForm({
 
 						<div className="text-center text-sm">
 							<Link
-								to="/sign-in"
+								aria-disabled={isLoading}
 								className="text-muted-foreground hover:text-foreground"
 								tabIndex={isLoading ? -1 : undefined}
-								aria-disabled={isLoading}
+								to="/sign-in"
 							>
 								{t.backToSignIn}
 							</Link>

@@ -12,12 +12,11 @@ import (
 // V1 is the v1 API handler
 type V1 struct {
 	*app.Container
-	paymentService *service.Payment
-	// sessionService *service.Session
+	service *service.Manager
 }
 
 const (
-	TagSessions = "Sessions"
+	TagIdentity = "Identity"
 )
 
 func BasePath(path string) string {
@@ -25,25 +24,35 @@ func BasePath(path string) string {
 }
 
 // AddRoutes adds the v1 API docs/routes to the http server
-func AddRoutes(container *app.Container, api huma.API) error {
-	paymentService, err := service.NewPayment(container)
-	if err != nil {
-		return err
+func AddRoutes(container *app.Container, api huma.API, serviceManager *service.Manager) error {
+	v1 := &V1{
+		Container: container,
+		service:   serviceManager,
 	}
 
-	v1 := &V1{
-		Container:      container,
-		paymentService: paymentService,
-		// sessionService: service.NewSession(container),
-	}
+	huma.Register(api, huma.Operation{
+		Method:      http.MethodGet,
+		OperationID: "get-session",
+		Path:        BasePath("/identity/me"),
+		Summary:     "Get current user session",
+		Tags:        []string{TagIdentity},
+	}, v1.Me)
 
 	huma.Register(api, huma.Operation{
 		Method:      http.MethodPost,
 		OperationID: "sign-in",
 		Path:        BasePath("/identity/sign-in"),
-		Summary:     "Sign in to your account",
-		Tags:        []string{TagSessions},
+		Summary:     "Authenticate and create a new session",
+		Tags:        []string{TagIdentity},
 	}, v1.SignIn)
+
+	huma.Register(api, huma.Operation{
+		Method:      http.MethodDelete,
+		OperationID: "sign-out",
+		Path:        BasePath("/identity/sign-out"),
+		Summary:     "Terminate current session",
+		Tags:        []string{TagIdentity},
+	}, v1.SignOut)
 
 	return nil
 }

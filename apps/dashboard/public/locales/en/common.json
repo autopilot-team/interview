@@ -1,4 +1,82 @@
 {
+	"breadcrumbs": {
+		"overview": {
+			"title": "Overview",
+			"activity": "Activity Overview",
+			"balances": "Account Balances",
+			"performance": "Performance Metrics",
+			"settings": "Account Settings"
+		},
+		"moneyIn": {
+			"title": "Money In",
+			"transactions": "Transaction History",
+			"paymentMethods": "Payment Methods",
+			"checkout": "Checkout Settings",
+			"subscriptions": "Subscription Management",
+			"products": "Product Catalog"
+		},
+		"moneyFlow": {
+			"title": "Money Flow",
+			"accounts": "Account Management",
+			"transfers": "Transfer History",
+			"treasury": "Treasury Management",
+			"fx": "Foreign Exchange"
+		},
+		"moneyOut": {
+			"title": "Money Out",
+			"payouts": "Payout Management",
+			"expenses": "Expense Tracking",
+			"vendors": "Vendor Management",
+			"tax": "Tax Settings"
+		},
+		"operations": {
+			"title": "Operations",
+			"processors": "Payment Processors",
+			"ledger": "Ledger Overview",
+			"reconciliation": "Reconciliation",
+			"reports": "Reports & Analytics"
+		},
+		"risk": {
+			"title": "Risk & Security",
+			"monitoring": "Risk Monitoring",
+			"prevention": "Fraud Prevention",
+			"disputes": "Dispute Management",
+			"compliance": "Compliance Settings",
+			"vault": "Data Vault"
+		},
+		"intelligence": {
+			"title": "Intelligence",
+			"analytics": "Analytics Dashboard",
+			"insights": "Business Insights",
+			"reports": "Custom Reports",
+			"models": "AI Models"
+		},
+		"developer": {
+			"title": "Developer Tools",
+			"apiKeys": "API Key Management",
+			"webhooks": "Webhook Configuration",
+			"documentation": "API Documentation",
+			"status": "System Status"
+		},
+		"settings": {
+			"title": "Settings",
+			"profile": {
+				"title": "Profile Settings",
+				"security": "Security Settings",
+				"index": "Profile Information"
+			}
+		}
+	},
+	"entitySwitcher": {
+		"searchPlaceholder": "Search entities...",
+		"noEntities": "No entities found.",
+		"noMatchingEntities": "No matching entities found.",
+		"selectEntity": "Select entity",
+		"platforms": "Platforms",
+		"organizations": "Organizations",
+		"accounts": "Accounts",
+		"addEntity": "Add entity"
+	},
 	"nav": {
 		"overview": {
 			"title": "Overview",
@@ -59,22 +137,10 @@
 			"status": "Status"
 		}
 	},
-	"entitySwitcher": {
-		"searchPlaceholder": "Search entities...",
-		"noEntities": "No entities found.",
-		"noMatchingEntities": "No matching entities found.",
-		"selectEntity": "Select entity",
-		"platforms": "Platforms",
-		"organizations": "Organizations",
-		"accounts": "Accounts",
-		"addEntity": "Add entity"
-	},
 	"navUser": {
-		"upgradeToPro": "Upgrade to Pro",
-		"account": "Account",
 		"billing": "Billing",
-		"notifications": "Notifications",
-		"logOut": "Log out"
+		"settings": "Settings",
+		"signOut": "Sign out"
 	},
 	"loading": {
 		"initializing": "Initializing..."
@@ -94,6 +160,42 @@
 		"unexpected": {
 			"title": "Something went wrong",
 			"description": "We're working on fixing this issue."
+		}
+	},
+	"settings": {
+		"title": "Settings",
+		"description": "Manage your account settings and preferences.",
+		"tabs": {
+			"profile": "Profile",
+			"security": "Security",
+			"sessions": "Sessions"
+		},
+		"profile": {
+			"title": "Profile Information",
+			"description": "Update your profile information.",
+			"email": "Email",
+			"name": "Name",
+			"updateProfile": "Update Profile",
+			"errors": {
+				"nameRequired": "Name is required",
+				"nameMinLength": "Name must be at least 2 characters"
+			},
+			"success": "Profile updated successfully",
+			"error": "Failed to update profile"
+		},
+		"sessions": {
+			"title": "Active Sessions",
+			"description": "Manage your active sessions across devices.",
+			"currentSession": "(Current)",
+			"revoke": "Revoke",
+			"revokeAll": "Revoke All Other Sessions",
+			"browser": "Browser",
+			"os": "OS",
+			"firstSeen": "First seen",
+			"success": "Session revoked successfully",
+			"error": "Failed to revoke session",
+			"revokeAllSuccess": "All other sessions revoked successfully",
+			"revokeAllError": "Failed to revoke other sessions"
 		}
 	}
 }

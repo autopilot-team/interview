@@ -1,13 +1,24 @@
 package store
 
 import (
-	"autopilot/backends/api/internal/app"
 	"autopilot/backends/api/internal/model"
 	"autopilot/backends/internal/core"
 	"context"
 	"database/sql"
-	"fmt"
 )
+
+// Userer is the store for user operations.
+type Userer interface {
+	Create(ctx context.Context, user *model.User, args ...*sql.Tx) error
+	GetByID(ctx context.Context, id string) (*model.User, error)
+	GetByEmail(ctx context.Context, email string) (*model.User, error)
+	Update(ctx context.Context, user *model.User, args ...*sql.Tx) error
+	CreateVerification(ctx context.Context, verification *model.Verification, args ...*sql.Tx) error
+	GetVerification(ctx context.Context, context string, id string) (*model.Verification, error)
+	DeleteVerification(ctx context.Context, id string, args ...*sql.Tx) error
+	ExistsByEmail(ctx context.Context, email string) (bool, error)
+	GetVerificationByValue(ctx context.Context, context string, value string) (*model.Verification, error)
+}
 
 // User is the store for user operations.
 type User struct {
@@ -15,29 +26,34 @@ type User struct {
 }
 
 // NewUser creates a new User.
-func NewUser(container *app.Container) *User {
+func NewUser(db core.DBer) *User {
 	return &User{
-		container.DB.Primary,
+		db,
 	}
 }
 
 // Create creates a new user.
-func (s *User) Create(ctx context.Context, tx *sql.Tx, user *model.User) error {
+func (s *User) Create(ctx context.Context, user *model.User, args ...*sql.Tx) error {
 	query := `
 		INSERT INTO users (
-			id, name, email, email_verified_at, failed_login_attempts,
+			name, email, email_verified_at, failed_login_attempts,
 			image, last_active_at, last_logged_in_at, locked_at,
-			password_changed_at, password_hash, two_factor_enabled,
-			created_at, updated_at
+			password_changed_at, password_hash
 		) VALUES (
-			uuid7(), $1, $2, $3, $4,
+			$1, $2, $3, $4,
 			$5, $6, $7, $8,
-			$9, $10, $11,
-			$12, $13
+			$9, $10
 		) RETURNING id
 	`
 
-	err := tx.QueryRowContext(
+	var querier core.Querier
+	if len(args) > 0 {
+		querier = args[0]
+	} else {
+		querier = s.Writer()
+	}
+
+	err := querier.QueryRowContext(
 		ctx,
 		query,
 		user.Name,
@@ -50,82 +66,50 @@ func (s *User) Create(ctx context.Context, tx *sql.Tx, user *model.User) error {
 		user.LockedAt,
 		user.PasswordChangedAt,
 		user.PasswordHash,
-		user.TwoFactorEnabled,
-		user.CreatedAt,
-		user.UpdatedAt,
 	).Scan(&user.ID)
 
 	if err != nil {
-		return fmt.Errorf("inserting user: %w", err)
+		return err
 	}
 
 	return nil
 }
 
-// Update updates a user.
-func (s *User) Update(ctx context.Context, tx *sql.Tx, user *model.User) error {
-	query := `
-		UPDATE users SET
-			name = $1,
-			email = $2,
-			email_verified_at = $3,
-			failed_login_attempts = $4,
-			image = $5,
-			last_active_at = $6,
-			last_logged_in_at = $7,
-			locked_at = $8,
-			password_changed_at = $9,
-			password_hash = $10,
-			two_factor_enabled = $11,
-			updated_at = $12
-		WHERE id = $13
-	`
+// GetByID gets a user by ID.
+func (s *User) GetByID(ctx context.Context, id string) (*model.User, error) {
+	var user model.User
+	query := `SELECT * FROM users WHERE id = $1`
 
-	result, err := tx.ExecContext(
-		ctx,
-		query,
-		user.Name,
-		user.Email,
-		user.EmailVerifiedAt,
-		user.FailedLoginAttempts,
-		user.Image,
-		user.LastActiveAt,
-		user.LastLoggedInAt,
-		user.LockedAt,
-		user.PasswordChangedAt,
-		user.PasswordHash,
-		user.TwoFactorEnabled,
-		user.UpdatedAt,
-		user.ID,
+	err := s.Writer().QueryRowContext(ctx, query, id).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Email,
+		&user.EmailVerifiedAt,
+		&user.FailedLoginAttempts,
+		&user.Image,
+		&user.LastActiveAt,
+		&user.LastLoggedInAt,
+		&user.LockedAt,
+		&user.PasswordChangedAt,
+		&user.PasswordHash,
+		&user.CreatedAt,
+		&user.UpdatedAt,
 	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
 	if err != nil {
-		return fmt.Errorf("updating user: %w", err)
+		return nil, err
 	}
 
-	rows, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("getting rows affected: %w", err)
-	}
-
-	if rows == 0 {
-		return fmt.Errorf("user not found")
-	}
-
-	return nil
+	return &user, nil
 }
 
 // GetByEmail gets a user by email.
 func (s *User) GetByEmail(ctx context.Context, email string) (*model.User, error) {
 	var user model.User
-	query := `
-		SELECT
-			id, name, email, email_verified_at, failed_login_attempts,
-			image, last_active_at, last_logged_in_at, locked_at,
-			password_changed_at, password_hash, two_factor_enabled,
-			created_at, updated_at
-		FROM users
-		WHERE email = $1
-	`
+	query := `SELECT * FROM users WHERE email = $1`
 
 	err := s.Writer().QueryRowContext(ctx, query, email).Scan(
 		&user.ID,
@@ -139,58 +123,117 @@ func (s *User) GetByEmail(ctx context.Context, email string) (*model.User, error
 		&user.LockedAt,
 		&user.PasswordChangedAt,
 		&user.PasswordHash,
-		&user.TwoFactorEnabled,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
+
 	if err != nil {
-		return nil, fmt.Errorf("getting user by email: %w", err)
+		return nil, err
 	}
 
 	return &user, nil
 }
 
-// CreateVerification creates a new verification.
-func (s *User) CreateVerification(ctx context.Context, tx *sql.Tx, verification *model.Verification) error {
+// Update updates a user.
+func (s *User) Update(ctx context.Context, user *model.User, args ...*sql.Tx) error {
 	query := `
-		INSERT INTO verifications (
-			id, value, expires_at, created_at, updated_at
-		) VALUES (
-			uuid7(), $1, $2, $3, $4
-		) RETURNING id
+		UPDATE users SET
+			name = $1,
+			email = $2,
+			email_verified_at = $3,
+			failed_login_attempts = $4,
+			image = $5,
+			last_active_at = $6,
+			last_logged_in_at = $7,
+			locked_at = $8,
+			password_changed_at = $9,
+			password_hash = $10,
+			updated_at = $11
+		WHERE id = $12
 	`
 
-	err := tx.QueryRowContext(
+	var querier core.Querier
+	if len(args) > 0 {
+		querier = args[0]
+	} else {
+		querier = s.Writer()
+	}
+
+	result, err := querier.ExecContext(
 		ctx,
 		query,
-		verification.Value,
-		verification.ExpiresAt,
-		verification.CreatedAt,
-		verification.UpdatedAt,
-	).Scan(&verification.ID)
-
+		user.Name,
+		user.Email,
+		user.EmailVerifiedAt,
+		user.FailedLoginAttempts,
+		user.Image,
+		user.LastActiveAt,
+		user.LastLoggedInAt,
+		user.LockedAt,
+		user.PasswordChangedAt,
+		user.PasswordHash,
+		user.UpdatedAt,
+		user.ID,
+	)
 	if err != nil {
-		return fmt.Errorf("inserting verification: %w", err)
+		return err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return err
 	}
 
 	return nil
 }
 
-// GetVerification gets a verification by ID.
-func (s *User) GetVerification(ctx context.Context, id string) (*model.Verification, error) {
-	var verification model.Verification
+// CreateVerification creates a new verification.
+func (s *User) CreateVerification(ctx context.Context, verification *model.Verification, args ...*sql.Tx) error {
 	query := `
-		SELECT
-			id, value, expires_at, created_at, updated_at
-		FROM verifications
-		WHERE id = $1
+		INSERT INTO verifications (
+			context, value, expires_at
+		) VALUES (
+			$1, $2, $3
+		) RETURNING id
 	`
 
-	err := s.Writer().QueryRowContext(ctx, query, id).Scan(
+	var querier core.Querier
+	if len(args) > 0 {
+		querier = args[0]
+	} else {
+		querier = s.Writer()
+	}
+
+	err := querier.QueryRowContext(
+		ctx,
+		query,
+		verification.Context,
+		verification.Value,
+		verification.ExpiresAt,
+	).Scan(&verification.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetVerification gets a verification by ID and context.
+func (s *User) GetVerification(ctx context.Context, context string, id string) (*model.Verification, error) {
+	var verification model.Verification
+	query := `SELECT * FROM verifications WHERE context = $1 AND id = $2`
+
+	err := s.Writer().QueryRowContext(ctx, query, context, id).Scan(
 		&verification.ID,
+		&verification.Context,
 		&verification.Value,
 		&verification.ExpiresAt,
 		&verification.CreatedAt,
@@ -201,28 +244,35 @@ func (s *User) GetVerification(ctx context.Context, id string) (*model.Verificat
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("getting verification: %w", err)
+		return nil, err
 	}
 
 	return &verification, nil
 }
 
 // DeleteVerification deletes a verification.
-func (s *User) DeleteVerification(ctx context.Context, tx *sql.Tx, id string) error {
+func (s *User) DeleteVerification(ctx context.Context, id string, args ...*sql.Tx) error {
 	query := `DELETE FROM verifications WHERE id = $1`
 
-	result, err := tx.ExecContext(ctx, query, id)
+	var querier core.Querier
+	if len(args) > 0 {
+		querier = args[0]
+	} else {
+		querier = s.Writer()
+	}
+
+	result, err := querier.ExecContext(ctx, query, id)
 	if err != nil {
-		return fmt.Errorf("deleting verification: %w", err)
+		return err
 	}
 
 	rows, err := result.RowsAffected()
 	if err != nil {
-		return fmt.Errorf("getting rows affected: %w", err)
+		return err
 	}
 
 	if rows == 0 {
-		return fmt.Errorf("verification not found")
+		return err
 	}
 
 	return nil
@@ -235,8 +285,32 @@ func (s *User) ExistsByEmail(ctx context.Context, email string) (bool, error) {
 
 	err := s.Writer().QueryRowContext(ctx, query, email).Scan(&exists)
 	if err != nil {
-		return false, fmt.Errorf("checking email existence: %w", err)
+		return false, err
 	}
 
 	return exists, nil
+}
+
+// GetVerificationByValue gets a verification by value and context.
+func (s *User) GetVerificationByValue(ctx context.Context, context string, value string) (*model.Verification, error) {
+	var verification model.Verification
+	query := `SELECT * FROM verifications WHERE context = $1 AND value = $2`
+
+	err := s.Writer().QueryRowContext(ctx, query, context, value).Scan(
+		&verification.ID,
+		&verification.Context,
+		&verification.Value,
+		&verification.ExpiresAt,
+		&verification.CreatedAt,
+		&verification.UpdatedAt,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &verification, nil
 }

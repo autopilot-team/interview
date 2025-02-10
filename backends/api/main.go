@@ -4,6 +4,7 @@ import (
 	"autopilot/backends/api/internal/app"
 	"autopilot/backends/api/internal/handler"
 	v1 "autopilot/backends/api/internal/handler/v1"
+	apimdw "autopilot/backends/api/internal/middleware"
 	"autopilot/backends/api/internal/service"
 	"autopilot/backends/api/internal/store"
 	"autopilot/backends/internal/cmd"
@@ -73,7 +74,7 @@ func main() {
 	}
 
 	// Initialize the HTTP server
-	httpServer, err := initHttpServer(container)
+	httpServer, err := initHttpServer(container, serviceManager)
 	if err != nil {
 		log.Fatalf("Failed to initialize HTTP server: %v", err)
 	}
@@ -142,7 +143,7 @@ func addCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Con
 	}))
 }
 
-func initHttpServer(container *app.Container) (*core.HttpServer, error) {
+func initHttpServer(container *app.Container, serviceManager *service.Manager) (*core.HttpServer, error) {
 	httpServer, err := core.NewHttpServer(core.HttpServerOptions{
 		Host:       container.Config.Server.Host,
 		Port:       container.Config.Server.Port,
@@ -172,6 +173,9 @@ func initHttpServer(container *app.Container) (*core.HttpServer, error) {
 				AllowCredentials: true,
 				MaxAge:           30,
 			}),
+			apimdw.WithRequestMetadata(),
+			apimdw.WithContainer(container),
+			apimdw.WithT(container.I18nBundle),
 		},
 	})
 	if err != nil {
@@ -180,7 +184,7 @@ func initHttpServer(container *app.Container) (*core.HttpServer, error) {
 
 	huma.NewError = handler.NewCustomStatusError
 	apiV1 := initApiV1(container, httpServer)
-	err = v1.AddRoutes(container, apiV1)
+	err = v1.AddRoutes(container, apiV1, serviceManager)
 	if err != nil {
 		return nil, err
 	}
@@ -214,8 +218,8 @@ func initApiV1(container *app.Container, httpServer *core.HttpServer) huma.API {
 	}
 	apiConfig.OpenAPI.Tags = []*huma.Tag{
 		{
-			Name:        v1.TagSessions,
-			Description: "Sessions management",
+			Name:        v1.TagIdentity,
+			Description: "Identity management",
 		},
 	}
 

@@ -1,90 +1,241 @@
 {
 	"errors": {
-		"signUp": {
-			"title": "錯誤",
-			"description": "無法註冊。請重試。"
-		}
-	},
-	"success": {
-		"signUp": {
-			"title": "成功",
-			"description": "一封驗證郵件已發送至您的信箱。請檢查您的信箱並點擊連結以驗證您的帳戶。"
-		}
-	},
-	"signInForm": {
-		"title": "歡迎回來",
-		"email": "電子郵件",
-		"emailPlaceholder": "name@company.com",
-		"password": "密碼",
-		"passwordPlaceholder": "請輸入密碼",
-		"forgotPassword": "忘記密碼？",
-		"signIn": "登入",
-		"noAccount": "首次使用 Autopilot？",
-		"signUp": "建立帳戶",
-		"termsText": "點擊{button}即表示您同意我們的{terms}和{privacy}。",
-		"termsButton": "登入",
-		"termsOfService": "服務條款",
-		"privacyPolicy": "隱私權政策",
-		"errors": {
-			"emailRequired": "請輸入電子郵件",
-			"emailInvalid": "請輸入有效的電子郵件",
-			"passwordRequired": "請輸入密碼",
-			"passwordMinLength": "密碼長度至少需要8個字元"
-		}
-	},
-	"signUpForm": {
-		"title": "建立您的帳戶",
-		"name": "全名",
-		"namePlaceholder": "請輸入全名",
-		"email": "公司電子郵件",
-		"emailPlaceholder": "name@company.com",
-		"password": "密碼",
-		"passwordPlaceholder": "建立密碼",
-		"confirmPassword": "確認密碼",
-		"confirmPasswordPlaceholder": "再次輸入密碼",
-		"signUp": "建立帳戶",
-		"haveAccount": "已經有帳戶？",
-		"signIn": "登入",
-		"termsText": "點擊{button}即表示您同意我們的{terms}和{privacy}。",
-		"termsButton": "建立帳戶",
-		"termsOfService": "服務條款",
-		"privacyPolicy": "隱私權政策",
-		"passwordStrength": {
-			"secure": "安全",
-			"moderate": "中等",
-			"weak": "偏弱",
-			"requirements": {
-				"minLength": "至少8個字元",
-				"mixCase": "需要大小寫字母",
-				"number": "需要數字",
-				"special": "需要特殊符號"
-			}
+		"forgotPassword": {
+			"description": "無法發送密碼重設連結。請重試。",
+			"title": "錯誤"
 		},
-		"errors": {
-			"nameRequired": "請輸入全名",
-			"nameMinLength": "請輸入全名",
-			"emailRequired": "請輸入公司電子郵件",
-			"emailInvalid": "請輸入有效的電子郵件",
-			"passwordRequired": "請建立密碼",
-			"passwordMinLength": "至少8個字元",
-			"passwordUppercase": "需要大小寫字母",
-			"passwordLowercase": "需要大小寫字母",
-			"passwordNumber": "需要數字",
-			"passwordSpecial": "需要特殊符號",
-			"confirmPasswordRequired": "請確認密碼",
-			"confirmPasswordMatch": "密碼不一致"
+		"resetPassword": {
+			"invalidToken": "重設權杖無效或已過期。請重新申請密碼重設連結。",
+			"title": "錯誤"
+		},
+		"signIn": {
+			"accountLocked": "您的帳戶已被暫時鎖定。請點擊下方的忘記密碼選項重設密碼並立即恢復存取。",
+			"description": "無法登入。請重試。",
+			"emailNotVerified": "請在登入前驗證您的電子郵件地址。請檢查收件匣中的驗證連結。",
+			"invalidCredentials": "電子郵件或密碼無效。請重試。",
+			"invalidSession": "您的工作階段已過期。請重新登入。",
+			"title": "錯誤"
+		},
+		"signUp": {
+			"description": "無法註冊。請重試。",
+			"title": "錯誤"
+		},
+		"twoFactor": {
+			"codeExpired": "驗證碼已過期，請重試。",
+			"description": "無法驗證代碼，請重試。",
+			"invalidCode": "驗證碼無效，請重試。",
+			"title": "錯誤"
 		}
 	},
 	"forgotPasswordForm": {
-		"title": "重設密碼",
-		"description": "我們將發送安全連結至您的信箱以重設密碼。",
+		"backToSignIn": "返回登入",
+		"description": "我們將向您發送一個安全連結以重設密碼。",
 		"email": "電子郵件",
 		"emailPlaceholder": "name@company.com",
-		"resetPassword": "發送重設連結",
-		"backToSignIn": "返回登入",
 		"errors": {
-			"emailRequired": "請輸入電子郵件",
-			"emailInvalid": "請輸入有效的電子郵件"
+			"emailInvalid": "請輸入有效的電子郵件",
+			"emailRequired": "請輸入您的電子郵件"
+		},
+		"resetPassword": "發送重設連結",
+		"title": "重設密碼"
+	},
+	"resetPasswordForm": {
+		"backToSignIn": "返回登入",
+		"confirmPassword": "確認新密碼",
+		"confirmPasswordPlaceholder": "再次輸入新密碼",
+		"description": "請在下方輸入並確認您的新密碼。",
+		"errors": {
+			"confirmPasswordMatch": "兩次輸入的密碼不相符",
+			"confirmPasswordRequired": "請確認您的新密碼",
+			"passwordLowercase": "需要混合使用大小寫字母",
+			"passwordMinLength": "密碼至少需要8個字元",
+			"passwordNumber": "需要包含數字",
+			"passwordRequired": "請建立新密碼",
+			"passwordSpecial": "需要包含特殊符號",
+			"passwordUppercase": "需要混合使用大小寫字母"
+		},
+		"password": "新密碼",
+		"passwordPlaceholder": "建立新密碼",
+		"resetPassword": "重設密碼",
+		"title": "建立新密碼"
+	},
+	"security": {
+		"password": {
+			"confirmPassword": "確認新密碼",
+			"currentPassword": "目前密碼",
+			"description": "更新您的密碼以確保帳戶安全。",
+			"errors": {
+				"confirmPasswordRequired": "確認密碼為必填項",
+				"currentPasswordRequired": "目前密碼為必填項",
+				"invalidPassword": "密碼錯誤",
+				"newPasswordRequired": "新密碼為必填項",
+				"passwordLowercase": "密碼必須包含至少一個小寫字母",
+				"passwordMinLength": "密碼至少需要8個字元",
+				"passwordNumber": "密碼必須包含至少一個數字",
+				"passwordSpecial": "密碼必須包含至少一個特殊字元",
+				"passwordUppercase": "密碼必須包含至少一個大寫字母",
+				"passwordsDoNotMatch": "兩次輸入的密碼不一致"
+			},
+			"error": "更新密碼失敗",
+			"newPassword": "新密碼",
+			"success": "密碼更新成功",
+			"title": "修改密碼",
+			"updatePassword": "更新密碼"
+		},
+		"twoFactor": {
+			"backupCodes": {
+				"copied": "已複製！",
+				"copyAll": "複製全部",
+				"description": "請將這些備用碼保存在安全的地方。如果您無法使用認證器裝置，可以使用它們存取您的帳戶。",
+				"title": "備用碼"
+			},
+			"cancel": "取消",
+			"code": "驗證碼",
+			"description": "透過啟用雙重認證為您的帳戶添加額外的安全層。",
+			"disable": {
+				"confirm": "停用雙重認證",
+				"description": "您即將停用帳戶的雙重認證。",
+				"title": "停用",
+				"warning": {
+					"description": "停用雙重認證將降低您帳戶的安全性。",
+					"title": "警告"
+				}
+			},
+			"disableError": "停用雙重認證失敗",
+			"disableSuccess": "雙重認證已停用。您的帳戶現在僅使用密碼進行驗證。",
+			"disabled": "雙重認證已停用。",
+			"enable": {
+				"confirm": "啟用雙重認證",
+				"description": "按照以下步驟為您的帳戶啟用雙重認證。",
+				"next": "下一步",
+				"title": "啟用",
+				"verify": "驗證"
+			},
+			"enableError": "啟用雙重認證失敗",
+			"enableSuccess": "雙重認證已成功啟用。您的帳戶現在更加安全。",
+			"enabled": "雙重認證已啟用。",
+			"error": "更新雙重認證失敗",
+			"errors": {
+				"codeRequired": "驗證碼為必填項",
+				"passwordRequired": "密碼為必填項"
+			},
+			"label": "雙重認證",
+			"retry": "重試",
+			"scanQrCode": "使用您的認證器應用程式掃描此 QR 碼",
+			"title": "雙重認證",
+			"verify": "輸入您認證器應用程式生成的6位驗證碼"
 		}
+	},
+	"signInForm": {
+		"email": "電子郵件",
+		"emailPlaceholder": "name@company.com",
+		"errors": {
+			"emailInvalid": "請輸入有效的電子郵件",
+			"emailRequired": "請輸入您的電子郵件",
+			"passwordMinLength": "密碼至少需要8個字元",
+			"passwordRequired": "請輸入密碼"
+		},
+		"forgotPassword": "忘記密碼？",
+		"noAccount": "首次使用 Autopilot？",
+		"password": "密碼",
+		"passwordPlaceholder": "請輸入密碼",
+		"privacyPolicy": "隱私權政策",
+		"signIn": "登入",
+		"signUp": "建立帳戶",
+		"termsButton": "登入",
+		"termsOfService": "服務條款",
+		"termsText": "點擊{button}，即表示您同意我們的{terms}和{privacy}。",
+		"title": "歡迎回來"
+	},
+	"signUpForm": {
+		"confirmPassword": "確認密碼",
+		"confirmPasswordPlaceholder": "再次輸入密碼",
+		"email": "工作電子郵件",
+		"emailPlaceholder": "name@company.com",
+		"errors": {
+			"confirmPasswordMatch": "兩次輸入的密碼不相符",
+			"confirmPasswordRequired": "請確認您的密碼",
+			"emailInvalid": "請輸入有效的電子郵件",
+			"emailRequired": "請輸入您的工作電子郵件",
+			"nameMinLength": "請輸入您的全名",
+			"nameRequired": "請輸入您的全名",
+			"passwordLowercase": "需要混合使用大小寫字母",
+			"passwordMinLength": "密碼至少需要8個字元",
+			"passwordNumber": "需要包含數字",
+			"passwordRequired": "請建立密碼",
+			"passwordSpecial": "需要包含特殊符號",
+			"passwordUppercase": "需要混合使用大小寫字母"
+		},
+		"haveAccount": "已有帳戶？",
+		"name": "全名",
+		"namePlaceholder": "全名",
+		"password": "密碼",
+		"passwordPlaceholder": "建立密碼",
+		"passwordStrength": {
+			"moderate": "中等",
+			"requirements": {
+				"minLength": "至少需要8個字元",
+				"mixCase": "需要混合使用大小寫字母",
+				"number": "需要包含數字",
+				"special": "需要包含特殊符號"
+			},
+			"secure": "安全",
+			"weak": "偏弱"
+		},
+		"privacyPolicy": "隱私權政策",
+		"signIn": "登入",
+		"signUp": "建立帳戶",
+		"termsButton": "建立帳戶",
+		"termsOfService": "服務條款",
+		"termsText": "點擊{button}，即表示您同意我們的{terms}和{privacy}。",
+		"title": "建立您的帳戶"
+	},
+	"success": {
+		"forgotPassword": {
+			"description": "如果此電子郵件已註冊帳戶，我們將向您發送密碼重設連結。請檢查您的信箱。",
+			"title": "成功"
+		},
+		"resetPassword": {
+			"description": "您的密碼已成功重設。您現在可以使用新密碼登入。",
+			"title": "成功"
+		},
+		"signUp": {
+			"description": "我們已向您發送一封驗證郵件。請檢查您的信箱並點擊連結以驗證您的帳戶。",
+			"title": "成功"
+		}
+	},
+	"twoFactorForm": {
+		"backupCodeInstructions": "請輸入您的10位備用碼。請注意，每個備用碼只能使用一次。",
+		"backupCodePlaceholder": "輸入10位備用碼",
+		"code": "請輸入您的驗證器應用程式產生的6位驗證碼以繼續。",
+		"codePlaceholder": "輸入6位驗證碼",
+		"errors": {
+			"backupCodeLength": "備用碼必須為10個字元",
+			"codeLength": "驗證碼必須為6位數字",
+			"codeRequired": "請輸入驗證碼"
+		},
+		"title": "雙重認證",
+		"useAuthenticator": "使用驗證器應用程式",
+		"useBackupCode": "使用備用碼",
+		"verify": "驗證"
+	},
+	"verifyEmail": {
+		"error": "驗證連結無效或已過期",
+		"errorDescription": "驗證連結無效或已過期。請嘗試登入或聯絡客服獲取協助。",
+		"success": "電子郵件驗證成功",
+		"successDescription": "您的電子郵件已驗證成功。您現在可以登入您的帳戶。",
+		"verifying": "正在驗證您的電子郵件",
+		"verifyingDescription": "請稍候，我們正在驗證您的電子郵件地址..."
+	},
+	"verifyPassword": {
+		"cancel": "取消",
+		"description": "基於安全考量，請輸入密碼以驗證您的身份。",
+		"errors": {
+			"invalidPassword": "密碼錯誤",
+			"passwordRequired": "密碼為必填項"
+		},
+		"label": "密碼",
+		"next": "下一步",
+		"title": "驗證密碼"
 	}
 }

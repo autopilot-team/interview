@@ -1,3 +1,4 @@
+import { useIdentity } from "@/components/identity-provider";
 import {
 	AppSidebar,
 	type Entity,
@@ -53,7 +54,7 @@ import {
 } from "@autopilot/ui/components/sidebar";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Outlet } from "react-router";
+import { Navigate, Outlet, useNavigate } from "react-router";
 
 // Example entities following the setup examples
 const entities: Entity[] = [
@@ -565,23 +566,44 @@ export default function Component() {
 			],
 		},
 	];
+	const handleCreateEntity = async () => {};
+	const { signOut, user } = useIdentity();
+	const navigate = useNavigate();
 
-	const handleCreateEntity = () => {};
+	if (!user) {
+		return <Navigate to="/sign-in" replace />;
+	}
 
 	return (
 		<SidebarProvider>
 			<AppSidebar
+				currentEntity={currentEntity}
+				entities={entities}
+				navigation={navigation}
+				onCreateEntity={handleCreateEntity}
+				onEntityChange={setCurrentEntity}
+				onSignOutClick={async () => {
+					await signOut();
+					navigate("/sign-in");
+				}}
 				t={{
 					nav: t("common:nav", { returnObjects: true }),
 					entitySwitcher: t("common:entitySwitcher", { returnObjects: true }),
 					navUser: t("common:navUser", { returnObjects: true }),
 				}}
-				entities={entities}
-				currentEntity={currentEntity}
-				onEntityChange={setCurrentEntity}
-				onCreateEntity={handleCreateEntity}
 				user={user}
-				navigation={navigation}
+				userNavigation={[
+					{
+						title: t("common:navUser.billing"),
+						icon: CreditCard,
+						url: "/billing",
+					},
+					{
+						title: t("common:navUser.settings"),
+						icon: Settings,
+						url: "/settings/profile",
+					},
+				]}
 			/>
 
 			<SidebarInset>

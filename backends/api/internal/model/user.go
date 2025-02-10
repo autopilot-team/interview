@@ -2,6 +2,12 @@ package model
 
 import (
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
+)
+
+const (
+	PasswordHashBcryptCostBcryptCost = 12
 )
 
 // User represents a user in the system
@@ -17,7 +23,6 @@ type User struct {
 	LockedAt            *time.Time `db:"locked_at"`
 	PasswordChangedAt   *time.Time `db:"password_changed_at"`
 	PasswordHash        *string    `db:"password_hash"`
-	TwoFactorEnabled    bool       `db:"two_factor_enabled"`
 	CreatedAt           time.Time  `db:"created_at"`
 	UpdatedAt           time.Time  `db:"updated_at"`
 }
@@ -40,4 +45,16 @@ func (u *User) HasPassword() bool {
 // HasLoggedIn checks if the user has ever logged in
 func (u *User) HasLoggedIn() bool {
 	return u.LastLoggedInAt != nil
+}
+
+// VerifyPassword verifies the user's password
+func (u *User) VerifyPassword(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(*u.PasswordHash), []byte(password)) == nil
+}
+
+// IsTwoFactorEnabled checks if the user has 2FA enabled
+func (u *User) IsTwoFactorEnabled() bool {
+	// This will be populated by the handler after checking the two_factors table
+	// We can't determine this from the User model alone since it's in a different table
+	return false
 }
