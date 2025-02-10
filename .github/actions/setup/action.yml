@@ -12,23 +12,7 @@ runs:
   using: 'composite'
 
   steps:
-    - name: Install pkgx
-      uses: pkgxdev/setup@v3
-
-    - name: Generate pkgx Cache Key
-      id: pkgx-cache-key
-      shell: bash
-      run: echo "deps_hash=$(jq -r '.pkgx.dependencies' package.json | sha256sum | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-
-    - name: Cache pkgx Tools
-      uses: actions/cache@v4
-      with:
-        path: ~/.pkgx
-        key: ${{ runner.os }}-pkgx-${{ steps.pkgx-cache-key.outputs.deps_hash }}
-        restore-keys: |
-          ${{ runner.os }}-pkgx-
-
-    - name: Setup pkgx tools
+    - name: Setup pkgx Tools
       uses: pkgxdev/dev@v1
 
     - name: Cache Go modules
