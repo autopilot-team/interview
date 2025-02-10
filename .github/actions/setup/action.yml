@@ -29,9 +29,7 @@ runs:
           ${{ runner.os }}-pkgx-
 
     - name: Setup pkgx tools
-      working-directory: ${{ inputs.path }}
-      shell: bash
-      run: pkgx dev integrate
+      uses: pkgxdev/dev@v1
 
     - name: Cache Go modules
       uses: actions/cache@v4
