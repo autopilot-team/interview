@@ -24,11 +24,11 @@
 	"devDependencies": {
 		"@react-router/dev": "^7.1.5",
 		"@react-router/remix-config-routes-adapter": "0.0.0-nightly-bf7ecb711-20240911",
-		"@tailwindcss/vite": "^4.0.5",
+		"@tailwindcss/vite": "^4.0.6",
 		"cross-env": "^7.0.3",
 		"i18next-hmr": "^3.1.3",
 		"remix-flat-routes": "^0.8.4",
-		"tailwindcss": "^4.0.5",
+		"tailwindcss": "^4.0.6",
 		"vite": "^6.1.0",
 		"vite-tsconfig-paths": "^5.1.4"
 	}
