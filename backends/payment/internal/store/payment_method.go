@@ -20,12 +20,12 @@ var (
 
 // PaymentMethod represents the store for payment methods
 type PaymentMethod struct {
-	*app.Container
+	BaseStore
 }
 
 // NewPaymentMethod creates a new instance of PaymentMethod
 func NewPaymentMethod(container *app.Container) *PaymentMethod {
-	return &PaymentMethod{container}
+	return &PaymentMethod{BaseStore: BaseStore{container: container}}
 }
 
 // CreatePaymentMethod stores a new payment method with proper validation
@@ -41,7 +41,7 @@ func (r *PaymentMethod) CreatePaymentMethod(ctx context.Context, method *model.S
 	method.CreatedAt = now
 	method.UpdatedAt = now
 
-	_, err := r.Live.DB.Primary.Writer().ExecContext(ctx, query,
+	_, err := r.Infra(ctx).DB.Primary.Writer().ExecContext(ctx, query,
 		method.ID, method.MerchantID, method.CustomerID, method.Type,
 		method.Provider, method.ProviderID, method.Last4,
 		method.ExpiryMonth, method.ExpiryYear, method.Metadata,
@@ -60,7 +60,7 @@ func (r *PaymentMethod) GetPaymentMethod(ctx context.Context, id uuid.UUID) (*mo
 		WHERE id = $1
 	`
 	method := &model.StoredPaymentMethod{}
-	err := r.Live.DB.Primary.Writer().GetContext(ctx, method, query, id)
+	err := r.Infra(ctx).DB.Primary.Writer().GetContext(ctx, method, query, id)
 	if err == pgx.ErrNoRows {
 		return nil, ErrPaymentMethodNotFound
 	}
@@ -93,13 +93,13 @@ func (r *PaymentMethod) ListPaymentMethodsByCustomer(
 		LIMIT $2 OFFSET $3
 	`
 	var methods []*model.StoredPaymentMethod
-	err := r.Live.DB.Primary.Reader().SelectContext(ctx, &methods, query, customerID, limit, offset)
+	err := r.Infra(ctx).DB.Primary.Reader().SelectContext(ctx, &methods, query, customerID, limit, offset)
 	return methods, err
 }
 
 // SoftDeletePaymentMethod marks a payment method as deleted
 func (r *PaymentMethod) SoftDeletePaymentMethod(ctx context.Context, id uuid.UUID) error {
-	return r.Live.DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
+	return r.Infra(ctx).DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
 		// Check if payment method exists and is not already deleted
 		var deletedAt *time.Time
 		err := tx.GetContext(ctx, &deletedAt, "SELECT deleted_at FROM payment_methods WHERE id = $1 FOR UPDATE", id)
@@ -135,7 +135,7 @@ func (r *PaymentMethod) GetPaymentMethodByProviderID(ctx context.Context, provid
 		AND deleted_at IS NULL
 	`
 	method := &model.StoredPaymentMethod{}
-	err := r.Live.DB.Primary.Writer().GetContext(ctx, method, query, providerID)
+	err := r.Infra(ctx).DB.Primary.Writer().GetContext(ctx, method, query, providerID)
 	if err == pgx.ErrNoRows {
 		return nil, ErrPaymentMethodNotFound
 	}
@@ -148,7 +148,7 @@ func (r *PaymentMethod) UpdatePaymentMethodMetadata(
 	id uuid.UUID,
 	metadata map[string]any,
 ) error {
-	return r.Live.DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
+	return r.Infra(ctx).DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
 		// Check if payment method exists and is not deleted
 		var deletedAt *time.Time
 		err := tx.GetContext(ctx, &deletedAt, "SELECT deleted_at FROM payment_methods WHERE id = $1 FOR UPDATE", id)

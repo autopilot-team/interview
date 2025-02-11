@@ -38,6 +38,7 @@ func NewGrpcServer(opts GrpcServerOptions) (*GrpcServer, error) {
 	}
 
 	serverOpts := append(opts.ServerOptions,
+		grpc.UnaryInterceptor(middleware.UnaryOperationMode),
 		grpc.ChainUnaryInterceptor(
 			middleware.Logger(opts.Logger),
 			middleware.Recovery(opts.Logger),

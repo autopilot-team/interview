@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"autopilot/backends/api/internal/app"
+	"autopilot/backends/internal/grpc/middleware"
 	paymentv1 "autopilot/backends/internal/pbgen/payment/v1"
 
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
@@ -28,6 +29,7 @@ func NewPayment(container *app.Container) (*Payment, error) {
 		container.Config.Services.PaymentAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
+		grpc.WithUnaryInterceptor(middleware.UnaryOperationModeClientInterceptor),
 	)
 	if err != nil {
 		return nil, err

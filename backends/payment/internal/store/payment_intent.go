@@ -20,12 +20,12 @@ var (
 
 // PaymentIntent is a store for payment intents
 type PaymentIntent struct {
-	*app.Container
+	BaseStore
 }
 
 // NewPaymentIntent creates a new PaymentIntent instance
 func NewPaymentIntent(container *app.Container) *PaymentIntent {
-	return &PaymentIntent{container}
+	return &PaymentIntent{BaseStore: BaseStore{container: container}}
 }
 
 // CreatePaymentIntent creates a new payment intent with proper expiration
@@ -42,7 +42,7 @@ func (r *PaymentIntent) CreatePaymentIntent(ctx context.Context, intent *model.P
 	// Set expiration to 1 hour by default
 	intent.ExpiresAt = now.Add(1 * time.Hour)
 
-	_, err := r.Live.DB.Primary.Writer().ExecContext(ctx, query,
+	_, err := r.Infra(ctx).DB.Primary.Writer().ExecContext(ctx, query,
 		intent.ID, intent.MerchantID, intent.Amount, intent.Currency,
 		intent.Status, intent.Provider, intent.Method, intent.Description,
 		intent.ClientSecret, intent.ReturnURL, intent.WebhookURL, intent.Metadata,
@@ -61,7 +61,7 @@ func (r *PaymentIntent) GetPaymentIntent(ctx context.Context, id uuid.UUID) (*mo
 		WHERE id = $1
 	`
 	intent := &model.PaymentIntent{}
-	err := r.Live.DB.Primary.Writer().GetContext(ctx, intent, query, id)
+	err := r.Infra(ctx).DB.Primary.Writer().GetContext(ctx, intent, query, id)
 	if err == pgx.ErrNoRows {
 		return nil, ErrPaymentIntentNotFound
 	}
@@ -87,7 +87,7 @@ func (r *PaymentIntent) GetPaymentIntentByClientSecret(ctx context.Context, clie
 		WHERE client_secret = $1
 	`
 	intent := &model.PaymentIntent{}
-	err := r.Live.DB.Primary.Writer().GetContext(ctx, intent, query, clientSecret)
+	err := r.Infra(ctx).DB.Primary.Writer().GetContext(ctx, intent, query, clientSecret)
 	if err == pgx.ErrNoRows {
 		return nil, ErrPaymentIntentNotFound
 	}
@@ -104,7 +104,7 @@ func (r *PaymentIntent) GetPaymentIntentByClientSecret(ctx context.Context, clie
 
 // UpdatePaymentIntentStatus updates the status of a payment intent with validation
 func (r *PaymentIntent) UpdatePaymentIntentStatus(ctx context.Context, id uuid.UUID, status model.PaymentStatus) error {
-	return r.Live.DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
+	return r.Infra(ctx).DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
 		// Get current payment intent
 		var expiresAt time.Time
 		err := tx.GetContext(ctx, &expiresAt, "SELECT expires_at FROM payment_intents WHERE id = $1 FOR UPDATE", id)
@@ -141,7 +141,7 @@ func (r *PaymentIntent) ListPendingPaymentIntents(ctx context.Context, batchSize
 		LIMIT $3
 	`
 	var intents []*model.PaymentIntent
-	err := r.Live.DB.Primary.Reader().SelectContext(ctx, &intents, query,
+	err := r.Infra(ctx).DB.Primary.Reader().SelectContext(ctx, &intents, query,
 		model.PaymentStatusPending,
 		time.Now().UTC(),
 		batchSize,
@@ -151,7 +151,7 @@ func (r *PaymentIntent) ListPendingPaymentIntents(ctx context.Context, batchSize
 
 // CleanupExpiredPaymentIntents removes expired payment intents in batches
 func (r *PaymentIntent) CleanupExpiredPaymentIntents(ctx context.Context, batchSize int) error {
-	_, err := r.Live.DB.Primary.Writer().ExecContext(ctx, `
+	_, err := r.Infra(ctx).DB.Primary.Writer().ExecContext(ctx, `
 		DELETE FROM payment_intents
 		WHERE status = $1
 		AND expires_at < $2

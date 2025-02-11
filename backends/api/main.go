@@ -153,6 +153,7 @@ func initHttpServer(container *app.Container, serviceManager *service.Manager) (
 		Mode:       container.Mode,
 		Middlewares: []func(http.Handler) http.Handler{
 			middleware.Logger(container.Mode, container.Logger),
+			middleware.WithOperationMode(),
 			cors.Handler(cors.Options{
 				AllowedOrigins: container.Config.Server.CORS.AllowedOrigins,
 				AllowedMethods: []string{"DELETE", "GET", "POST", "PUT", "OPTIONS"},

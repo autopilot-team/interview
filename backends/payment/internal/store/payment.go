@@ -20,12 +20,12 @@ var (
 
 // Payment represents the payment store
 type Payment struct {
-	*app.Container
+	BaseStore
 }
 
 // NewPayment creates a new payment store
 func NewPayment(container *app.Container) *Payment {
-	return &Payment{container}
+	return &Payment{BaseStore: BaseStore{container: container}}
 }
 
 // CreatePayment creates a new payment record with optimistic locking
@@ -40,7 +40,7 @@ func (r *Payment) CreatePayment(ctx context.Context, payment *model.Payment) err
 	payment.CreatedAt = now
 	payment.UpdatedAt = now
 
-	_, err := r.Live.DB.Primary.Writer().ExecContext(ctx, query,
+	_, err := r.Infra(ctx).DB.Primary.Writer().ExecContext(ctx, query,
 		payment.ID, payment.MerchantID, payment.Amount, payment.Currency,
 		payment.Status, payment.Provider, payment.Method, payment.Description,
 		payment.ProviderID, payment.ErrorMessage, payment.Metadata,
@@ -59,7 +59,7 @@ func (r *Payment) GetPayment(ctx context.Context, id string) (*model.Payment, er
 		WHERE id = $1
 	`
 	payment := &model.Payment{}
-	err := r.Live.DB.Primary.Reader().GetContext(ctx, payment, query, id)
+	err := r.Infra(ctx).DB.Primary.Reader().GetContext(ctx, payment, query, id)
 	if err == pgx.ErrNoRows {
 		return nil, ErrPaymentNotFound
 	}
@@ -83,7 +83,7 @@ func (r *Payment) ListPaymentsByMerchant(
 		LIMIT $3
 	`
 	var payments []*model.Payment
-	err := r.Live.DB.Primary.Reader().SelectContext(ctx, &payments, query, merchantID, cursor, limit)
+	err := r.Infra(ctx).DB.Primary.Reader().SelectContext(ctx, &payments, query, merchantID, cursor, limit)
 	return payments, err
 }
 
@@ -94,7 +94,7 @@ func (r *Payment) UpdatePaymentStatus(
 	status model.PaymentStatus,
 	errorMsg *string,
 ) error {
-	return r.Live.DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
+	return r.Infra(ctx).DB.Primary.WithTx(ctx, func(ctx context.Context, tx *sqlx.Tx) error {
 		// Get current payment status
 		var currentStatus model.PaymentStatus
 		err := tx.GetContext(ctx, &currentStatus, "SELECT status FROM payments WHERE id = $1 FOR UPDATE", id)
@@ -140,7 +140,7 @@ func (r *Payment) SearchPayments(ctx context.Context, params SearchParams) ([]*m
 		LIMIT $6 OFFSET $7
 	`
 	var payments []*model.Payment
-	err := r.Live.DB.Primary.Reader().SelectContext(ctx, &payments, query,
+	err := r.Infra(ctx).DB.Primary.Reader().SelectContext(ctx, &payments, query,
 		params.MerchantID,
 		params.Status,
 		params.Provider,
