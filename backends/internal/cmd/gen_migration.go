@@ -24,7 +24,7 @@ func NewGenMigrationCmd(logger *slog.Logger, databases []core.DBer) *cobra.Comma
 
 			var targetDB core.DBer
 			for _, db := range databases {
-				if db.Name() == dbName {
+				if db.Identifier() == dbName {
 					targetDB = db
 					break
 				}
