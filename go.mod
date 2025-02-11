@@ -6,7 +6,7 @@ require (
 	github.com/9ssi7/turnstile v1.0.0
 	github.com/amacneil/dbmate/v2 v2.25.0
 	github.com/aws/aws-sdk-go-v2 v1.36.1
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.55
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.59
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.76.1
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/danielgtaylor/huma/v2 v2.28.0
