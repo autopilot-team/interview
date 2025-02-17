@@ -21,7 +21,7 @@ require (
 	github.com/riverqueue/river v0.16.0
 	github.com/riverqueue/river/riverdriver/riverpgxv5 v0.16.0
 	github.com/riverqueue/river/rivertype v0.16.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	github.com/stripe/stripe-go/v81 v81.3.1
 	github.com/unrolled/render v1.7.0
