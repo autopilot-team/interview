@@ -25,7 +25,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/stripe/stripe-go/v81 v81.3.1
 	github.com/unrolled/render v1.7.0
-	github.com/wneessen/go-mail v0.6.1
+	github.com/wneessen/go-mail v0.6.2
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.59.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0
 	go.opentelemetry.io/otel v1.34.0
