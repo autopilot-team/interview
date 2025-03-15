@@ -1,11 +1,25 @@
 services:
   # Infrastructure
+  aws-otel-collector:
+    image: public.ecr.aws/aws-observability/aws-otel-collector:v0.41.2
+    command: ["--config=/etc/ecs/ecs-default-config.yaml"]
+    environment:
+      - AWS_REGION=ap-southeast-1
+    ports:
+      - 2000:2000
+      - 4317:4317
+      - 55681:55681
+    profiles:
+      - infra
+    restart: on-failure
+
   cache:
-    image: redis:7.4.1
+    image: valkey/valkey:8.1
+    command: ["--cluster-enabled", "yes", "--cluster-config-file", "nodes.conf", "--cluster-node-timeout", "5000", "--appendonly", "yes"]
     healthcheck:
       interval: 3s
       retries: 5
-      test: ["CMD-SHELL", "redis-cli -a redis ping || exit 1"]
+      test: ["CMD-SHELL", "valkey-cli ping || exit 1"]
       timeout: 5s
     ports:
       - 6379:6379
@@ -13,8 +27,24 @@ services:
       - infra
     restart: on-failure
 
+  cache-node-2:
+    image: valkey/valkey:8.1
+    command: ["--cluster-enabled", "yes", "--cluster-config-file", "nodes.conf", "--cluster-node-timeout", "5000", "--appendonly", "yes"]
+    depends_on:
+      - cache
+    healthcheck:
+      interval: 3s
+      retries: 5
+      test: ["CMD-SHELL", "valkey-cli ping || exit 1"]
+      timeout: 5s
+    ports:
+      - 6380:6379
+    profiles:
+      - infra
+    restart: on-failure
+
   db:
-    image: postgres:17.1
+    image: postgres:16.6
     command: >
       bash -c '
         create_db() {
@@ -35,7 +65,7 @@ services:
 
         echo "Creating databases..." &&
           sleep 3 &&
-          for db in api; do create_db $$db; done &&
+          for db in identity worker; do create_db $$db; done &&
           for db in payment; do create_db $$db "live"; create_db $$db "test"; done &&
           wait
       '
@@ -56,12 +86,54 @@ services:
   db-ui:
     image: sosedoff/pgweb:0.16.2
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/api?sslmode=disable&search_path=public
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/identity?sslmode=disable&search_path=public
     ports:
       - 8081:8081
     profiles:
       - infra
     restart: on-failure
+
+  kafka:
+    image: bitnami/kafka:3.8.1
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    healthcheck:
+      interval: 3s
+      retries: 5
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      timeout: 5s
+    ports:
+      - 9092:9092
+    profiles:
+      - infra
+    restart: on-failure
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - SERVER_PORT=8080
+    healthcheck:
+      interval: 3s
+      retries: 5
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      timeout: 5s
+    ports:
+      - 8080:8080
+    profiles:
+      - infra
+    restart: on-failure
+    depends_on:
+      kafka:
+        condition: service_healthy
 
   mailpit:
     image: axllent/mailpit:v1.18.6
@@ -99,6 +171,30 @@ services:
     restart: on-failure
 
   # Apps/Services
+  assets:
+    build:
+      context: .
+      dockerfile: Dockerfile.spa
+      args:
+        - APP_SERVICE=assets
+    ports:
+      - 2998:80
+    profiles:
+      - app
+    restart: on-failure
+
+  checkout:
+    build:
+      context: .
+      dockerfile: Dockerfile.spa
+      args:
+        - APP_SERVICE=checkout
+    ports:
+      - 2999:80
+    profiles:
+      - app
+    restart: on-failure
+
   dashboard:
     build:
       context: .
@@ -119,27 +215,17 @@ services:
         - APP_SERVICE=api
     command: /app start --worker
     environment:
-      - LIVE_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/api_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
-      - TEST_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/api_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
-      - PAYMENT_SERVICE_ADDR=payment:3000
+      - API_CACHE_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
+      - API_RATE_LIMITER_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
+      - IDENTITY_CACHE_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
+      - IDENTITY_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@db:5432/identity?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+      - OTEL_API_ENDPOINT=aws-otel-collector:4317
+      - PAYMENT_CACHE_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
+      - PAYMENT_LIVE_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@db:5432/payment_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+      - PAYMENT_TEST_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@db:5432/payment_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
+      - WORKER_DB_URL=postgres://postgres:postgres@db:5432/worker?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
     ports:
       - 3001:3000
-    profiles:
-      - app
-    restart: on-failure
-
-  payment:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - APP_SERVICE=payment
-    command: /app start --worker
-    environment:
-      - LIVE_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/payment_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
-      - TEST_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@primary-writer:5432/payment_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
-    ports:
-      - 3002:3000
     profiles:
       - app
     restart: on-failure

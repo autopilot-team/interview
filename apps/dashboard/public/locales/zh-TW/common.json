@@ -1,71 +1,179 @@
 {
+	"actions": {
+		"cancel": "取消",
+		"close": "關閉",
+		"connect": "連接",
+		"copy": "複製",
+		"delete": "刪除",
+		"done": "完成",
+		"hide": "隱藏",
+		"search": "搜尋...",
+		"show": "顯示",
+		"showAll": "顯示全部 ({{count}})",
+		"showLess": "顯示較少",
+		"submit": "提交"
+	},
 	"breadcrumbs": {
-		"overview": {
-			"title": "總覽",
-			"activity": "活動總覽",
-			"balances": "帳戶餘額",
-			"performance": "績效指標",
-			"settings": "帳戶設定"
-		},
-		"moneyIn": {
-			"title": "收款",
-			"transactions": "交易歷史",
-			"paymentMethods": "付款方式",
-			"checkout": "結帳設定",
-			"subscriptions": "訂閱管理",
-			"products": "商品目錄"
-		},
-		"moneyFlow": {
-			"title": "資金流",
-			"accounts": "帳戶管理",
-			"transfers": "轉帳歷史",
-			"treasury": "資金管理",
-			"fx": "外匯交易"
-		},
-		"moneyOut": {
-			"title": "付款",
-			"payouts": "付款管理",
-			"expenses": "支出追蹤",
-			"vendors": "供應商管理",
-			"tax": "稅務設定"
-		},
-		"operations": {
-			"title": "營運",
-			"processors": "支付處理器",
-			"ledger": "分類帳總覽",
-			"reconciliation": "對帳作業",
-			"reports": "報表與分析"
-		},
-		"risk": {
-			"title": "風險與安全",
-			"monitoring": "風險監控",
-			"prevention": "詐欺防範",
-			"disputes": "爭議管理",
-			"compliance": "合規設定",
-			"vault": "資料保險箱"
-		},
-		"intelligence": {
-			"title": "智能",
-			"analytics": "分析儀表板",
-			"insights": "業務洞察",
-			"reports": "自訂報表",
-			"models": "AI 模型"
+		"connections": {
+			"title": "連接"
 		},
 		"developer": {
 			"title": "開發者工具",
-			"apiKeys": "API 金鑰管理",
-			"webhooks": "Webhook 設定",
-			"documentation": "API 文件",
+			"apiKeys": "API金鑰管理",
+			"webhooks": "Webhook設定",
+			"documentation": "API文件",
 			"status": "系統狀態"
+		},
+		"payout": {
+			"title": "支付",
+			"transactions": "交易"
 		},
 		"settings": {
 			"title": "設定",
 			"profile": {
-				"title": "個人資料設定",
-				"security": "安全設定",
-				"index": "個人資訊"
+				"index": "個人資訊",
+				"security": "安全",
+				"sessions": "會話",
+				"title": "個人資料"
 			}
 		}
+	},
+	"countries": {
+		"AE": "阿拉伯聯合酋長國",
+		"AR": "阿根廷",
+		"AT": "奧地利",
+		"AU": "澳大利亞",
+		"BE": "比利時",
+		"BG": "保加利亞",
+		"BR": "巴西",
+		"CA": "加拿大",
+		"CH": "瑞士",
+		"CL": "智利",
+		"CN": "中國",
+		"CO": "哥倫比亞",
+		"CY": "賽普勒斯",
+		"CZ": "捷克共和國",
+		"DE": "德國",
+		"DK": "丹麥",
+		"EE": "愛沙尼亞",
+		"EG": "埃及",
+		"ES": "西班牙",
+		"FI": "芬蘭",
+		"FR": "法國",
+		"GB": "英國",
+		"GI": "直布羅陀",
+		"GR": "希臘",
+		"HK": "香港",
+		"HR": "克羅地亞",
+		"HU": "匈牙利",
+		"ID": "印度尼西亞",
+		"IE": "愛爾蘭",
+		"IL": "以色列",
+		"IM": "馬恩島",
+		"IN": "印度",
+		"IT": "意大利",
+		"JE": "澤西島",
+		"JP": "日本",
+		"KR": "南韓",
+		"LI": "列支敦士登",
+		"LT": "立陶宛",
+		"LU": "盧森堡",
+		"LV": "拉脫維亞",
+		"MT": "馬爾他",
+		"MX": "墨西哥",
+		"MY": "馬來西亞",
+		"NG": "奈及利亞",
+		"NL": "荷蘭",
+		"NO": "挪威",
+		"NZ": "新西蘭",
+		"PE": "秘魯",
+		"PH": "菲律賓",
+		"PL": "波蘭",
+		"PT": "葡萄牙",
+		"RO": "羅馬尼亞",
+		"RU": "俄羅斯",
+		"SA": "沙特阿拉伯",
+		"SE": "瑞典",
+		"SG": "新加坡",
+		"SK": "斯洛伐克",
+		"SL": "塞拉利昂",
+		"TH": "泰國",
+		"TR": "土耳其",
+		"US": "美國",
+		"VN": "越南",
+		"ZA": "南非"
+	},
+	"currencies": {
+		"AED": "阿聯酋迪拉姆",
+		"AUD": "澳大利亞元",
+		"BGN": "保加利亞列弗",
+		"BRL": "巴西雷亞爾",
+		"CAD": "加拿大元",
+		"CHF": "瑞士法郎",
+		"CNY": "人民幣",
+		"CZK": "捷克克朗",
+		"DKK": "丹麥克朗",
+		"EUR": "歐元",
+		"GBP": "英鎊",
+		"HKD": "港元",
+		"HUF": "匈牙利福林",
+		"IDR": "印尼盾",
+		"ILS": "以色列新謝克爾",
+		"INR": "印度盧比",
+		"JPY": "日圓",
+		"KRW": "韓元",
+		"MXN": "墨西哥比索",
+		"MYR": "馬來西亞令吉",
+		"NOK": "挪威克朗",
+		"NZD": "新西蘭元",
+		"PHP": "菲律賓比索",
+		"PLN": "波蘭茲羅提",
+		"RON": "羅馬尼亞列伊",
+		"RUB": "俄羅斯盧布",
+		"SEK": "瑞典克朗",
+		"SGD": "新加坡元",
+		"THB": "泰銖",
+		"TRY": "土耳其里拉",
+		"USD": "美元",
+		"ZAR": "南非蘭特"
+	},
+	"developer": {
+		"apiKeys": {
+			"title": "API 金鑰",
+			"description": "管理您的 Autopilot API 存取金鑰。",
+			"create": "建立 API 金鑰",
+			"createTitle": "建立新的 API 金鑰",
+			"createDescription": "建立新的 API 金鑰以存取 Autopilot API。請確保安全保管您的 API 金鑰，切勿與他人分享。",
+			"name": "名稱",
+			"nameDescription": "幫助您識別此 API 金鑰的描述性名稱。",
+			"isSecret": "金鑰類型",
+			"isSecretDescription": "金鑰類型可以是私密金鑰或可發布金鑰。私密金鑰具有完整的帳戶存取權限，可發布金鑰僅可用於客戶端操作。",
+			"expiresAt": "到期時間",
+			"expiresAtDescription": "可選。設定此 API 金鑰的到期時間。留空表示永不到期。",
+			"noExpiration": "永不到期",
+			"type": "類型",
+			"token": "金鑰",
+			"mode": "模式",
+			"lastUsed": "最後使用",
+			"expires": "到期時間",
+			"never": "永不",
+			"created": "API 金鑰已建立",
+			"createdDescription": "這是您唯一一次看到此 API 金鑰的機會。請立即複製並安全保存。",
+			"deleted": "API 金鑰已刪除",
+			"copied": "已複製到剪貼簿",
+			"deleteTitle": "刪除 API 金鑰",
+			"deleteDescription": "您確定要刪除此 API 金鑰嗎？此操作無法復原。",
+			"keyTypes": {
+				"secret": "私密金鑰",
+				"publishable": "可發布金鑰"
+			},
+			"emptyState": {
+				"title": "暫無 API 金鑰",
+				"description": "您尚未建立任何 API 金鑰。API 金鑰允許您的應用程式安全地存取 Autopilot API。"
+			}
+		},
+		"description": "管理您的開發者設定和工具。",
+		"title": "開發者工具"
 	},
 	"entitySwitcher": {
 		"searchPlaceholder": "搜尋實體...",
@@ -77,73 +185,32 @@
 		"accounts": "帳戶",
 		"addEntity": "新增實體"
 	},
+	"mode": {
+		"live": "生產模式",
+		"test": "測試模式"
+	},
 	"nav": {
-		"overview": {
-			"title": "概覽",
-			"activity": "活動",
-			"balances": "餘額",
-			"performance": "表現",
-			"settings": "設定"
-		},
-		"moneyIn": {
-			"title": "收入",
-			"transactions": "交易",
-			"paymentMethods": "支付方式",
-			"checkout": "收銀台",
-			"subscriptions": "訂閱",
-			"products": "產品"
-		},
-		"moneyFlow": {
-			"title": "資金流",
-			"accounts": "帳戶",
-			"transfers": "轉帳",
-			"treasury": "資金",
-			"fx": "外匯"
-		},
-		"moneyOut": {
-			"title": "支出",
-			"payouts": "付款",
-			"expenses": "費用",
-			"vendors": "供應商",
-			"tax": "稅務"
-		},
-		"operations": {
-			"title": "營運",
-			"processors": "處理器",
-			"ledger": "帳本",
-			"reconciliation": "對帳",
-			"reports": "報表"
-		},
-		"risk": {
-			"title": "風險與安全",
-			"monitoring": "監控",
-			"prevention": "反詐欺",
-			"disputes": "爭議",
-			"compliance": "合規",
-			"vault": "資料保險箱"
-		},
-		"intelligence": {
-			"title": "智能",
-			"analytics": "分析",
-			"insights": "洞察",
-			"reports": "報表",
-			"models": "模型"
+		"connections": {
+			"title": "連接"
 		},
 		"developer": {
 			"title": "開發者",
 			"apiKeys": "API金鑰",
-			"webhooks": "Webhooks",
+			"apiReferences": "API參考",
 			"documentation": "文件",
 			"status": "狀態"
+		},
+		"payout": {
+			"title": "支付"
 		}
 	},
 	"navUser": {
-		"billing": "帳單",
+		"billing": "賬單",
 		"settings": "設定",
 		"signOut": "登出"
 	},
-	"loading": {
-		"initializing": "正在初始化..."
+	"payoutMethods": {
+		"bank-transfer": "銀行轉賬"
 	},
 	"error": {
 		"action": {
@@ -156,6 +223,26 @@
 		},
 		"support": {
 			"text": "如果此錯誤持續存在，請聯繫支援。"
+		},
+		"apiKeys": {
+			"load": {
+				"title": "無法載入 API 金鑰",
+				"description": "獲取 API 金鑰時遇到問題。請重新整理頁面，如果問題仍然存在，請聯繫支援。"
+			},
+			"create": {
+				"title": "無法建立 API 金鑰",
+				"description": "請驗證您的輸入並重試。如果問題仍然存在，請聯繫支援。"
+			},
+			"delete": {
+				"title": "錯誤",
+				"description": "操作無法完成。請重試，如果問題仍然存在，請聯繫支援。"
+			}
+		},
+		"sessions": {
+			"load": {
+				"title": "無法載入會話",
+				"description": "我們在檢索您的會話時遇到問題。如果問題仍然存在，請重新整理頁面或聯絡支援人員。"
+			}
 		},
 		"unexpected": {
 			"title": "發生錯誤",
@@ -175,6 +262,7 @@
 			"description": "更新您的個人資訊。",
 			"email": "電子郵件",
 			"name": "姓名",
+			"picture": "頭像",
 			"updateProfile": "更新資料",
 			"errors": {
 				"nameRequired": "姓名為必填項",
@@ -197,5 +285,49 @@
 			"revokeAllSuccess": "所有其他會話已撤銷",
 			"revokeAllError": "撤銷其他會話失敗"
 		}
+	},
+	"table": {
+		"noResults": "暫無資料",
+		"loading": "載入中...",
+		"columns": "欄位",
+		"cursorPagination": {
+			"rowsPerPage": "每頁行數",
+			"of": "共",
+			"rowsSelected": "已選擇 {{total}} 行中的 {{count}} 行",
+			"page": "第 {{current}} 頁，共 {{total}} 頁",
+			"navigation": {
+				"previous": "轉到上一頁",
+				"next": "轉到下一頁"
+			}
+		},
+		"offsetPagination": {
+			"rowsPerPage": "每頁行數",
+			"of": "共",
+			"rowsSelected": "已選擇 {{total}} 行中的 {{count}} 行",
+			"page": "第 {{current}} 頁，共 {{total}} 頁",
+			"navigation": {
+				"first": "轉到第一頁",
+				"previous": "上一頁",
+				"next": "下一頁",
+				"last": "轉到最後頁"
+			}
+		}
+	},
+	"success": {
+		"apiKeys": {
+			"delete": {
+				"title": "成功",
+				"description": "該API金鑰已被永久撤銷，無法繼續使用。"
+			}
+		}
+	},
+	"validation": {
+		"required": "此字段是必填項。"
+	},
+	"status": {
+		"completed": "已完成",
+		"pending": "處理中",
+		"failed": "失敗",
+		"unknown": "未知"
 	}
 }

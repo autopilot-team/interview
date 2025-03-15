@@ -95,7 +95,14 @@ func NewHttpServer(opts HttpServerOptions) (*HttpServer, error) {
 
 	router := chi.NewRouter()
 	router.Use(chimdw.Recoverer)
-	router.Use(opts.Middlewares...)
+
+	validMiddlewares := make([]func(http.Handler) http.Handler, 0, len(opts.Middlewares))
+	for _, m := range opts.Middlewares {
+		if m != nil {
+			validMiddlewares = append(validMiddlewares, m)
+		}
+	}
+	router.Use(validMiddlewares...)
 
 	server := &HttpServer{
 		router,

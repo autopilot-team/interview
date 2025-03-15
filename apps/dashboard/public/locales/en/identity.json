@@ -1,5 +1,77 @@
 {
+	"connections": {
+		"add": "Add Connection",
+		"capabilities": {
+			"cardProcessing": "Card Processing",
+			"oneOffPayments": "One-off Payments",
+			"partialCaptures": "Partial Captures",
+			"partialRefunds": "Partial Refunds",
+			"recurringPayments": "Recurring Payments",
+			"upiInstantPayments": "UPI Instant Payments",
+			"directBankTransfer": "Direct Bank Transfers",
+			"cryptoToFiat": "Crypto to Fiat"
+		},
+		"connectToProvider": "Connect to {{provider}}",
+		"createdAt": "Created At",
+		"customCredentialsHighlight": "Use Custom Credentials",
+		"description": "Supercharge your financial operations by connecting to your providers.",
+		"emptyState": {
+			"title": "No Connections",
+			"description": "You haven't created any connections yet. Connect to your providers to get started."
+		},
+		"name": {
+			"label": "Name",
+			"description": "The name of the connection which is used to identify the connection in the UI."
+		},
+		"noResults": "No results found",
+		"paymentEvents": "Payment Events",
+		"paymentMethods": {
+			"applePay": "Apple Pay",
+			"card": "Card",
+			"googlePay": "Google Pay"
+		},
+		"payoutEvents": "Payout Events",
+		"payoutMethods": {
+			"bankTransfer": "Bank Transfer"
+		},
+		"provider": "Provider",
+		"providerType": {
+			"processor": "Processor"
+		},
+		"providerDetails": {
+			"type": "Type",
+			"website": "Website",
+			"countries": "Countries",
+			"currencies": "Currencies",
+			"paymentMethods": "Payment Methods",
+			"payoutMethods": "Payout Methods",
+			"capabilities": "Capabilities",
+			"integration": "Integration"
+		},
+		"sharedCredentials": "Shared Credentials",
+		"testModeExplanation": "Enable this to provide your own credentials, or use our shared test credentials to quickly get started.",
+		"title": "Connections",
+		"useCustomCredentials": "Use Custom Credentials",
+		"webhookEndpoints": "Webhook Endpoints",
+		"webhookEndpointsDescription": "Configure your provider to send webhook events to the endpoints below:",
+		"whitelistedIPs": "Whitelisted IP Addresses",
+		"whitelistedIPsDescription": "Your provider may require you to whitelist the following IP addresses to allow secure API access:"
+	},
 	"errors": {
+		"connections": {
+			"create": {
+				"title": "Error",
+				"description": "Unable to create connection. Please try again."
+			},
+			"delete": {
+				"title": "Error",
+				"description": "Unable to delete connection. Please try again."
+			},
+			"load": {
+				"title": "Error",
+				"description": "Unable to load connections. Please try again."
+			}
+		},
 		"forgotPassword": {
 			"description": "Unable to send password reset link. Please try again.",
 			"title": "Error"
@@ -91,7 +163,7 @@
 			"newPassword": "New password",
 			"success": "Password updated successfully",
 			"title": "Change password",
-			"updatePassword": "Update password"
+			"updatePassword": "Update Password"
 		},
 		"twoFactor": {
 			"backupCodes": {
@@ -191,6 +263,16 @@
 		"title": "Create your account"
 	},
 	"success": {
+		"connections": {
+			"create": {
+				"title": "Success",
+				"description": "The connection has been created successfully."
+			},
+			"delete": {
+				"title": "Success",
+				"description": "The connection has been deleted successfully."
+			}
+		},
 		"forgotPassword": {
 			"description": "If an account exists with this email, we'll send you a password reset link. Please check your email.",
 			"title": "Success"

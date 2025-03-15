@@ -40,6 +40,7 @@ export interface Entity {
 	name: string;
 	logo: React.ElementType;
 	type: "platform" | "organization" | "account";
+	slug: string;
 	parentId?: string;
 }
 
@@ -384,32 +385,32 @@ export function EntitySwitcher({
 											</CommandGroup>
 										)}
 
+										{entityTrees.platforms.length > 0 &&
+											entityTrees.orgs.length === 0 && <CommandSeparator />}
+
 										{entityTrees.orgs.length > 0 && (
-											<>
-												<CommandSeparator />
-												<CommandGroup
-													heading={t.organizations}
-													className="[&>h3]:mb-2 [&>h3]:ml-2 [&>h3]:select-none [&>div]:list-none p-0 mb-2"
-												>
-													{entityTrees.orgs.map((node) => (
-														<EntityTreeItem key={node.entity.id} node={node} />
-													))}
-												</CommandGroup>
-											</>
+											<CommandGroup
+												heading={t.organizations}
+												className="[&>h3]:mb-2 [&>h3]:ml-2 [&>h3]:select-none [&>div]:list-none p-0 mb-2"
+											>
+												{entityTrees.orgs.map((node) => (
+													<EntityTreeItem key={node.entity.id} node={node} />
+												))}
+											</CommandGroup>
 										)}
 
+										{entityTrees.orgs.length > 0 &&
+											entityTrees.accounts.length === 0 && <CommandSeparator />}
+
 										{entityTrees.accounts.length > 0 && (
-											<>
-												<CommandSeparator />
-												<CommandGroup
-													heading={t.accounts}
-													className="[&>h3]:mb-2 [&>h3]:ml-2 [&>h3]:select-none [&>div]:list-none p-0"
-												>
-													{entityTrees.accounts.map((node) => (
-														<EntityTreeItem key={node.entity.id} node={node} />
-													))}
-												</CommandGroup>
-											</>
+											<CommandGroup
+												heading={t.accounts}
+												className="[&>h3]:mb-2 [&>h3]:ml-2 [&>h3]:select-none [&>div]:list-none p-0"
+											>
+												{entityTrees.accounts.map((node) => (
+													<EntityTreeItem key={node.entity.id} node={node} />
+												))}
+											</CommandGroup>
 										)}
 									</>
 								) : (

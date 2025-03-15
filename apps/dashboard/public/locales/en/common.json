@@ -1,71 +1,179 @@
 {
+	"actions": {
+		"cancel": "Cancel",
+		"close": "Close",
+		"connect": "Connect",
+		"copy": "Copy",
+		"delete": "Delete",
+		"done": "Done",
+		"hide": "Hide",
+		"search": "Search...",
+		"show": "Show",
+		"showLess": "Show less",
+		"showAll": "Show all ({{count}})",
+		"submit": "Submit"
+	},
 	"breadcrumbs": {
-		"overview": {
-			"title": "Overview",
-			"activity": "Activity Overview",
-			"balances": "Account Balances",
-			"performance": "Performance Metrics",
-			"settings": "Account Settings"
-		},
-		"moneyIn": {
-			"title": "Money In",
-			"transactions": "Transaction History",
-			"paymentMethods": "Payment Methods",
-			"checkout": "Checkout Settings",
-			"subscriptions": "Subscription Management",
-			"products": "Product Catalog"
-		},
-		"moneyFlow": {
-			"title": "Money Flow",
-			"accounts": "Account Management",
-			"transfers": "Transfer History",
-			"treasury": "Treasury Management",
-			"fx": "Foreign Exchange"
-		},
-		"moneyOut": {
-			"title": "Money Out",
-			"payouts": "Payout Management",
-			"expenses": "Expense Tracking",
-			"vendors": "Vendor Management",
-			"tax": "Tax Settings"
-		},
-		"operations": {
-			"title": "Operations",
-			"processors": "Payment Processors",
-			"ledger": "Ledger Overview",
-			"reconciliation": "Reconciliation",
-			"reports": "Reports & Analytics"
-		},
-		"risk": {
-			"title": "Risk & Security",
-			"monitoring": "Risk Monitoring",
-			"prevention": "Fraud Prevention",
-			"disputes": "Dispute Management",
-			"compliance": "Compliance Settings",
-			"vault": "Data Vault"
-		},
-		"intelligence": {
-			"title": "Intelligence",
-			"analytics": "Analytics Dashboard",
-			"insights": "Business Insights",
-			"reports": "Custom Reports",
-			"models": "AI Models"
+		"connections": {
+			"title": "Connections"
 		},
 		"developer": {
-			"title": "Developer Tools",
-			"apiKeys": "API Key Management",
-			"webhooks": "Webhook Configuration",
+			"title": "Developer",
+			"apiKeys": "API Keys",
+			"webhooks": "Webhooks",
 			"documentation": "API Documentation",
 			"status": "System Status"
+		},
+		"payout": {
+			"title": "Payout",
+			"transactions": "Transactions"
 		},
 		"settings": {
 			"title": "Settings",
 			"profile": {
-				"title": "Profile Settings",
-				"security": "Security Settings",
-				"index": "Profile Information"
+				"index": "Profile",
+				"security": "Security",
+				"sessions": "Sessions",
+				"title": "Profile"
 			}
 		}
+	},
+	"countries": {
+		"AE": "United Arab Emirates",
+		"AR": "Argentina",
+		"AT": "Austria",
+		"AU": "Australia",
+		"BE": "Belgium",
+		"BG": "Bulgaria",
+		"BR": "Brazil",
+		"CA": "Canada",
+		"CH": "Switzerland",
+		"CL": "Chile",
+		"CN": "China",
+		"CO": "Colombia",
+		"CY": "Cyprus",
+		"CZ": "Czech Republic",
+		"DE": "Germany",
+		"DK": "Denmark",
+		"EE": "Estonia",
+		"EG": "Egypt",
+		"ES": "Spain",
+		"FI": "Finland",
+		"FR": "France",
+		"GB": "United Kingdom",
+		"GI": "Gibraltar",
+		"GR": "Greece",
+		"HK": "Hong Kong",
+		"HR": "Croatia",
+		"HU": "Hungary",
+		"ID": "Indonesia",
+		"IE": "Ireland",
+		"IL": "Israel",
+		"IM": "Isle of Man",
+		"IN": "India",
+		"IT": "Italy",
+		"JE": "Jersey",
+		"JP": "Japan",
+		"KR": "South Korea",
+		"LI": "Liechtenstein",
+		"LT": "Lithuania",
+		"LU": "Luxembourg",
+		"LV": "Latvia",
+		"MT": "Malta",
+		"MX": "Mexico",
+		"MY": "Malaysia",
+		"NG": "Nigeria",
+		"NL": "Netherlands",
+		"NO": "Norway",
+		"NZ": "New Zealand",
+		"PE": "Peru",
+		"PH": "Philippines",
+		"PL": "Poland",
+		"PT": "Portugal",
+		"RO": "Romania",
+		"RU": "Russia",
+		"SA": "Saudi Arabia",
+		"SE": "Sweden",
+		"SG": "Singapore",
+		"SK": "Slovakia",
+		"SL": "Sierra Leone",
+		"TH": "Thailand",
+		"TR": "Turkey",
+		"US": "United States",
+		"VN": "Vietnam",
+		"ZA": "South Africa"
+	},
+	"currencies": {
+		"AED": "United Arab Emirates Dirham",
+		"AUD": "Australian Dollar",
+		"BGN": "Bulgarian Lev",
+		"BRL": "Brazilian Real",
+		"CAD": "Canadian Dollar",
+		"CHF": "Swiss Franc",
+		"CNY": "Chinese Yuan",
+		"CZK": "Czech Koruna",
+		"DKK": "Danish Krone",
+		"EUR": "Euro",
+		"GBP": "British Pound Sterling",
+		"HKD": "Hong Kong Dollar",
+		"HUF": "Hungarian Forint",
+		"IDR": "Indonesian Rupiah",
+		"ILS": "Israeli New Shekel",
+		"INR": "Indian Rupee",
+		"JPY": "Japanese Yen",
+		"KRW": "South Korean Won",
+		"MXN": "Mexican Peso",
+		"MYR": "Malaysian Ringgit",
+		"NOK": "Norwegian Krone",
+		"NZD": "New Zealand Dollar",
+		"PHP": "Philippine Peso",
+		"PLN": "Polish Złoty",
+		"RON": "Romanian Leu",
+		"RUB": "Russian Ruble",
+		"SEK": "Swedish Krona",
+		"SGD": "Singapore Dollar",
+		"THB": "Thai Baht",
+		"TRY": "Turkish Lira",
+		"USD": "United States Dollar",
+		"ZAR": "South African Rand"
+	},
+	"developer": {
+		"apiKeys": {
+			"title": "API Keys",
+			"description": "Manage your API keys for accessing the Autopilot API.",
+			"create": "Create API Key",
+			"createTitle": "Create New API Key",
+			"createDescription": "Create a new API key for accessing the Autopilot API. Keep your API keys secure and never share them with anyone.",
+			"name": "Name",
+			"nameDescription": "A descriptive name to help you identify this API key.",
+			"isSecret": "Secret",
+			"isSecretDescription": "Secret keys have full access to your account. Publishable keys can only be used for client-side operations.",
+			"expiresAt": "Expiration",
+			"expiresAtDescription": "Optional. When this API key should expire. Leave empty for no expiration.",
+			"noExpiration": "No expiration",
+			"type": "Type",
+			"token": "Token",
+			"mode": "Mode",
+			"lastUsed": "Last Used",
+			"expires": "Expires",
+			"never": "Never",
+			"created": "API Key Created",
+			"createdDescription": "This is the only time you'll see this API key. Make sure to copy it now and store it securely.",
+			"deleted": "API key deleted",
+			"copied": "Copied to clipboard",
+			"deleteTitle": "Delete API Key",
+			"deleteDescription": "Are you sure you want to delete this API key? This action cannot be undone.",
+			"keyTypes": {
+				"secret": "Secret",
+				"publishable": "Publishable"
+			},
+			"emptyState": {
+				"title": "No API Keys",
+				"description": "You haven't created any API keys yet. API keys allow secure access to the Autopilot API from your applications."
+			}
+		},
+		"title": "Developer",
+		"description": "Manage your developer settings and tools."
 	},
 	"entitySwitcher": {
 		"searchPlaceholder": "Search entities...",
@@ -77,64 +185,23 @@
 		"accounts": "Accounts",
 		"addEntity": "Add entity"
 	},
+	"mode": {
+		"live": "Live Mode",
+		"test": "Test Mode"
+	},
 	"nav": {
-		"overview": {
-			"title": "Overview",
-			"activity": "Activity",
-			"balances": "Balances",
-			"performance": "Performance",
-			"settings": "Settings"
-		},
-		"moneyIn": {
-			"title": "Money In",
-			"transactions": "Transactions",
-			"paymentMethods": "Payment Methods",
-			"checkout": "Checkout",
-			"subscriptions": "Subscriptions",
-			"products": "Products"
-		},
-		"moneyFlow": {
-			"title": "Money Flow",
-			"accounts": "Accounts",
-			"transfers": "Transfers",
-			"treasury": "Treasury",
-			"fx": "FX"
-		},
-		"moneyOut": {
-			"title": "Money Out",
-			"payouts": "Payouts",
-			"expenses": "Expenses",
-			"vendors": "Vendors",
-			"tax": "Tax"
-		},
-		"operations": {
-			"title": "Operations",
-			"processors": "Processors",
-			"ledger": "Ledger",
-			"reconciliation": "Reconciliation",
-			"reports": "Reports"
-		},
-		"risk": {
-			"title": "Risk & Security",
-			"monitoring": "Monitoring",
-			"prevention": "Fraud Prevention",
-			"disputes": "Disputes",
-			"compliance": "Compliance",
-			"vault": "Data Vault"
-		},
-		"intelligence": {
-			"title": "Intelligence",
-			"analytics": "Analytics",
-			"insights": "Insights",
-			"reports": "Reports",
-			"models": "Models"
+		"connections": {
+			"title": "Connections"
 		},
 		"developer": {
 			"title": "Developer",
 			"apiKeys": "API Keys",
-			"webhooks": "Webhooks",
+			"apiReferences": "API References",
 			"documentation": "Documentation",
 			"status": "Status"
+		},
+		"payout": {
+			"title": "Payout"
 		}
 	},
 	"navUser": {
@@ -142,8 +209,8 @@
 		"settings": "Settings",
 		"signOut": "Sign out"
 	},
-	"loading": {
-		"initializing": "Initializing..."
+	"payoutMethods": {
+		"bank-transfer": "Bank Transfer"
 	},
 	"error": {
 		"action": {
@@ -156,6 +223,26 @@
 		},
 		"support": {
 			"text": "If this error persists, please contact support."
+		},
+		"apiKeys": {
+			"load": {
+				"title": "Unable to load API keys",
+				"description": "We encountered an issue while retrieving your API keys. Please refresh the page or contact support if the problem persists."
+			},
+			"create": {
+				"title": "Unable to create API key",
+				"description": "Please verify your input and try again. If the issue persists, contact support."
+			},
+			"delete": {
+				"title": "Error",
+				"description": "The operation could not be completed. Please try again or contact support if the issue persists."
+			}
+		},
+		"sessions": {
+			"load": {
+				"title": "Unable to load sessions",
+				"description": "We encountered an issue while retrieving your sessions. Please refresh the page or contact support if the problem persists."
+			}
 		},
 		"unexpected": {
 			"title": "Something went wrong",
@@ -175,7 +262,8 @@
 			"description": "Update your profile information.",
 			"email": "Email",
 			"name": "Name",
-			"updateProfile": "Update Profile",
+			"picture": "Profile Picture",
+			"updateProfile": "Save Profile",
 			"errors": {
 				"nameRequired": "Name is required",
 				"nameMinLength": "Name must be at least 2 characters"
@@ -197,5 +285,49 @@
 			"revokeAllSuccess": "All other sessions revoked successfully",
 			"revokeAllError": "Failed to revoke other sessions"
 		}
+	},
+	"table": {
+		"noResults": "No results.",
+		"loading": "Loading...",
+		"columns": "Columns",
+		"cursorPagination": {
+			"rowsPerPage": "Rows per page",
+			"of": "of",
+			"rowsSelected": "{{count}} of {{total}} row(s) selected.",
+			"page": "Page {{current}} of {{total}}",
+			"navigation": {
+				"previous": "Previous",
+				"next": "Next"
+			}
+		},
+		"offsetPagination": {
+			"rowsPerPage": "Rows per page",
+			"of": "of",
+			"rowsSelected": "{{count}} of {{total}} row(s) selected.",
+			"page": "Page {{current}} of {{total}}",
+			"navigation": {
+				"first": "Go to first page",
+				"previous": "Go to previous page",
+				"next": "Go to next page",
+				"last": "Go to last page"
+			}
+		}
+	},
+	"success": {
+		"apiKeys": {
+			"delete": {
+				"title": "Success",
+				"description": "The API key has been permanently deleted and cannot be used further."
+			}
+		}
+	},
+	"validation": {
+		"required": "This field is required."
+	},
+	"status": {
+		"completed": "Completed",
+		"pending": "Pending",
+		"failed": "Failed",
+		"unknown": "Unknown"
 	}
 }

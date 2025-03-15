@@ -21,7 +21,7 @@ export default defineConfig(async ({ mode }) => {
 
 	return {
 		clearScreen: false,
-		plugins: [reactRouter(), tailwindcss(), tsconfigPaths()].concat(devPlugins),
+		plugins: [tailwindcss(), reactRouter(), tsconfigPaths()].concat(devPlugins),
 		server: {
 			host,
 			port,

@@ -1,6 +1,8 @@
 package types
 
-import "context"
+import (
+	"context"
+)
 
 // OperationMode represents the operational mode (live/test)
 type OperationMode string
@@ -14,6 +16,8 @@ const (
 
 	// OperationModeKey is the context key for operation mode
 	OperationModeKey = contextKey("operation_mode")
+
+	AuthKey = contextKey("auth_info")
 )
 
 // GetOperationMode gets the operation mode from context

@@ -1,71 +1,179 @@
 {
+	"actions": {
+		"cancel": "取消",
+		"close": "关闭",
+		"connect": "连接",
+		"copy": "复制",
+		"delete": "删除",
+		"done": "完成",
+		"hide": "隐藏",
+		"search": "搜索...",
+		"show": "显示",
+		"showLess": "显示更少",
+		"showAll": "显示全部 ({{count}})",
+		"submit": "提交"
+	},
 	"breadcrumbs": {
-		"overview": {
-			"title": "概览",
-			"activity": "活动概览",
-			"balances": "账户余额",
-			"performance": "绩效指标",
-			"settings": "账户设置"
-		},
-		"moneyIn": {
-			"title": "收入",
-			"transactions": "交易历史",
-			"paymentMethods": "支付方式",
-			"checkout": "收银台设置",
-			"subscriptions": "订阅管理",
-			"products": "产品目录"
-		},
-		"moneyFlow": {
-			"title": "资金流",
-			"accounts": "账户管理",
-			"transfers": "转账历史",
-			"treasury": "资金管理",
-			"fx": "外汇交易"
-		},
-		"moneyOut": {
-			"title": "支出",
-			"payouts": "付款管理",
-			"expenses": "费用追踪",
-			"vendors": "供应商管理",
-			"tax": "税务设置"
-		},
-		"operations": {
-			"title": "运营",
-			"processors": "支付处理器",
-			"ledger": "账本概览",
-			"reconciliation": "对账操作",
-			"reports": "报表与分析"
-		},
-		"risk": {
-			"title": "风险与安全",
-			"monitoring": "风险监控",
-			"prevention": "欺诈防范",
-			"disputes": "争议管理",
-			"compliance": "合规设置",
-			"vault": "数据保险库"
-		},
-		"intelligence": {
-			"title": "智能",
-			"analytics": "分析仪表盘",
-			"insights": "业务洞察",
-			"reports": "自定义报表",
-			"models": "AI 模型"
+		"connections": {
+			"title": "连接"
 		},
 		"developer": {
 			"title": "开发者工具",
-			"apiKeys": "API 密钥管理",
-			"webhooks": "Webhook 配置",
-			"documentation": "API 文档",
+			"apiKeys": "API密钥管理",
+			"webhooks": "Webhook配置",
+			"documentation": "API文档",
 			"status": "系统状态"
+		},
+		"payout": {
+			"title": "支付",
+			"transactions": "交易"
 		},
 		"settings": {
 			"title": "设置",
 			"profile": {
-				"title": "个人资料设置",
-				"security": "安全设置",
-				"index": "个人信息"
+				"index": "个人信息",
+				"security": "安全",
+				"sessions": "会话",
+				"title": "个人资料"
 			}
 		}
+	},
+	"countries": {
+		"AE": "阿拉伯联合酋长国",
+		"AR": "阿根廷",
+		"AT": "奥地利",
+		"AU": "澳大利亚",
+		"BE": "比利时",
+		"BG": "保加利亚",
+		"BR": "巴西",
+		"CA": "加拿大",
+		"CH": "瑞士",
+		"CL": "智利",
+		"CN": "中国",
+		"CO": "哥伦比亚",
+		"CY": "塞浦路斯",
+		"CZ": "捷克共和国",
+		"DE": "德国",
+		"DK": "丹麦",
+		"EE": "爱沙尼亚",
+		"EG": "埃及",
+		"ES": "西班牙",
+		"FI": "芬兰",
+		"FR": "法国",
+		"GB": "英国",
+		"GI": "直布罗陀",
+		"GR": "希腊",
+		"HK": "香港",
+		"HR": "克罗地亚",
+		"HU": "匈牙利",
+		"ID": "印度尼西亚",
+		"IE": "爱尔兰",
+		"IL": "以色列",
+		"IM": "马恩岛",
+		"IN": "印度",
+		"IT": "意大利",
+		"JE": "泽西岛",
+		"JP": "日本",
+		"KR": "韩国",
+		"LI": "列支敦士登",
+		"LT": "立陶宛",
+		"LU": "卢森堡",
+		"LV": "拉脱维亚",
+		"MT": "马耳他",
+		"MX": "墨西哥",
+		"MY": "马来西亚",
+		"NG": "尼日利亚",
+		"NL": "荷兰",
+		"NO": "挪威",
+		"NZ": "新西兰",
+		"PE": "秘鲁",
+		"PH": "菲律宾",
+		"PL": "波兰",
+		"PT": "葡萄牙",
+		"RO": "罗马尼亚",
+		"RU": "俄罗斯",
+		"SA": "沙特阿拉伯",
+		"SE": "瑞典",
+		"SG": "新加坡",
+		"SK": "斯洛伐克",
+		"SL": "塞拉利昂",
+		"TH": "泰国",
+		"TR": "土耳其",
+		"US": "美国",
+		"VN": "越南",
+		"ZA": "南非"
+	},
+	"currencies": {
+		"AED": "阿联酋迪拉姆",
+		"AUD": "澳大利亚元",
+		"BGN": "保加利亚列弗",
+		"BRL": "巴西雷亚尔",
+		"CAD": "加拿大元",
+		"CHF": "瑞士法郎",
+		"CNY": "人民币",
+		"CZK": "捷克克朗",
+		"DKK": "丹麦克朗",
+		"EUR": "欧元",
+		"GBP": "英镑",
+		"HKD": "港元",
+		"HUF": "匈牙利福林",
+		"IDR": "印尼盾",
+		"ILS": "以色列新谢克尔",
+		"INR": "印度卢比",
+		"JPY": "日元",
+		"KRW": "韩元",
+		"MXN": "墨西哥比索",
+		"MYR": "马来西亚林吉特",
+		"NOK": "挪威克朗",
+		"NZD": "新西兰元",
+		"PHP": "菲律宾比索",
+		"PLN": "波兰兹罗提",
+		"RON": "罗马尼亚列伊",
+		"RUB": "俄罗斯卢布",
+		"SEK": "瑞典克朗",
+		"SGD": "新加坡元",
+		"THB": "泰铢",
+		"TRY": "土耳其里拉",
+		"USD": "美元",
+		"ZAR": "南非兰特"
+	},
+	"developer": {
+		"apiKeys": {
+			"title": "API 密钥",
+			"description": "管理您的 Autopilot API 访问密钥。",
+			"create": "创建 API 密钥",
+			"createTitle": "创建新的 API 密钥",
+			"createDescription": "创建新的 API 密钥以访问 Autopilot API。请确保安全保管您的 API 密钥，切勿与他人分享。",
+			"name": "名称",
+			"nameDescription": "帮助您识别此 API 密钥的描述性名称。",
+			"isSecret": "密钥类型",
+			"isSecretDescription": "密钥类型可以是私密密钥或可发布密钥。私密密钥具有完整的账户访问权限，可发布密钥仅可用于客户端操作。",
+			"expiresAt": "过期时间",
+			"expiresAtDescription": "可选。设置此 API 密钥的过期时间。留空表示永不过期。",
+			"noExpiration": "永不过期",
+			"type": "类型",
+			"token": "密钥",
+			"mode": "模式",
+			"lastUsed": "最后使用",
+			"expires": "过期时间",
+			"never": "永不",
+			"created": "API 密钥已创建",
+			"createdDescription": "这是您唯一一次看到此 API 密钥的机会。请立即复制并安全保存。",
+			"deleted": "API 密钥已删除",
+			"copied": "已复制到剪贴板",
+			"deleteTitle": "删除 API 密钥",
+			"deleteDescription": "您确定要删除此 API 密钥吗？此操作无法撤销。",
+			"keyTypes": {
+				"secret": "私密密钥",
+				"publishable": "可发布密钥"
+			},
+			"emptyState": {
+				"title": "暂无 API 密钥",
+				"description": "您尚未创建任何 API 密钥。API 密钥允许您的应用程序安全地访问 Autopilot API。"
+			}
+		},
+		"description": "管理您的开发者设置和工具。",
+		"title": "开发者工具"
 	},
 	"entitySwitcher": {
 		"searchPlaceholder": "搜索实体...",
@@ -77,73 +185,32 @@
 		"accounts": "账户",
 		"addEntity": "添加实体"
 	},
+	"mode": {
+		"live": "生产模式",
+		"test": "测试模式"
+	},
 	"nav": {
-		"overview": {
-			"title": "概览",
-			"activity": "活动",
-			"balances": "余额",
-			"performance": "表现",
-			"settings": "设置"
-		},
-		"moneyIn": {
-			"title": "收入",
-			"transactions": "交易",
-			"paymentMethods": "支付方式",
-			"checkout": "收银台",
-			"subscriptions": "订阅",
-			"products": "产品"
-		},
-		"moneyFlow": {
-			"title": "资金流",
-			"accounts": "账户",
-			"transfers": "转账",
-			"treasury": "资金",
-			"fx": "外汇"
-		},
-		"moneyOut": {
-			"title": "支出",
-			"payouts": "付款",
-			"expenses": "费用",
-			"vendors": "供应商",
-			"tax": "税务"
-		},
-		"operations": {
-			"title": "运营",
-			"processors": "处理器",
-			"ledger": "账本",
-			"reconciliation": "对账",
-			"reports": "报表"
-		},
-		"risk": {
-			"title": "风险与安全",
-			"monitoring": "监控",
-			"prevention": "反欺诈",
-			"disputes": "争议",
-			"compliance": "合规",
-			"vault": "数据保险库"
-		},
-		"intelligence": {
-			"title": "智能",
-			"analytics": "分析",
-			"insights": "洞察",
-			"reports": "报表",
-			"models": "模型"
+		"connections": {
+			"title": "连接"
 		},
 		"developer": {
 			"title": "开发者",
 			"apiKeys": "API密钥",
-			"webhooks": "Webhooks",
+			"apiReferences": "API参考",
 			"documentation": "文档",
 			"status": "状态"
+		},
+		"payout": {
+			"title": "支付"
 		}
 	},
 	"navUser": {
 		"billing": "账单",
 		"settings": "设置",
-		"signOut": "退出登录"
+		"signOut": "登出"
 	},
-	"loading": {
-		"initializing": "正在初始化..."
+	"payoutMethods": {
+		"bank-transfer": "银行转账"
 	},
 	"error": {
 		"action": {
@@ -156,6 +223,26 @@
 		},
 		"support": {
 			"text": "如果此错误持续存在，请联系支持。"
+		},
+		"apiKeys": {
+			"load": {
+				"title": "无法加载 API 密钥",
+				"description": "获取 API 密钥时遇到问题。请刷新页面，如果问题仍然存在，请联系支持。"
+			},
+			"create": {
+				"title": "无法创建 API 密钥",
+				"description": "请验证您的输入并重试。如果问题仍然存在，请联系支持。"
+			},
+			"delete": {
+				"title": "错误",
+				"description": "操作无法完成。请重试，如果问题仍然存在，请联系支持。"
+			}
+		},
+		"sessions": {
+			"load": {
+				"title": "无法加载会话",
+				"description": "我们在检索您的会话时遇到问题。如果问题仍然存在，请刷新页面或联系支持人员。"
+			}
 		},
 		"unexpected": {
 			"title": "发生错误",
@@ -175,6 +262,7 @@
 			"description": "更新您的个人信息。",
 			"email": "邮箱",
 			"name": "姓名",
+			"picture": "头像",
 			"updateProfile": "更新资料",
 			"errors": {
 				"nameRequired": "姓名为必填项",
@@ -197,5 +285,49 @@
 			"revokeAllSuccess": "所有其他会话已撤销",
 			"revokeAllError": "撤销其他会话失败"
 		}
+	},
+	"table": {
+		"noResults": "暂无数据",
+		"loading": "加载中...",
+		"columns": "列",
+		"cursorPagination": {
+			"rowsPerPage": "每页行数",
+			"of": "共",
+			"rowsSelected": "已选择 {{total}} 行中的 {{count}} 行",
+			"page": "第 {{current}} 页，共 {{total}} 页",
+			"navigation": {
+				"previous": "上一页",
+				"next": "下一页"
+			}
+		},
+		"offsetPagination": {
+			"rowsPerPage": "每页行数",
+			"of": "共",
+			"rowsSelected": "已选择 {{total}} 行中的 {{count}} 行",
+			"page": "第 {{current}} 页，共 {{total}} 页",
+			"navigation": {
+				"first": "转到第一页",
+				"previous": "转到上一页",
+				"next": "转到下一页",
+				"last": "转到最后一页"
+			}
+		}
+	},
+	"success": {
+		"apiKeys": {
+			"delete": {
+				"title": "成功",
+				"description": "该API密钥已被永久撤销，无法继续使用。"
+			}
+		}
+	},
+	"validation": {
+		"required": "此字段是必填项。"
+	},
+	"status": {
+		"completed": "已完成",
+		"pending": "处理中",
+		"failed": "失败",
+		"unknown": "未知"
 	}
 }

@@ -12,6 +12,7 @@ import (
 )
 
 func TestDebugLogHandler(t *testing.T) {
+	t.Parallel()
 	t.Run("handles standard log message", func(t *testing.T) {
 		var buf bytes.Buffer
 		logger := NewLogger(LoggerOptions{
@@ -25,7 +26,7 @@ func TestDebugLogHandler(t *testing.T) {
 		assert.Contains(t, output, "INFO  test message password=\"[REDACTED]\"")
 	})
 
-	t.Run("handles HTTP request log with formatted headers", func(t *testing.T) {
+	t.Run("should handle HTTP request log with formatted headers", func(t *testing.T) {
 		var buf bytes.Buffer
 		logger := NewLogger(LoggerOptions{
 			Mode:   types.DebugMode,
@@ -52,6 +53,7 @@ func TestDebugLogHandler(t *testing.T) {
 }
 
 func TestReleaseLogHandler(t *testing.T) {
+	t.Parallel()
 	t.Run("adds trace information", func(t *testing.T) {
 		var buf bytes.Buffer
 		logger := NewLogger(LoggerOptions{
@@ -61,12 +63,12 @@ func TestReleaseLogHandler(t *testing.T) {
 
 		logger.Info("test message")
 
-		var logEntry map[string]interface{}
+		var logEntry map[string]any
 		err := json.Unmarshal(buf.Bytes(), &logEntry)
 		assert.NoError(t, err)
 	})
 
-	t.Run("handles standard log message", func(t *testing.T) {
+	t.Run("should handle standard log message", func(t *testing.T) {
 		var buf bytes.Buffer
 		logger := NewLogger(LoggerOptions{
 			Mode:   types.ReleaseMode,
@@ -81,7 +83,7 @@ func TestReleaseLogHandler(t *testing.T) {
 		assert.Contains(t, output, "\"password\":\"[REDACTED]\"")
 	})
 
-	t.Run("handles HTTP request log with formatted headers", func(t *testing.T) {
+	t.Run("should handle HTTP request log with formatted headers", func(t *testing.T) {
 		var buf bytes.Buffer
 		logger := NewLogger(LoggerOptions{
 			Mode:   types.ReleaseMode,
@@ -115,25 +117,26 @@ func TestReleaseLogHandler(t *testing.T) {
 }
 
 func TestFormatAttributes(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name     string
 		attrs    []slog.Attr
 		expected string
 	}{
 		{
-			name:     "empty attributes",
+			name:     "should handle empty attributes",
 			attrs:    []slog.Attr{},
 			expected: "",
 		},
 		{
-			name: "string attribute",
+			name: "should format string attribute",
 			attrs: []slog.Attr{
 				slog.String("key", "value"),
 			},
 			expected: ` key="value"`,
 		},
 		{
-			name: "multiple attributes",
+			name: "should format multiple attributes",
 			attrs: []slog.Attr{
 				slog.Int("count", 42),
 				slog.Bool("enabled", true),
@@ -151,6 +154,7 @@ func TestFormatAttributes(t *testing.T) {
 }
 
 func TestLevelColor(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		level    slog.Level
 		contains string
@@ -162,7 +166,7 @@ func TestLevelColor(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.contains, func(t *testing.T) {
+		t.Run("should color "+tt.contains+" level correctly", func(t *testing.T) {
 			result := levelColor(tt.level)
 			assert.Contains(t, result, tt.contains)
 		})
@@ -170,10 +174,11 @@ func TestLevelColor(t *testing.T) {
 }
 
 func TestMethodColor(t *testing.T) {
+	t.Parallel()
 	methods := []string{"GET", "POST", "PUT", "DELETE", "PATCH", "CUSTOM"}
 
 	for _, method := range methods {
-		t.Run(method, func(t *testing.T) {
+		t.Run("should color "+method+" method correctly", func(t *testing.T) {
 			result := methodColor(method)
 			assert.Contains(t, result, method)
 		})
@@ -181,6 +186,7 @@ func TestMethodColor(t *testing.T) {
 }
 
 func TestStatusColor(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		status string
 		code   int
@@ -192,7 +198,7 @@ func TestStatusColor(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.status, func(t *testing.T) {
+		t.Run("should color status "+tt.status+" correctly", func(t *testing.T) {
 			result := statusColor(tt.status)
 			assert.Contains(t, result, tt.status)
 		})

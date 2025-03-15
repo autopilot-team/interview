@@ -108,6 +108,12 @@ indent_style = space
 indent_size = 2
 indent_style = space
 
+# Terraform
+# https://developer.hashicorp.com/terraform/language/style
+[*.tf]
+indent_size = 2
+indent_style = space
+
 # TOML
 # https://github.com/toml-lang/toml/tree/master/examples
 [*.toml]

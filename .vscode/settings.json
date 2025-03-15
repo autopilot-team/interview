@@ -19,11 +19,16 @@
 	"go.formatTool": "goimports",
 	"javascript.format.enable": false,
 	"javascript.preferences.importModuleSpecifier": "non-relative",
+	"makefile.configureOnOpen": false,
 	"typescript.format.enable": false,
-	"typescript.preferences.preferTypeOnlyAutoImports": true,
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"[go]": {
 		"editor.defaultFormatter": "golang.go"
 	},
-	"makefile.configureOnOpen": false
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[html]": {
+		"editor.defaultFormatter": "vscode.html-language-features"
+	}
 }

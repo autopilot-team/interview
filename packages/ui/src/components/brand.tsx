@@ -1,20 +1,19 @@
-import { GalleryVerticalEnd } from "@autopilot/ui/components/icons";
 import { cn } from "@autopilot/ui/lib/utils";
 import { Link } from "react-router";
 
 const sizeVariants = {
 	sm: {
-		icon: "h-6 w-6",
+		icon: "size-6",
 		iconInner: "size-4",
 		text: "text-base",
 	},
 	md: {
-		icon: "h-8 w-8",
+		icon: "size-8",
 		iconInner: "size-5",
 		text: "text-lg",
 	},
 	lg: {
-		icon: "h-10 w-10",
+		icon: "size-10",
 		iconInner: "size-6",
 		text: "text-2xl",
 	},
@@ -24,6 +23,7 @@ interface BrandProps extends Omit<React.ComponentPropsWithoutRef<"a">, "href"> {
 	showName?: boolean;
 	size?: keyof typeof sizeVariants;
 	href?: string;
+	spaNavigation?: boolean;
 }
 
 export function Brand({
@@ -31,6 +31,7 @@ export function Brand({
 	showName = true,
 	size = "sm",
 	href = "/",
+	spaNavigation = true,
 	...props
 }: BrandProps) {
 	const sizes = sizeVariants[size];
@@ -43,6 +44,13 @@ export function Brand({
 				sizes.text,
 				className,
 			)}
+			onClick={(e) => {
+				if (!spaNavigation) {
+					e.preventDefault();
+					window.location.href = href;
+					return;
+				}
+			}}
 			{...props}
 		>
 			<div
@@ -51,8 +59,13 @@ export function Brand({
 					sizes.icon,
 				)}
 			>
-				<GalleryVerticalEnd className={sizes.iconInner} />
+				<img
+					src="https://assets.autopilot.is/logo.png"
+					alt="Autopilot"
+					className={sizes.iconInner}
+				/>
 			</div>
+
 			{showName && "Autopilot"}
 		</Link>
 	);

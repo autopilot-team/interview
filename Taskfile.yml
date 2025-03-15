@@ -1,0 +1,267 @@
+version: '3'
+
+env:
+  NODE_OPTIONS: "--no-warnings"
+
+interval: 500ms
+
+silent: true
+
+vars:
+  APPS_DIR: apps
+  APPS:
+    sh: find {{.APPS_DIR}} -maxdepth 1 -type d -not -path '*/\.*' -not -path '{{.APPS_DIR}}' -exec basename {} \; | sort
+  BUILD_DIR: tmp
+  SERVICES_DIR: backends
+  SERVICES:
+    sh: find {{.SERVICES_DIR}} -maxdepth 1 -type d -not -path '*/\.*' -not -path '{{.SERVICES_DIR}}' -not -path '{{.SERVICES_DIR}}/internal' -exec basename {} \; | sort
+  DATABASES_WITHOUT_LIVE_TEST: identity worker
+  DATABASES_WITH_LIVE_TEST: payment
+  S3_BUCKETS: autopilot-development-identity autopilot-development-payment
+
+tasks:
+  check:
+    desc: Run all code checks
+    deps:
+      - check:biome
+      - check:be
+      - check:fe
+      - check:locales
+
+  check:be:
+    desc: Run backend code checks
+    cmds:
+      - go fmt ./...
+      - go vet ./...
+      - golangci-lint run
+
+  check:biome:
+    desc: Run Biome checks
+    cmds:
+      - pnpm biome check --diagnostic-level=warn{{if not .CI}} --write --unsafe{{end}} .
+
+  check:fe:
+    desc: Run frontend code checks
+    cmds:
+      - for: { var: APPS, split: "\n" }
+        cmd: pnpm --silent --filter=./{{.APPS_DIR}}/{{.ITEM}} typecheck
+
+  check:locales:
+    desc: Verify code locale files are in sync
+    cmds:
+      - go run ./tools sync-locales
+
+  clean:
+    desc: Clean build artifacts and temporary files
+    cmds:
+      - rm -rf tmp **/**/{.react-router,build,tsconfig.tsbuildinfo}
+
+  db:migrate:
+    desc: Run database migrations for all services
+    cmds:
+      - echo "🔄 Running Database Migrations";
+        echo "";
+
+        for service in $(echo "{{.SERVICES}}" | tr '\n' ' '); do
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          echo "📦 Migrating '$service' database...";
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          go run ./{{.SERVICES_DIR}}/$service db:migrate;
+        done
+
+        echo "✅ All migrations completed";
+
+  db:seed:
+    desc: Run database seeders for all services
+    cmds:
+      - echo "🔄 Running Database Seeders";
+        echo "";
+
+        for service in $(echo "{{.SERVICES}}" | tr '\n' ' '); do
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          echo "📦 Seeding '$service' database...";
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          go run ./{{.SERVICES_DIR}}/$service db:seed;
+        done
+
+        echo "✅ All seeders completed";
+
+  db:templates:
+    desc: Create template databases for all services
+    cmds:
+      - echo "🔄 Creating template databases...";
+        echo "";
+
+        for db in $(echo "{{.DATABASES_WITHOUT_LIVE_TEST}}" | tr '\n' ' '); do
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          echo "📦 Creating template database for '$db'...";
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          docker compose exec -it db psql -U postgres -q -c "CREATE DATABASE template_$db WITH TEMPLATE '$db';";
+        done
+
+        for db in {{.DATABASES_WITH_LIVE_TEST}}; do
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          echo "📦 Creating template database for '$db'...";
+          echo "──────────────────────────────────────────────────────────────────────────────";
+          docker compose exec -it db psql -U postgres -q -c "CREATE DATABASE template_${db}_live WITH TEMPLATE '${db}_live';";
+          docker compose exec -it db psql -U postgres -q -c "CREATE DATABASE template_${db}_test WITH TEMPLATE '${db}_test';";
+        done
+
+        echo "";
+        echo "✅ All template databases created";
+
+  dev:
+    desc: Start development environment with all apps/services
+    deps:
+      - for: { var: APPS, split: "\n" }
+        task: dev:fe
+        vars:
+          APP: '{{.ITEM}}'
+      - for: { var: SERVICES, split: "\n" }
+        task: dev:be
+        vars:
+          SERVICE: '{{.ITEM}}'
+      - task: dev:openapi
+      - task: dev:storybook
+
+  dev:be:
+    desc: Run backend service in development mode
+    cmds:
+      - air -build.bin='{{.BUILD_DIR}}/{{.SERVICE}} start --worker'
+          -build.cmd='go build -o {{.BUILD_DIR}}/{{.SERVICE}} ./{{.SERVICES_DIR}}/{{.SERVICE}}'
+          -build.delay=350
+          -build.exclude_dir={{.SERVICES_DIR}}/internal/core/testdata
+          -build.include_ext='css,go,html,js,json,sql,toml,tpl,tmpl,yaml,yml'
+          -build.include_dir={{.SERVICES_DIR}}/{{.SERVICE}},{{.SERVICES_DIR}}/internal
+          -log.main_only=true
+
+  dev:fe:
+    desc: Run frontend app in development mode
+    cmds:
+      - pnpm --silent --filter=./{{.APPS_DIR}}/{{.APP}} dev
+
+  dev:openapi:
+    desc: Run OpenAPI generator in development mode
+    cmds:
+      - pnpm --silent chokidar '{{.SERVICES_DIR}}/api/main.go' '{{.SERVICES_DIR}}/api/internal/**/handler/**/*.go' -c 'task gen:openapi' --silent
+
+  dev:storybook:
+    desc: Run storybook in development mode
+    cmds:
+      - pnpm --silent --filter=./packages/ui storybook
+
+  domains:
+    desc: Show domains for all services
+    cmds:
+      - echo "";
+        echo "📱 Frontend Apps";
+        echo "   • Storybook          http://localhost:2995";
+        echo "   • Dashboard          http://localhost:3000";
+        echo "   • API Reference      http://localhost:3000/api-references/v1";
+        echo "   • API Explorer       http://localhost:3000/docs/v1";
+        echo "   • Mailer Preview     http://localhost:3001/mailer/preview";
+        echo "   • Queue UI           http://localhost:3001/queue";
+        echo "";
+        echo "🔧 Backend Services";
+        echo "   • API                http://localhost:3001";
+        echo "";
+        echo "🛠️  Infrastructure";
+        echo "   • Grafana            http://localhost:4316";
+        echo "   • Postgres           localhost:5432";
+        echo "   • Postgres UI        http://localhost:8081";
+        echo "   • Redis              localhost:6379";
+        echo "   • Kafka              localhost:9092";
+        echo "   • Kafka UI           http://localhost:8080";
+        echo "   • Mailpit            http://localhost:8025";
+        echo "   • MinIO              http://localhost:9000";
+        echo "   • MinIO Admin        http://localhost:9001";
+        echo "";
+
+  down:
+    desc: Teardown the infrastructure
+    cmds:
+      - docker compose --profile=infra down --remove-orphans --timeout 0
+
+  gen:
+    desc: Generate OpenAPI, API clients
+    deps:
+      - gen:be
+      - gen:fe
+
+  gen:be:
+    desc: Generate backend OpenAPI, API clients
+    cmds:
+      - go generate -x ./...
+      - task: gen:be:mocks
+      - task: gen:openapi
+
+  gen:be:mocks:
+    desc: Generate backend interface mocks
+    cmds:
+      - mockery --config=.mockery.yaml --log-level=error
+
+  gen:fe:
+    desc: Generate frontend types
+    cmds:
+      - for: { var: APPS, split: "\n" }
+        cmd: pnpm --silent --filter=./{{.APPS_DIR}}/{{.ITEM}} typegen
+
+  gen:openapi:
+    desc: Generate OpenAPI spec and Typescript client
+    cmds:
+      - go run ./{{.SERVICES_DIR}}/api gen:openapi
+      - pnpm --silent --filter=./packages/api gen
+
+  preview:
+    desc: Preview the application in Docker Compose
+    cmds:
+      - docker compose --profile=app up --build
+      - docker compose --profile=app down
+
+  reset:
+    desc: Reset the infrastructure with a fresh database/storage state
+    cmds:
+      - task: down
+      - task: up
+
+  setup:
+    desc: Install dependencies and setup lefthook hooks
+    cmds:
+      - go mod download
+      - pnpm i
+      - lefthook install
+
+  test:
+    desc: Run unit tests
+    deps:
+      - test:be
+
+  test:be:
+    desc: Run unit tests for the backend
+    cmds:
+      - task: gen:be:mocks
+      - gotestsum --format=testdox -- -count=1 -race -v ./...
+
+  up:
+    desc: Setup the infrastructure with a fresh database/storage state
+    cmds:
+      - docker compose --profile=infra up --wait
+      - docker compose --profile=infra stop db-ui
+      - docker compose exec -it cache /bin/bash -c 'printf "yes\nyes\n" | valkey-cli --cluster create cache:6379 cache-node-2:6379 --cluster-replicas 0'
+      - task: db:migrate
+      - task: db:templates
+      - task: db:seed
+      - docker compose --profile=infra start db-ui
+      - docker compose exec -it storage /bin/bash -c 'mc alias set local http://localhost:9000 minioadmin minioadmin'
+      - for: { var: S3_BUCKETS, split: " " }
+        cmd: docker compose exec -it storage /bin/bash -c 'mc mb "local/{{.ITEM}}"'
+
+  '*':
+    cmds:
+      - BINARY=./{{.SERVICES_DIR}}/{{index .MATCH 0}}
+
+        if [[ -d "$BINARY" ]]; then
+          go run "$BINARY" {{.CLI_ARGS}};
+        else
+          task -l;
+        fi

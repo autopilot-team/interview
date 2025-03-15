@@ -16,67 +16,6 @@ import {
 import { NavMain, type NavMainItem } from "./nav-main.js";
 import { NavUser, type NavUserItem, type NavUserT } from "./nav-user.js";
 
-export interface NavigationT {
-	overview: {
-		title: string;
-		activity: string;
-		balances: string;
-		performance: string;
-		settings: string;
-	};
-	moneyIn: {
-		title: string;
-		transactions: string;
-		paymentMethods: string;
-		checkout: string;
-		subscriptions: string;
-		products: string;
-	};
-	moneyFlow: {
-		title: string;
-		accounts: string;
-		transfers: string;
-		treasury: string;
-		fx: string;
-	};
-	moneyOut: {
-		title: string;
-		payouts: string;
-		expenses: string;
-		vendors: string;
-		tax: string;
-	};
-	operations: {
-		title: string;
-		processors: string;
-		ledger: string;
-		reconciliation: string;
-		reports: string;
-	};
-	risk: {
-		title: string;
-		monitoring: string;
-		prevention: string;
-		disputes: string;
-		compliance: string;
-		vault: string;
-	};
-	intelligence: {
-		title: string;
-		analytics: string;
-		insights: string;
-		reports: string;
-		models: string;
-	};
-	developer: {
-		title: string;
-		apiKeys: string;
-		webhooks: string;
-		documentation: string;
-		status: string;
-	};
-}
-
 export interface User {
 	name: string;
 	email: string;
@@ -85,7 +24,6 @@ export interface User {
 
 export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 	t: {
-		nav: NavigationT;
 		entitySwitcher: EntitySwitcherT;
 		navUser: NavUserT;
 	};

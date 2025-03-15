@@ -1,0 +1,16 @@
+[tools]
+
+go = "1.24.1"
+node = "23.9.0"
+"aqua:pnpm/pnpm" = "10.6.1"
+"aqua:air-verse/air" = "1.61.7"
+"aqua:aquasecurity/tfsec" = "1.28.13"
+"aqua:aws" = "2.24.19"
+"aqua:evilmartians/lefthook" = "1.11.3"
+"aqua:golangci/golangci-lint" = "1.64.6"
+"aqua:gotestyourself/gotestsum" = "1.12.0"
+"aqua:hashicorp/terraform" = "1.11.1"
+"aqua:stripe/stripe-cli" = "1.25.0"
+"aqua:terraform-linters/tflint" = "0.55.1"
+"aqua:vektra/mockery" = "2.53.0"
+"ubi:go-task/task" = "3.42.1"

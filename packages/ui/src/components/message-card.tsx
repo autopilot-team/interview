@@ -86,7 +86,7 @@ export function MessageCard({
 							<div className="space-y-4">
 								<div className="flex items-center justify-center gap-2">
 									{homeButton.show && (
-										<Button asChild className="w-full">
+										<Button asChild className="flex-1">
 											<Link to={homeButton.to || "/"}>
 												{homeButton.icon ? (
 													homeButton.icon
@@ -102,7 +102,7 @@ export function MessageCard({
 										<Button
 											variant="outline"
 											type="button"
-											className="w-full"
+											className="flex-1"
 											onClick={() => window.history.back()}
 										>
 											{backButton.icon ? (

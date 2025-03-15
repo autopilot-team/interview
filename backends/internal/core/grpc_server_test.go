@@ -11,13 +11,14 @@ import (
 )
 
 func TestNewGrpcServer(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name    string
 		opts    GrpcServerOptions
 		wantErr bool
 	}{
 		{
-			name: "valid configuration",
+			name: "should initialize server with valid configuration",
 			opts: GrpcServerOptions{
 				Logger: slog.Default(),
 				Port:   "50051",
@@ -25,7 +26,7 @@ func TestNewGrpcServer(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "invalid port",
+			name: "should reject invalid port",
 			opts: GrpcServerOptions{
 				Logger: slog.Default(),
 				Port:   "invalid",
@@ -52,6 +53,7 @@ func TestNewGrpcServer(t *testing.T) {
 }
 
 func TestGrpcServer_Addr(t *testing.T) {
+	t.Parallel()
 	opts := GrpcServerOptions{
 		Logger: slog.Default(),
 		Port:   "0", // Use port 0 to get a random available port
@@ -70,6 +72,7 @@ func TestGrpcServer_Addr(t *testing.T) {
 }
 
 func TestGrpcServer_ListenAndServe(t *testing.T) {
+	t.Parallel()
 	// Create a bufconn listener for testing
 	listener := bufconn.Listen(1024 * 1024)
 	server := &GrpcServer{
@@ -101,6 +104,7 @@ func TestGrpcServer_ListenAndServe(t *testing.T) {
 }
 
 func TestGrpcServer_Stop(t *testing.T) {
+	t.Parallel()
 	opts := GrpcServerOptions{
 		Logger: slog.Default(),
 		Port:   "0",

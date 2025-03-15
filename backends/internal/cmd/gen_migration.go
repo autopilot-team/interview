@@ -3,50 +3,48 @@ package cmd
 import (
 	"autopilot/backends/internal/core"
 	"fmt"
-	"log"
 	"log/slog"
+	"slices"
 
 	"github.com/spf13/cobra"
 )
 
 func NewGenMigrationCmd(logger *slog.Logger, databases []core.DBer) *cobra.Command {
 	var dbName string
+	var listDBs bool
 
 	cmd := &cobra.Command{
 		Use:   "gen:migration [name]",
 		Short: "Create a new migration",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(databases) == 0 {
-				logger.Info("No databases configured yet.")
+			if listDBs {
+				for _, db := range databases {
+					fmt.Println(db.Identifier())
+				}
 				return nil
 			}
 
-			var targetDB core.DBer
-			for _, db := range databases {
-				if db.Identifier() == dbName {
-					targetDB = db
-					break
-				}
+			switch {
+			case len(databases) == 0:
+				return fmt.Errorf("no databases configured")
+			case dbName == "":
+				return fmt.Errorf("database name not provided (--db)")
+			case len(args) == 0:
+				return fmt.Errorf("expected migration name")
 			}
 
-			if targetDB == nil {
-				return fmt.Errorf("database '%s' not found", dbName)
+			i := slices.IndexFunc(databases, func(d core.DBer) bool { return d.Identifier() == dbName })
+			if i == -1 {
+				return fmt.Errorf("database %q not found", dbName)
 			}
+			targetDB := databases[i]
 
-			// Only run migration for the target database
-			if err := targetDB.GenMigration(args[0]); err != nil {
-				return err
-			}
-
-			return nil
+			return targetDB.GenMigration(args[0])
 		},
 	}
 
+	cmd.Flags().BoolVarP(&listDBs, "list", "l", false, "The database name")
 	cmd.Flags().StringVar(&dbName, "db", "", "The database name")
-	if err := cmd.MarkFlagRequired("db"); err != nil {
-		log.Fatal(err)
-	}
-
 	return cmd
 }

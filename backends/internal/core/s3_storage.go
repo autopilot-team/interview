@@ -174,7 +174,11 @@ func (s *S3Storage) GenerateDownloadURL(ctx context.Context, key string, expires
 		Key:    aws.String(key),
 	}
 
-	result, err := presignClient.PresignGetObject(ctx, input, s3.WithPresignExpires(expiresIn))
+	var opts []func(*s3.PresignOptions)
+	if expiresIn == 0 {
+		opts = append(opts, s3.WithPresignExpires(expiresIn))
+	}
+	result, err := presignClient.PresignGetObject(ctx, input, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate download URL: %w", err)
 	}

@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewStartCmd(ctx context.Context, logger *slog.Logger, httpServer *core.HttpServer, grpcServer *core.GrpcServer, liveWorker *core.Worker, testWorker *core.Worker, cleanUp func()) *cobra.Command {
+func NewStartCmd(ctx context.Context, logger *slog.Logger, httpServer *core.HttpServer, grpcServer *core.GrpcServer, liveWorker core.Worker, testWorker core.Worker, cleanUp func()) *cobra.Command {
 	var runServer, runWorker bool
 
 	cmd := &cobra.Command{
@@ -40,7 +40,7 @@ type StartOptions struct {
 	RunWorker bool
 }
 
-func Start(ctx context.Context, logger *slog.Logger, httpServer *core.HttpServer, grpcServer *core.GrpcServer, liveWorker *core.Worker, testWorker *core.Worker, cleanUp func(), opts StartOptions) error {
+func Start(ctx context.Context, logger *slog.Logger, httpServer *core.HttpServer, grpcServer *core.GrpcServer, liveWorker core.Worker, testWorker core.Worker, cleanUp func(), opts StartOptions) error {
 	var wg sync.WaitGroup
 	errChan := make(chan error, 2)
 	serverDone := make(chan struct{})

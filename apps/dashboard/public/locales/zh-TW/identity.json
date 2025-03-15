@@ -1,5 +1,77 @@
 {
+	"connections": {
+		"add": "新增連接",
+		"capabilities": {
+			"cardProcessing": "卡處理",
+			"oneOffPayments": "一次性支付",
+			"partialCaptures": "部分捕獲",
+			"partialRefunds": "部分退款",
+			"recurringPayments": "定期支付",
+			"upiInstantPayments": "UPI即時支付",
+			"directBankTransfer": "直接银行转账",
+			"cryptoToFiat": "加密货币转法定货币"
+		},
+		"connectToProvider": "連接至{{provider}}",
+		"createdAt": "建立時間",
+		"customCredentialsHighlight": "使用自訂憑證",
+		"description": "通過連接您的提供商，加速您的財務操作。",
+		"emptyState": {
+			"title": "沒有連接",
+			"description": "您還沒有建立任何連接。連接您的提供商以開始。"
+		},
+		"name": {
+			"label": "名稱",
+			"description": "連接的名称。"
+		},
+		"noResults": "未找到結果",
+		"paymentEvents": "支付事件",
+		"paymentMethods": {
+			"applePay": "蘋果支付",
+			"card": "卡",
+			"googlePay": "谷歌支付"
+		},
+		"payoutEvents": "支出事件",
+		"payoutMethods": {
+			"bankTransfer": "銀行轉帳"
+		},
+		"provider": "提供商",
+		"providerType": {
+			"processor": "處理器"
+		},
+		"providerDetails": {
+			"type": "類型",
+			"website": "網站",
+			"countries": "國家",
+			"currencies": "貨幣",
+			"paymentMethods": "支付方式",
+			"payoutMethods": "支付方式",
+			"capabilities": "能力",
+			"integration": "集成"
+		},
+		"sharedCredentials": "共享憑證",
+		"testModeExplanation": "啟用此選項以提供您自己的憑證，或使用我們的共享測試憑證快速開始。",
+		"title": "連接",
+		"useCustomCredentials": "使用自訂憑證",
+		"webhookEndpoints": "Webhook端點",
+		"webhookEndpointsDescription": "配置您的提供商以將Webhook事件發送到以下端點：",
+		"whitelistedIPs": "白名單IP地址",
+		"whitelistedIPsDescription": "您的提供商可能需要您將以下IP地址列入白名單以允許安全API訪問："
+	},
 	"errors": {
+		"connections": {
+			"create": {
+				"title": "錯誤",
+				"description": "無法建立連接。請重試。"
+			},
+			"delete": {
+				"title": "錯誤",
+				"description": "無法刪除連接。請重試。"
+			},
+			"load": {
+				"title": "錯誤",
+				"description": "無法加載連接。請重試。"
+			}
+		},
 		"forgotPassword": {
 			"description": "無法發送密碼重設連結。請重試。",
 			"title": "錯誤"
@@ -38,6 +110,17 @@
 		},
 		"resetPassword": "發送重設連結",
 		"title": "重設密碼"
+	},
+	"passwordStrength": {
+		"moderate": "中等",
+		"requirements": {
+			"minLength": "至少需要8個字元",
+			"mixCase": "需要混合使用大小寫字母",
+			"number": "需要包含數字",
+			"special": "需要包含特殊符號"
+		},
+		"secure": "安全",
+		"weak": "偏弱"
 	},
 	"resetPasswordForm": {
 		"backToSignIn": "返回登入",
@@ -171,17 +254,6 @@
 		"namePlaceholder": "全名",
 		"password": "密碼",
 		"passwordPlaceholder": "建立密碼",
-		"passwordStrength": {
-			"moderate": "中等",
-			"requirements": {
-				"minLength": "至少需要8個字元",
-				"mixCase": "需要混合使用大小寫字母",
-				"number": "需要包含數字",
-				"special": "需要包含特殊符號"
-			},
-			"secure": "安全",
-			"weak": "偏弱"
-		},
 		"privacyPolicy": "隱私權政策",
 		"signIn": "登入",
 		"signUp": "建立帳戶",
@@ -191,6 +263,16 @@
 		"title": "建立您的帳戶"
 	},
 	"success": {
+		"connections": {
+			"create": {
+				"title": "成功",
+				"description": "連接已成功建立。"
+			},
+			"delete": {
+				"title": "成功",
+				"description": "連接已成功刪除。"
+			}
+		},
 		"forgotPassword": {
 			"description": "如果此電子郵件已註冊帳戶，我們將向您發送密碼重設連結。請檢查您的信箱。",
 			"title": "成功"

@@ -235,7 +235,7 @@ export const WithFooter: Story = {
 				<CommandGroup>
 					<CommandItem className="text-red-600">
 						<LogOut className="mr-2" />
-						<span>Log out</span>
+						<span>Sign out</span>
 						<CommandShortcut>⇧⌘Q</CommandShortcut>
 					</CommandItem>
 				</CommandGroup>
@@ -244,9 +244,9 @@ export const WithFooter: Story = {
 	),
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
-		const logoutText = canvas.getByText("Log out");
-		const logoutItem = logoutText.closest("[cmdk-item]");
-		await expect(logoutItem).toHaveClass("text-red-600");
+		const signOutText = canvas.getByText("Sign out");
+		const signOutItem = signOutText.closest("[cmdk-item]");
+		await expect(signOutItem).toHaveClass("text-red-600");
 
 		// Test shortcut is visible
 		const shortcut = canvas.getByText("⇧⌘Q");

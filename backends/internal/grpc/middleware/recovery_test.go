@@ -13,6 +13,7 @@ import (
 )
 
 func TestRecovery(t *testing.T) {
+	t.Parallel()
 	var logBuffer bytes.Buffer
 	logger := slog.New(slog.NewTextHandler(&logBuffer, &slog.HandlerOptions{
 		Level: slog.LevelError,
@@ -26,15 +27,15 @@ func TestRecovery(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		handler      func(ctx context.Context, req interface{}) (interface{}, error)
+		handler      func(ctx context.Context, req any) (any, error)
 		expectPanic  bool
 		expectedCode codes.Code
-		expectedResp interface{}
+		expectedResp any
 		expectedLog  string
 	}{
 		{
-			name: "successful execution - no panic",
-			handler: func(ctx context.Context, req interface{}) (interface{}, error) {
+			name: "should execute successfully without panic",
+			handler: func(ctx context.Context, req any) (any, error) {
 				return "success", nil
 			},
 			expectPanic:  false,
@@ -43,8 +44,8 @@ func TestRecovery(t *testing.T) {
 			expectedLog:  "",
 		},
 		{
-			name: "panic with error",
-			handler: func(ctx context.Context, req interface{}) (interface{}, error) {
+			name: "should recover from panic with error message",
+			handler: func(ctx context.Context, req any) (any, error) {
 				panic("test panic error")
 			},
 			expectPanic:  true,
@@ -53,8 +54,8 @@ func TestRecovery(t *testing.T) {
 			expectedLog:  "level=ERROR msg=\"Panic recovered\" error=\"test panic error\"",
 		},
 		{
-			name: "panic with non-error value",
-			handler: func(ctx context.Context, req interface{}) (interface{}, error) {
+			name: "should recover from panic with non-error value",
+			handler: func(ctx context.Context, req any) (any, error) {
 				panic(123)
 			},
 			expectPanic:  true,
@@ -77,7 +78,7 @@ func TestRecovery(t *testing.T) {
 			}
 
 			// Create a wrapper handler that matches the grpc.UnaryHandler signature
-			wrappedHandler := func(ctx context.Context, req interface{}) (interface{}, error) {
+			wrappedHandler := func(ctx context.Context, req any) (any, error) {
 				return tt.handler(ctx, req)
 			}
 

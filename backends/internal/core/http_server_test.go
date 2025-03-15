@@ -15,6 +15,7 @@ import (
 var testFS embed.FS
 
 func TestHttpServer_ServeStaticFiles(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	tests := []struct {
@@ -25,21 +26,21 @@ func TestHttpServer_ServeStaticFiles(t *testing.T) {
 		expectedBody   string
 	}{
 		{
-			name:           "serve index.html for root path",
+			name:           "should serve index.html for root path",
 			path:           "/",
 			expectedStatus: http.StatusOK,
 			expectedType:   "text/html",
 			expectedBody:   "<h1>Index</h1>",
 		},
 		{
-			name:           "serve 404.html for non-existent path",
+			name:           "should serve 404.html for non-existent path",
 			path:           "/nonexistent",
 			expectedStatus: http.StatusOK,
 			expectedType:   "text/html",
 			expectedBody:   "<h1>404</h1>",
 		},
 		{
-			name:           "serve static file",
+			name:           "should serve static file correctly",
 			path:           "/style.css",
 			expectedStatus: http.StatusOK,
 			expectedType:   "text/css; charset=utf-8",

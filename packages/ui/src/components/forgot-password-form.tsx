@@ -58,6 +58,7 @@ export function ForgotPasswordForm({
 	...props
 }: ForgotPasswordFormProps) {
 	const forgotPasswordSchema = z.object({
+		cfTurnstileToken: z.string().optional(),
 		email: z
 			.string()
 			.min(1, t.errors.emailRequired)
@@ -68,16 +69,21 @@ export function ForgotPasswordForm({
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<ForgotPasswordFormData>({
+	} = useForm({
 		resolver: zodResolver(forgotPasswordSchema),
 	});
 	const onSubmit = handleSubmit(async (data) => {
 		data.cfTurnstileToken = turnstileRef.current?.getResponse() || "";
-		await handleForgotPassword?.(data, reset);
+		await handleForgotPassword?.(
+			data as ForgotPasswordFormData,
+			reset as UseFormReset<ForgotPasswordFormData>,
+		);
 	});
 	const [currentError, setCurrentError] = useState(generalError);
 	const [currentSuccess, setCurrentSuccess] = useState(successMessage);
 	const turnstileRef = useRef<TurnstileInstance>(null);
+	const [isCfTurnstileLoading, setIsCfTurnstileLoading] = useState(true);
+	const isFormLoading = isLoading || isCfTurnstileLoading;
 
 	// Update messages when props change
 	useEffect(() => {
@@ -143,9 +149,14 @@ export function ForgotPasswordForm({
 									className="text-center"
 									options={{ size: "invisible" }}
 									siteKey={cfTurnstileSiteKey}
+									onSuccess={() => setIsCfTurnstileLoading(false)}
 								/>
 
-								<Button type="submit" className="w-full" disabled={isLoading}>
+								<Button
+									type="submit"
+									className="w-full"
+									disabled={isFormLoading}
+								>
 									{t.resetPassword}
 								</Button>
 							</div>

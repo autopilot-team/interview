@@ -25,7 +25,7 @@ type Mailer interface {
 	BulkSend(templateName string, messages []EmailMessage, opts *RenderOptions) error
 
 	// Render renders both HTML and text versions of an email template
-	Render(templateName string, data map[string]interface{}, opts *RenderOptions) (html string, text string, err error)
+	Render(templateName string, data map[string]any, opts *RenderOptions) (html string, text string, err error)
 
 	// Send sends an email using rendered templates
 	Send(templateName string, msg EmailMessage, opts *RenderOptions) error
@@ -79,7 +79,7 @@ type MailOptions struct {
 	I18nBundle      *I18nBundle
 	Logger          *slog.Logger
 	Mode            types.Mode
-	PreviewData     map[string]map[string]interface{}
+	PreviewData     map[string]map[string]any
 	TemplateOptions *MailTemplateOptions
 	SmtpUrl         string
 }
@@ -152,7 +152,7 @@ func (m *Mail) TemplateOptions() *MailTemplateOptions {
 }
 
 // Render renders both HTML and text versions of an email template
-func (m *Mail) Render(templateName string, data map[string]interface{}, opts *RenderOptions) (html string, text string, err error) {
+func (m *Mail) Render(templateName string, data map[string]any, opts *RenderOptions) (html string, text string, err error) {
 	if data == nil {
 		return "", "", fmt.Errorf("data map cannot be nil")
 	}
@@ -167,7 +167,7 @@ func (m *Mail) Render(templateName string, data map[string]interface{}, opts *Re
 
 	// Create base template functions
 	baseFuncs := template.FuncMap{
-		"t": func(messageID string, args ...interface{}) (string, error) {
+		"t": func(messageID string, args ...any) (string, error) {
 			if len(data) > 0 {
 				for k, v := range data {
 					args = append(args, k, v)
@@ -264,7 +264,7 @@ type EmailMessage struct {
 	From         string
 	To           []string
 	Subject      string
-	Data         map[string]interface{}
+	Data         map[string]any
 	MessageID    string // Optional message ID
 	EnvelopeFrom string // Optional envelope from address
 	Attachments  []*mail.File

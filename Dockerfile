@@ -1,20 +1,22 @@
 # syntax=docker/dockerfile:1
 
 # For building the apps/services.
-FROM pkgxdev/pkgx:v2.2.1 AS base
+FROM jdxcode/mise AS base
 
 ARG APP_SERVICE
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 WORKDIR /go/src/app
 
+# Setup pkgx
+COPY package.json mise.toml ./
+RUN mise trust
+RUN mise install
+
 # Install dependencies
 RUN apt update -qq && \
-    apt install --no-install-recommends -y curl && \
+    apt install --no-install-recommends -y apt-transport-https ca-certificates curl gnupg && \
+    apt update -qq && \
     rm -rf /var/lib/apt/lists/*
-
-# Setup pkgx
-COPY package.json ./
-RUN dev
 
 FROM base AS builder
 

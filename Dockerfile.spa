@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # For building the apps/services.
-FROM pkgxdev/pkgx:v2.2.1 AS base
+FROM jdxcode/mise AS base
 
 ARG APP_SERVICE
 ARG VITE_API_BASE_URL
@@ -14,8 +14,9 @@ RUN apt update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # Setup pkgx
-COPY package.json ./
-RUN dev
+COPY package.json mise.toml ./
+RUN mise trust
+RUN mise install
 
 FROM base AS builder
 
@@ -24,6 +25,7 @@ ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
 # Install NodeJS dependencies
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY ./apps/assets/package.json ./apps/assets/package.json
 COPY ./apps/dashboard/package.json ./apps/dashboard/package.json
 COPY ./packages/api/package.json ./packages/api/package.json
 COPY ./packages/typescript-config/package.json ./packages/typescript-config/package.json
@@ -42,7 +44,7 @@ ARG APP_SERVICE
 # Copy the built assets
 COPY --from=builder /app/apps/${APP_SERVICE}/build/client /usr/share/nginx/html
 
-# Configure nginx for React Router SPA
+# Configure nginx for Next.js SPA
 RUN echo 'error_log /dev/stderr warn;' > /etc/nginx/nginx.conf && \
     echo 'events { worker_connections 1024; }' >> /etc/nginx/nginx.conf && \
     echo 'http { \

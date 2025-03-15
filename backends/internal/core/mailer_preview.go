@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"path/filepath"
 	"strings"
-
-	"log/slog"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -23,7 +22,7 @@ type MailerPreview struct {
 	mailer     Mailer
 	i18nBundle *I18nBundle
 	logger     *slog.Logger
-	data       map[string]map[string]interface{}
+	data       map[string]map[string]any
 }
 
 // NewMailerPreview creates a new MailerPreview instance
@@ -32,21 +31,21 @@ func NewMailerPreview(mailer Mailer, i18nBundle *I18nBundle, logger *slog.Logger
 		mailer:     mailer,
 		i18nBundle: i18nBundle,
 		logger:     logger,
-		data:       make(map[string]map[string]interface{}),
+		data:       make(map[string]map[string]any),
 	}
 }
 
 // SetPreviewData sets the preview data for templates
-func (mp *MailerPreview) SetPreviewData(data map[string]map[string]interface{}) {
+func (mp *MailerPreview) SetPreviewData(data map[string]map[string]any) {
 	mp.data = data
 }
 
 // GetPreviewData returns preview data for a template
-func (mp *MailerPreview) GetPreviewData(templateName string) map[string]interface{} {
+func (mp *MailerPreview) GetPreviewData(templateName string) map[string]any {
 	if data, ok := mp.data[templateName]; ok {
 		return data
 	}
-	return map[string]interface{}{}
+	return map[string]any{}
 }
 
 // setupEmailPreviewRoutes configures routes for email template previews
@@ -200,7 +199,7 @@ func (mp *MailerPreview) handleSendTestEmail(w http.ResponseWriter, r *http.Requ
 	}
 
 	if err := mp.mailer.Send(templateName, msg, opts); err != nil {
-		mp.logger.Error("failed to send email", "error", err)
+		mp.logger.Error("Failed to send email", "error", err)
 		http.Error(w, fmt.Sprintf("Failed to send email: %v", err), http.StatusInternalServerError)
 		return
 	}

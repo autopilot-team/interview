@@ -18,10 +18,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	//go:embed all:testdata
-	mailerPreviewFS embed.FS
-)
+//go:embed all:testdata
+var mailerPreviewFS embed.FS
 
 func setupTestMailerPreview(t *testing.T) (*MailerPreview, Mailer) {
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
@@ -54,6 +52,7 @@ func setupTestMailerPreview(t *testing.T) (*MailerPreview, Mailer) {
 }
 
 func TestNewMailerPreview(t *testing.T) {
+	t.Parallel()
 	preview, mailer := setupTestMailerPreview(t)
 
 	assert.NotNil(t, preview)
@@ -63,9 +62,10 @@ func TestNewMailerPreview(t *testing.T) {
 }
 
 func TestSetPreviewData(t *testing.T) {
+	t.Parallel()
 	preview, _ := setupTestMailerPreview(t)
 
-	testData := map[string]map[string]interface{}{
+	testData := map[string]map[string]any{
 		"welcome": {
 			"Name":    "John",
 			"AppName": "TestApp",
@@ -85,6 +85,7 @@ func TestSetPreviewData(t *testing.T) {
 }
 
 func TestHandleListEmailTemplates(t *testing.T) {
+	t.Parallel()
 	preview, _ := setupTestMailerPreview(t)
 	router := chi.NewRouter()
 	preview.setupEmailPreviewRoutes(router)
@@ -96,12 +97,12 @@ func TestHandleListEmailTemplates(t *testing.T) {
 		checkResponse  func(*testing.T, *httptest.ResponseRecorder)
 	}{
 		{
-			name:           "list templates without query params",
+			name:           "should redirect to first template without query params",
 			path:           "/mailer/preview",
-			expectedStatus: http.StatusFound, // Should redirect to first template
+			expectedStatus: http.StatusFound,
 		},
 		{
-			name:           "list templates with template and locale",
+			name:           "should display template list with template and locale",
 			path:           "/mailer/preview?template=welcome&locale=en",
 			expectedStatus: http.StatusOK,
 			checkResponse: func(t *testing.T, w *httptest.ResponseRecorder) {
@@ -126,12 +127,13 @@ func TestHandleListEmailTemplates(t *testing.T) {
 }
 
 func TestHandlePreviewEmailTemplate(t *testing.T) {
+	t.Parallel()
 	preview, _ := setupTestMailerPreview(t)
 	router := chi.NewRouter()
 	preview.setupEmailPreviewRoutes(router)
 
 	// Set test data
-	preview.SetPreviewData(map[string]map[string]interface{}{
+	preview.SetPreviewData(map[string]map[string]any{
 		"basic": {
 			"Name": "John",
 		},
@@ -195,12 +197,13 @@ func TestHandlePreviewEmailTemplate(t *testing.T) {
 }
 
 func TestHandleSendTestEmail(t *testing.T) {
+	t.Parallel()
 	preview, _ := setupTestMailerPreview(t)
 	router := chi.NewRouter()
 	preview.setupEmailPreviewRoutes(router)
 
 	// Set test data
-	preview.SetPreviewData(map[string]map[string]interface{}{
+	preview.SetPreviewData(map[string]map[string]any{
 		"basic": {
 			"Name": "John",
 		},
@@ -257,6 +260,7 @@ func TestHandleSendTestEmail(t *testing.T) {
 }
 
 func TestTemplateManager(t *testing.T) {
+	t.Parallel()
 	preview, _ := setupTestMailerPreview(t)
 	templateMgr := newTemplateManager(preview.mailer.TemplateOptions().FS, preview.mailer.TemplateOptions().Dir)
 
@@ -271,6 +275,7 @@ func TestTemplateManager(t *testing.T) {
 }
 
 func TestPreviewRenderer(t *testing.T) {
+	t.Parallel()
 	preview, _ := setupTestMailerPreview(t)
 	templateMgr := newTemplateManager(preview.mailer.TemplateOptions().FS, preview.mailer.TemplateOptions().Dir)
 	renderer := newPreviewRenderer(templateMgr)

@@ -93,13 +93,13 @@ func NewLocalizer(bundle *I18nBundle, locales ...string) *Localizer {
 //   - args: Variable arguments that can be either a single map or key-value pairs
 //
 // Returns:
-//   - func(string, ...interface{}) (string, error): A function that performs the actual translation
+//   - func(string, ...any) (string, error): A function that performs the actual translation
 //   - The returned function returns the translated string and any error that occurred
-func (l *Localizer) T() func(messageID string, args ...interface{}) (string, error) {
-	return func(messageID string, args ...interface{}) (string, error) {
+func (l *Localizer) T() func(messageID string, args ...any) (string, error) {
+	return func(messageID string, args ...any) (string, error) {
 		// If we have exactly one argument and it's a map, use it directly as template data
 		if len(args) == 1 {
-			if templateData, ok := args[0].(map[string]interface{}); ok {
+			if templateData, ok := args[0].(map[string]any); ok {
 				lc := &i18n.LocalizeConfig{
 					MessageID:    messageID,
 					TemplateData: templateData,
@@ -110,7 +110,7 @@ func (l *Localizer) T() func(messageID string, args ...interface{}) (string, err
 		}
 
 		// Handle the original key-value pair style arguments
-		kv := map[string]interface{}{}
+		kv := map[string]any{}
 		key := ""
 		for _, arg := range args {
 			if key == "" {
@@ -126,7 +126,7 @@ func (l *Localizer) T() func(messageID string, args ...interface{}) (string, err
 
 		lc := &i18n.LocalizeConfig{
 			Funcs: template.FuncMap{
-				"t": func(messageID string, args ...interface{}) (string, error) {
+				"t": func(messageID string, args ...any) (string, error) {
 					lc := &i18n.LocalizeConfig{
 						MessageID:    messageID,
 						TemplateData: kv,

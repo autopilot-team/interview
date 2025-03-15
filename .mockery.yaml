@@ -9,10 +9,14 @@ resolve-type-alias: false
 with-expecter: true
 
 packages:
-  autopilot/backends/api/internal/service:
+  autopilot/backends/internal/core:
     config:
       recursive: true
 
-  autopilot/backends/api/internal/store:
+  autopilot/backends/api/pkg/app:
+    config:
+      recursive: true
+
+  autopilot/backends/api/internal:
     config:
       recursive: true

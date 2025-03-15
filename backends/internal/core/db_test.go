@@ -26,10 +26,8 @@ const (
 	postgresURL = "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
 )
 
-var (
-	//go:embed all:testdata
-	testMigrationsFS embed.FS
-)
+//go:embed all:testdata
+var testMigrationsFS embed.FS
 
 // generateTestDBName generates a unique database name using timestamp and random suffix
 func generateTestDBName() string {
@@ -100,8 +98,6 @@ func setupTestDB(t *testing.T) (string, string, func()) {
 }
 
 func TestMain(m *testing.M) {
-	rand.New(rand.NewSource(time.Now().UnixNano()))
-
 	// Run tests
 	code := m.Run()
 
@@ -124,6 +120,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestNewDB(t *testing.T) {
+	t.Parallel()
 	writerURL, readerURL, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -137,7 +134,7 @@ func TestNewDB(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "success with writer only",
+			name: "should initialize successfully with writer only",
 			opts: DBOptions{
 				Mode:          "debug",
 				WriterURL:     writerURL,
@@ -150,7 +147,7 @@ func TestNewDB(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "success with writer and reader",
+			name: "should initialize successfully with writer and reader",
 			opts: DBOptions{
 				Mode:          "debug",
 				WriterURL:     writerURL,
@@ -164,7 +161,7 @@ func TestNewDB(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "invalid writer URL",
+			name: "should reject invalid writer URL",
 			opts: DBOptions{
 				Mode:          "debug",
 				WriterURL:     "invalid://url",
@@ -177,7 +174,7 @@ func TestNewDB(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "invalid reader URL",
+			name: "should reject invalid reader URL",
 			opts: DBOptions{
 				Mode:          "debug",
 				WriterURL:     writerURL,
@@ -191,7 +188,7 @@ func TestNewDB(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "missing logger",
+			name: "should reject missing logger",
 			opts: DBOptions{
 				Mode:          "debug",
 				WriterURL:     writerURL,
@@ -222,6 +219,7 @@ func TestNewDB(t *testing.T) {
 }
 
 func TestDB_Reader(t *testing.T) {
+	t.Parallel()
 	writerURL, readerURL, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -229,7 +227,7 @@ func TestDB_Reader(t *testing.T) {
 	_, mainFile, _, ok := runtime.Caller(0)
 	require.True(t, ok, "Failed to get caller information")
 
-	t.Run("fallback to writer when no readers", func(t *testing.T) {
+	t.Run("should fallback to writer when no readers available", func(t *testing.T) {
 		db, err := NewDB(context.Background(), DBOptions{
 			Mode:          "debug",
 			WriterURL:     writerURL,
@@ -246,7 +244,7 @@ func TestDB_Reader(t *testing.T) {
 		assert.Equal(t, db.Writer(), reader)
 	})
 
-	t.Run("returns reader when available", func(t *testing.T) {
+	t.Run("should return reader when available", func(t *testing.T) {
 		db, err := NewDB(context.Background(), DBOptions{
 			Mode:          "debug",
 			WriterURL:     writerURL,
@@ -266,6 +264,7 @@ func TestDB_Reader(t *testing.T) {
 }
 
 func TestDB_Writer(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -290,6 +289,7 @@ func TestDB_Writer(t *testing.T) {
 }
 
 func TestDB_WithTx(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -364,6 +364,7 @@ func TestDB_WithTx(t *testing.T) {
 }
 
 func TestDB_Close(t *testing.T) {
+	t.Parallel()
 	writerURL, readerURL, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -402,6 +403,7 @@ func TestDB_Close(t *testing.T) {
 }
 
 func TestDB_WithTxTimeout(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -467,6 +469,7 @@ func TestDB_WithTxTimeout(t *testing.T) {
 }
 
 func TestDbLogger_Log(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	dbLogger := &DbLogger{
 		Logger: logger,
@@ -474,7 +477,7 @@ func TestDbLogger_Log(t *testing.T) {
 	}
 
 	t.Run("logs query in debug mode", func(t *testing.T) {
-		data := map[string]interface{}{
+		data := map[string]any{
 			"sql":  "SELECT * FROM users",
 			"time": time.Duration(100 * time.Millisecond),
 		}
@@ -482,7 +485,7 @@ func TestDbLogger_Log(t *testing.T) {
 	})
 
 	t.Run("ignores non-query messages", func(t *testing.T) {
-		data := map[string]interface{}{
+		data := map[string]any{
 			"message": "test",
 		}
 		dbLogger.Log(context.Background(), tracelog.LogLevelInfo, "NotQuery", data)
@@ -490,6 +493,7 @@ func TestDbLogger_Log(t *testing.T) {
 }
 
 func TestFormatQuery(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name     string
 		query    string
@@ -518,9 +522,10 @@ func TestFormatQuery(t *testing.T) {
 }
 
 func TestFormatArg(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name string
-		arg  interface{}
+		arg  any
 	}{
 		{
 			name: "string",
@@ -557,6 +562,7 @@ func TestFormatArg(t *testing.T) {
 }
 
 func TestDB_Name(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -580,6 +586,7 @@ func TestDB_Name(t *testing.T) {
 }
 
 func TestDB_Migrate(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -604,6 +611,7 @@ func TestDB_Migrate(t *testing.T) {
 }
 
 func TestDB_GenMigration(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 
@@ -653,6 +661,7 @@ func TestDB_GenMigration(t *testing.T) {
 }
 
 func TestDB_MigrateStatus(t *testing.T) {
+	t.Parallel()
 	writerURL, _, cleanup := setupTestDB(t)
 	defer cleanup()
 

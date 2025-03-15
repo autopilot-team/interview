@@ -2,8 +2,15 @@ package core
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"log/slog"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/smithy-go/logging"
 )
 
 // ObjectMetadata represents metadata for a stored object
@@ -79,4 +86,51 @@ type Storage interface {
 
 	// UpdateMetadata updates the metadata for an existing object
 	UpdateMetadata(ctx context.Context, key string, metadata *ObjectMetadata) error
+}
+
+type StorageOptions struct {
+	// Logger is used for storage access-related logging
+	Logger *slog.Logger
+	// Endpoint is used for public accessible endpoints
+	Endpoint string
+	// Region is the location of the storge server.
+	Region string
+	// AccessKeyID is the storage access key.
+	AccessKeyID string
+	// AccessKeyID is the storage secret key.
+	SecretAccessKey string
+	// Bucket is the bucket name to use.
+	Bucket string
+	// UsePathStyle enables client path style addressing.
+	UsePathStyle bool
+}
+
+func NewStorage(ctx context.Context, opts StorageOptions) (Storage, error) {
+	if opts.Logger == nil {
+		return nil, fmt.Errorf("logger is required")
+	}
+	awsCfg := aws.Config{
+		Logger:       compatLogger{opts.Logger},
+		Credentials:  credentials.NewStaticCredentialsProvider(opts.AccessKeyID, opts.SecretAccessKey, ""),
+		Region:       opts.Region,
+		BaseEndpoint: &opts.Endpoint,
+	}
+	s3Client := s3.NewFromConfig(awsCfg, func(o *s3.Options) {
+		o.UsePathStyle = opts.UsePathStyle // Required for MinIO compat
+	})
+
+	return NewS3Storage(s3Client, opts.Bucket), nil
+}
+
+type compatLogger struct {
+	*slog.Logger
+}
+
+func (c compatLogger) Logf(typ logging.Classification, format string, v ...any) {
+	switch typ {
+	case logging.Warn:
+		c.Warn(fmt.Sprintf(format, v...))
+	case logging.Debug:
+		c.Debug(fmt.Sprintf(format, v...))
+	}
 }

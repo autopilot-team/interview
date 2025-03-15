@@ -11,19 +11,19 @@ export function QueryClientProvider({
 		() =>
 			new QueryClient({
 				defaultOptions: {
+					mutations: {
+						retry: false, // Retry failed mutations once
+						retryDelay: 1000, // Wait 1 second before retrying
+					},
 					queries: {
-						staleTime: 0, // Consider data stale immediately
 						gcTime: 60 * 1000, // Keep inactive queries for 1 minute only
-						retry: 2, // Retry failed requests twice
+						retry: false, // Retry failed requests twice
 						retryDelay: (attemptIndex) =>
 							Math.min(1000 * 2 ** attemptIndex, 30000),
 						refetchOnWindowFocus: true, // Refetch when user returns to the app
 						refetchOnReconnect: true, // Refetch on network reconnection
 						refetchOnMount: true, // Always refetch on component mount
-					},
-					mutations: {
-						retry: 1, // Retry failed mutations once
-						retryDelay: 1000, // Wait 1 second before retrying
+						staleTime: 0, // Consider data stale immediately
 					},
 				},
 			}),

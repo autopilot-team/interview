@@ -11,10 +11,29 @@ yarn-error.log
 # Misc.
 .DS_Store
 .react-router
+.task
+.terraform
+.terraform.lock.hcl
+.wrangler
 build
+dist
 !**/testdata/
 node_modules
 internal/core/testdata/migrations/test/*_table.sql
 tmp
+.mise.local.toml
 
 *storybook.log
+
+# Playwright
+node_modules/
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/

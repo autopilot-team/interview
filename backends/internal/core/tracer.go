@@ -2,49 +2,46 @@ package core
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 
+	"go.opentelemetry.io/contrib/propagators/aws/xray"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
-	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 )
 
-// Package core provides core functionality for the application.
-
-// NewTracer initializes and configures an OpenTelemetry tracer with Axiom export capabilities.
-// It sets up tracing with the provided configuration parameters and returns a shutdown function
+// NewTracer initializes an OpenTelemetry trace provider configured with AWS X-Ray ID generator,
+// sets it as the global trace provider, and configures X-Ray propagation.
+//
+// It returns a shutdown function to clean up resources, which is a closure
 // that should be called when the application terminates.
 //
 // Parameters:
 //   - ctx: Context for tracer initialization
 //   - appEnv: Application environment (e.g., "production", "staging")
-//   - apiToken: Axiom API token for authentication
-//   - service: Name of the service/dataset in Axiom
+//   - otlpEndpoint: Endpoint for the OpenTelemetry Collector (e.g., "collector:4317")
+//   - service: Name of the service
 //   - version: Version of the service being traced
 //
 // Returns:
 //   - func(context.Context) error: Shutdown function to clean up the tracer
 //   - error: Any error encountered during setup
-func NewTracer(ctx context.Context, appEnv, apiToken, service, version string) (func(context.Context) error, error) {
-	exporter, err := otlptracehttp.New(
+func NewTracer(ctx context.Context, appEnv, otlpEndpoint, service, version string) (func(context.Context) error, error) {
+	traceExporter, err := otlptracegrpc.New(
 		ctx,
-		otlptracehttp.WithEndpoint("api.axiom.co"),
-		otlptracehttp.WithHeaders(map[string]string{
-			"Authorization":   "Bearer " + apiToken,
-			"X-AXIOM-DATASET": "autopilot",
-		}),
-		otlptracehttp.WithTLSClientConfig(&tls.Config{}),
+		otlptracegrpc.WithEndpoint(otlpEndpoint),
+		otlptracegrpc.WithInsecure(),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create exporter: %v", err)
+		return nil, fmt.Errorf("failed to create trace exporter: %v", err)
 	}
 
-	provider := sdktrace.NewTracerProvider(
-		sdktrace.WithBatcher(exporter),
+	// Create and register trace provider with X-Ray ID generator
+	traceProvider := sdktrace.NewTracerProvider(
+		sdktrace.WithBatcher(traceExporter),
+		sdktrace.WithIDGenerator(xray.NewIDGenerator()),
 		sdktrace.WithResource(
 			resource.NewWithAttributes(
 				semconv.SchemaURL,
@@ -53,12 +50,12 @@ func NewTracer(ctx context.Context, appEnv, apiToken, service, version string) (
 				semconv.DeploymentEnvironmentKey.String(appEnv),
 			),
 		),
+		sdktrace.WithSampler(sdktrace.AlwaysSample()), // Default to sampling all traces
 	)
-	otel.SetTracerProvider(provider)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
-		propagation.TraceContext{},
-		propagation.Baggage{},
-	))
 
-	return provider.Shutdown, nil
+	// Set global trace provider and X-Ray propagator
+	otel.SetTracerProvider(traceProvider)
+	otel.SetTextMapPropagator(xray.Propagator{})
+
+	return traceProvider.Shutdown, nil
 }

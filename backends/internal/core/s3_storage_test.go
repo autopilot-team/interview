@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -27,20 +28,18 @@ const (
 )
 
 type s3TestConfig struct {
-	accessKey  string
-	secretKey  string
-	endpoint   string
-	region     string
-	bucketName string
+	accessKey string
+	secretKey string
+	endpoint  string
+	region    string
 }
 
 func getTestConfig() s3TestConfig {
 	return s3TestConfig{
-		accessKey:  getEnvOrDefault("AWS_ACCESS_KEY_ID", testAccessKey),
-		secretKey:  getEnvOrDefault("AWS_SECRET_ACCESS_KEY", testSecretKey),
-		endpoint:   getEnvOrDefault("AWS_ENDPOINT", testEndpoint),
-		region:     getEnvOrDefault("AWS_REGION", testRegion),
-		bucketName: testBucket,
+		accessKey: getEnvOrDefault("AWS_ACCESS_KEY_ID", testAccessKey),
+		secretKey: getEnvOrDefault("AWS_SECRET_ACCESS_KEY", testSecretKey),
+		endpoint:  getEnvOrDefault("AWS_ENDPOINT", testEndpoint),
+		region:    getEnvOrDefault("AWS_REGION", testRegion),
 	}
 }
 
@@ -52,9 +51,10 @@ func getEnvOrDefault(key, defaultValue string) string {
 	return defaultValue
 }
 
-func setupTestS3(t *testing.T) (*S3Storage, func()) {
+func setupTestS3(t *testing.T) *S3Storage {
 	t.Helper()
 	cfg := getTestConfig()
+	bucketName := uuid.New().String()
 
 	// Configure S3 client
 	awsCfg := aws.Config{
@@ -71,19 +71,19 @@ func setupTestS3(t *testing.T) (*S3Storage, func()) {
 	// Create test bucket
 	ctx := context.Background()
 	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{
-		Bucket: aws.String(cfg.bucketName),
+		Bucket: aws.String(bucketName),
 	})
 	if err != nil {
 		t.Logf("Failed to create bucket, might already exist: %v", err)
 	}
 
-	storage := NewS3Storage(client, cfg.bucketName)
+	storage := NewS3Storage(client, bucketName)
 
-	cleanup := func() {
-		cleanupTestBucket(t, client, cfg.bucketName)
-	}
+	t.Cleanup(func() {
+		cleanupTestBucket(t, client, bucketName)
+	})
 
-	return storage, cleanup
+	return storage
 }
 
 func cleanupTestBucket(t *testing.T, client *s3.Client, bucketName string) {
@@ -123,8 +123,8 @@ func cleanupTestBucket(t *testing.T, client *s3.Client, bucketName string) {
 }
 
 func TestS3Storage_Upload(t *testing.T) {
-	storage, cleanup := setupTestS3(t)
-	defer cleanup()
+	t.Parallel()
+	storage := setupTestS3(t)
 
 	tests := []struct {
 		name        string
@@ -135,7 +135,7 @@ func TestS3Storage_Upload(t *testing.T) {
 		wantErr     bool
 	}{
 		{
-			name:        "basic upload",
+			name:        "should upload basic file successfully",
 			key:         "test.txt",
 			content:     []byte(testContentStr),
 			contentType: "text/plain",
@@ -143,35 +143,35 @@ func TestS3Storage_Upload(t *testing.T) {
 			wantErr:     false,
 		},
 		{
-			name:        "empty content",
+			name:        "should upload empty file successfully",
 			key:         "empty.txt",
 			content:     []byte{},
 			contentType: "text/plain",
 			wantErr:     false,
 		},
 		{
-			name:        "with special characters in key",
+			name:        "should handle special characters in key",
 			key:         "special/chars/测试.txt",
 			content:     []byte(testContentStr),
 			contentType: "text/plain",
 			wantErr:     false,
 		},
 		{
-			name:        "large content",
+			name:        "should upload large file successfully",
 			key:         "large.txt",
 			content:     bytes.Repeat([]byte("a"), 1024*1024), // 1MB
 			contentType: "text/plain",
 			wantErr:     false,
 		},
 		{
-			name:        "with empty key",
+			name:        "should reject empty key",
 			key:         "",
 			content:     []byte(testContentStr),
 			contentType: "text/plain",
 			wantErr:     true,
 		},
 		{
-			name:        "with nil metadata",
+			name:        "should handle nil metadata",
 			key:         "nil-metadata.txt",
 			content:     []byte(testContentStr),
 			contentType: "text/plain",
@@ -179,7 +179,7 @@ func TestS3Storage_Upload(t *testing.T) {
 			wantErr:     false,
 		},
 		{
-			name:        "with many metadata entries",
+			name:        "should handle multiple metadata entries",
 			key:         "many-metadata.txt",
 			content:     []byte(testContentStr),
 			contentType: "text/plain",
@@ -228,8 +228,8 @@ func TestS3Storage_Upload(t *testing.T) {
 }
 
 func TestS3Storage_List(t *testing.T) {
-	storage, cleanup := setupTestS3(t)
-	defer cleanup()
+	t.Parallel()
+	storage := setupTestS3(t)
 
 	tests := []struct {
 		name       string
@@ -239,16 +239,16 @@ func TestS3Storage_List(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "list all",
+			name:       "should list all files",
 			prefix:     "",
 			setupFiles: []string{"a.txt", "b.txt", "c.txt"},
 			wantCount:  3,
 			wantErr:    false,
 		},
 		{
-			name:       "list with prefix",
+			name:       "should list files with prefix",
 			prefix:     "test/",
-			setupFiles: []string{"test/file1.txt", "test/file2.txt", "other.txt"},
+			setupFiles: []string{"test/a.txt", "test/b.txt", "other.txt"},
 			wantCount:  2,
 			wantErr:    false,
 		},
@@ -334,8 +334,8 @@ func TestS3Storage_List(t *testing.T) {
 }
 
 func TestS3Storage_GenerateURLs(t *testing.T) {
-	storage, cleanup := setupTestS3(t)
-	defer cleanup()
+	t.Parallel()
+	storage := setupTestS3(t)
 
 	tests := []struct {
 		name        string
@@ -424,8 +424,8 @@ func TestS3Storage_GenerateURLs(t *testing.T) {
 }
 
 func TestS3Storage_UpdateMetadata(t *testing.T) {
-	storage, cleanup := setupTestS3(t)
-	defer cleanup()
+	t.Parallel()
+	storage := setupTestS3(t)
 
 	tests := []struct {
 		name            string
@@ -546,8 +546,8 @@ func TestS3Storage_UpdateMetadata(t *testing.T) {
 }
 
 func TestS3Storage_Delete(t *testing.T) {
-	storage, cleanup := setupTestS3(t)
-	defer cleanup()
+	t.Parallel()
+	storage := setupTestS3(t)
 
 	tests := []struct {
 		name    string
@@ -615,8 +615,8 @@ func TestS3Storage_Delete(t *testing.T) {
 
 // Add new test for GetMetadata
 func TestS3Storage_GetMetadata(t *testing.T) {
-	storage, cleanup := setupTestS3(t)
-	defer cleanup()
+	t.Parallel()
+	storage := setupTestS3(t)
 
 	tests := []struct {
 		name        string

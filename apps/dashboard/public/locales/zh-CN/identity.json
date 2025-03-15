@@ -1,5 +1,77 @@
 {
+	"connections": {
+		"add": "添加连接",
+		"capabilities": {
+			"cardProcessing": "卡处理",
+			"oneOffPayments": "一次性支付",
+			"partialCaptures": "部分捕获",
+			"partialRefunds": "部分退款",
+			"recurringPayments": "定期支付",
+			"upiInstantPayments": "UPI即时支付",
+			"directBankTransfer": "直接银行转账",
+			"cryptoToFiat": "加密货币兑法定货币"
+		},
+		"connectToProvider": "连接到{{provider}}",
+		"createdAt": "创建时间",
+		"customCredentialsHighlight": "使用自定义凭据",
+		"description": "通过连接您的提供商，加速您的财务操作。",
+		"emptyState": {
+			"title": "没有连接",
+			"description": "您还没有创建任何连接。连接您的提供商以开始。"
+		},
+		"name": {
+			"label": "名称",
+			"description": "连接的名称。"
+		},
+		"noResults": "未找到结果",
+		"paymentEvents": "支付事件",
+		"paymentMethods": {
+			"applePay": "苹果支付",
+			"card": "卡",
+			"googlePay": "谷歌支付"
+		},
+		"payoutEvents": "支出事件",
+		"payoutMethods": {
+			"bankTransfer": "银行转账"
+		},
+		"provider": "提供商",
+		"providerType": {
+			"processor": "处理器"
+		},
+		"providerDetails": {
+			"type": "类型",
+			"website": "网站",
+			"countries": "国家",
+			"currencies": "货币",
+			"paymentMethods": "支付方式",
+			"payoutMethods": "支付方式",
+			"capabilities": "能力",
+			"integration": "集成"
+		},
+		"sharedCredentials": "共享凭据",
+		"testModeExplanation": "启用此选项以提供您自己的凭据，或使用我们的共享测试凭据快速开始。",
+		"title": "连接",
+		"useCustomCredentials": "使用自定义凭据",
+		"webhookEndpoints": "Webhook端点",
+		"webhookEndpointsDescription": "配置您的提供商以将Webhook事件发送到以下端点：",
+		"whitelistedIPs": "白名单IP地址",
+		"whitelistedIPsDescription": "您的提供商可能需要您将以下IP地址列入白名单以允许安全API访问："
+	},
 	"errors": {
+		"connections": {
+			"create": {
+				"title": "错误",
+				"description": "无法创建连接。请重试。"
+			},
+			"delete": {
+				"title": "错误",
+				"description": "无法删除连接。请重试。"
+			},
+			"load": {
+				"title": "错误",
+				"description": "无法加载连接。请重试。"
+			}
+		},
 		"forgotPassword": {
 			"description": "无法发送密码重置链接。请重试。",
 			"title": "错误"
@@ -191,6 +263,16 @@
 		"title": "创建您的账户"
 	},
 	"success": {
+		"connections": {
+			"create": {
+				"title": "成功",
+				"description": "连接已成功创建。"
+			},
+			"delete": {
+				"title": "成功",
+				"description": "连接已成功删除。"
+			}
+		},
 		"forgotPassword": {
 			"description": "如果此邮箱存在账户，我们将向您发送密码重置链接。请检查您的邮箱。",
 			"title": "成功"

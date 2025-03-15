@@ -115,10 +115,10 @@ profile matches our requirements.
 During the interview, you'll be using this interview to implement a mini feature end-to-end with
 our interviewer within 90 minutes, which might include:
 
-- Frontend component development
 - API implementation
 - Database schema changes
 - Testing and documentation
+- Frontend component development
 
 ### Evaluation
 
@@ -136,51 +136,69 @@ our interviewer within 90 minutes, which might include:
 ├── backends/                    # Backend services
 │    ├── api/                    # API gateway
 │    ├── internal/               # Common libraries
-│    └── payment/                # Payment service
 └── packages/                    # Shared packages
      ├── api/                    # API client library
      ├── ui/                     # UI component library
      └── typescript-config/      # Shared TS configs
 ```
 
-## Getting Started
+## Quick Start
 
-1. **Prerequisites**
-   - [pkgx.sh](https://pkgx.sh) - Universal package manager
-   - [Docker](https://www.docker.com/get-started/) - Container platform
+## Prerequisites
 
-2. **Setup**
-   ```bash
-   # Install pkgx.sh (if not already installed)
-   curl -fsS https://pkgx.sh | sh
+- Linux:
+   - Install Docker and Docker Compose
+- MacOS: 
+   - Install [OrbStack](https://orbstack.dev/download)
 
-   # Clone the repository
-   git clone git@github.com:autopilot-team/interview.git
-   cd interview
+## Setup
 
-   # Create "virtual environments" consisting of the project toolings (e.g. Go/NodeJS/etc.)
-   dev
+```sh
+# Install `mise`
+# Installation options: https://mise.jdx.dev/installing-mise.html
+$ curl https://mise.run | sh
 
-   # Setup the development environment
-   make setup   # Installs dependencies and configures services
-   make reset   # Resets database state
+# Activate `mise` in your .profile
+# Activation options: https://mise.jdx.dev/installing-mise.html#shells
+#
+# Run ONE of these:
+$ echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+$ echo 'eval "$(mise activate zsh)"' >> "${ZDOTDIR-$HOME}/.zshrc"
+$ echo 'mise activate fish | source' >> ~/.config/fish/config.fish
 
-   # Start development servers
-   make dev
-   ```
+# Open and validate `mise.toml` before trusting (inside repository root)
+$ mise trust
 
-3. **Development**
-   The `make dev` command will start all necessary services. After starting,
-   run the command in another terminal to view the local development URLs:
-   ```bash
-   make domains
-   ```
+$ mise install # Install dependencies`
 
-   All services feature hot reload capabilities, automatically rebuilding and
-   refreshing when code changes are detected:
-   - API contract changes in `packages/api/src/contracts`
-   - OpenAPI spec updates from backend API handlers
-   - Protocol Buffer changes in backend services
+# Setup the development environment
+$ task setup # Install dependencies
+$ task reset # Setup docker services (databases, migrations)
+
+# Start Development servers (auto restart)
+$ task dev
+
+### **Development**
+
+ The `task dev` command will start all necessary services. After starting,
+ run the command in another terminal to view the local development URLs:
+ ```sh
+ $ task domains
+ ```
+
+### Testing the Frontend
+
+To verify that everything is working, you can try to access the dashboard. There
+isn't much there - but you can use it to verify everything is working right.
+
+- URL: https://localhost:3000/ (Try refreshing to give React a time to start up fully)
+- Username: `admin@acme.com`
+- Password: `Strongpa$$w0rd!`
+
+ All services feature hot reload capabilities, automatically rebuilding and
+ refreshing when code changes are detected:
+ - API contract changes in `packages/api/src/contracts`
+ - OpenAPI spec updates from backend API handlers
 
 ## Architecture
 
@@ -241,7 +259,7 @@ Each service implements:
    - Stateless design
 
 2. **Clean Architecture Layers**
-   - **Handlers**: Request validation, auth, and routing
+   - **Handlers**: Request validation, auth and routing
    - **Services**: Business logic and workflow orchestration
    - **Stores**: Data persistence and caching
 

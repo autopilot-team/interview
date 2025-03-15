@@ -5,6 +5,9 @@ const port = 2998;
 
 export default defineConfig(async ({ mode }) => {
 	return {
+		build: {
+			outDir: "build/client",
+		},
 		clearScreen: false,
 		server: {
 			host,

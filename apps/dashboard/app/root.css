@@ -1,0 +1,20 @@
+#nprogress {
+	.bar {
+		background-color: var(--primary);
+	}
+
+	.peg {
+		box-shadow: 0 0 10px var(--primary), 0 0 5px var(--primary);
+	}
+
+	.spinner {
+		top: inherit !important;
+		bottom: 10px !important;
+		right: 10px !important;
+	}
+
+	.spinner-icon {
+		border-top-color: var(--primary);
+		border-left-color: var(--primary);
+	}
+}

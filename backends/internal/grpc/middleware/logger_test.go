@@ -39,6 +39,7 @@ func (b *testLogBuffer) Enabled(ctx context.Context, level slog.Level) bool {
 }
 
 func TestLogger(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name          string
 		handler       grpc.UnaryHandler
@@ -46,8 +47,8 @@ func TestLogger(t *testing.T) {
 		checkLogs     func(t *testing.T, logs []string)
 	}{
 		{
-			name: "successful request",
-			handler: func(ctx context.Context, req interface{}) (interface{}, error) {
+			name: "should log successful request correctly",
+			handler: func(ctx context.Context, req any) (any, error) {
 				return "response", nil
 			},
 			expectedError: nil,
@@ -75,8 +76,8 @@ func TestLogger(t *testing.T) {
 			},
 		},
 		{
-			name: "request with error",
-			handler: func(ctx context.Context, req interface{}) (interface{}, error) {
+			name: "should log request with error correctly",
+			handler: func(ctx context.Context, req any) (any, error) {
 				return nil, errors.New("test error")
 			},
 			expectedError: errors.New("test error"),

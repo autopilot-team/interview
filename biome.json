@@ -10,6 +10,7 @@
 			"node_modules/*",
 			"packages/api/src/contracts/*.json",
 			"packages/api/src/contracts/*.ts",
+			"packages/sdk/playwright-report/*",
 			"tmp/*"
 		],
 		"ignoreUnknown": true

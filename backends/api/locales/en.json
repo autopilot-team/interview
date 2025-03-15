@@ -1,13 +1,23 @@
 {
 	"email": {
-		"title": "Welcome to {{.AppName}}",
 		"preview": "Welcome to {{.AppName}} - Your global payment orchestration platform",
 		"header": "Header",
 		"footer": "© {{.CurrentYear}} {{.AppName}}. All rights reserved."
 	},
+	"password_reset": {
+		"title": "Reset your {{.AppName}} password",
+		"header": "Hello {{.Name}},",
+		"body": "We received a request to reset your password for your {{.AppName}} account.",
+		"reset_prompt": "To reset your password, click the button below. This link will expire in {{t \"duration.hours\" .Duration}}.",
+		"reset_button": "Reset Password",
+		"reset_alternative_prompt": "If the button above doesn't work, you can copy and paste this link into your browser:",
+		"expiry_notice": "For security reasons, this password reset link will expire in {{t \"duration.hours\" .Duration}}. If you need to reset your password after that, please request a new reset link.",
+		"disclaimer": "If you didn't request a password reset, please ignore this email or contact support if you have concerns about your account security."
+	},
 	"welcome": {
 		"header": "Welcome {{.Name}}!",
 		"body": "Thank you for joining {{.AppName}}. We're excited to have you on board.",
+		"title": "Welcome to {{.AppName}}",
 		"verify_email_prompt": "Please verify your email address to ensure the security of your account and access all features.",
 		"verify_button": "Verify Email Address",
 		"verify_expiry_notice": "This verification link will expire in {{t \"duration.hours\" .Duration}} for security reasons.",

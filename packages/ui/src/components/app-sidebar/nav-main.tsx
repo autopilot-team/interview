@@ -17,17 +17,22 @@ import {
 } from "@autopilot/ui/components/sidebar";
 import { Link } from "react-router";
 
+export interface NavSubItem {
+	title: string;
+	to: string;
+	resource?: string;
+	icon: LucideIcon;
+	isActive?: boolean;
+	hasNotification?: boolean;
+	notificationCount?: string;
+}
+
 export interface NavMainItem {
 	title: string;
 	icon: LucideIcon;
-	items: {
-		title: string;
-		url: string;
-		icon: LucideIcon;
-		isActive?: boolean;
-		hasNotification?: boolean;
-		notificationCount?: string;
-	}[];
+	to?: string;
+	resource?: string;
+	items?: NavSubItem[];
 }
 
 export function NavMain({
@@ -38,44 +43,61 @@ export function NavMain({
 	return (
 		<SidebarGroup>
 			<SidebarMenu>
-				{items.map((section) => (
-					<Collapsible
-						key={section.title}
-						asChild
-						defaultOpen={section.items.some((item) => item.isActive)}
-						className="group/collapsible"
-					>
-						<SidebarMenuItem>
-							<CollapsibleTrigger asChild>
-								<SidebarMenuButton tooltip={section.title}>
-									<section.icon className="size-4" />
-									<span>{section.title}</span>
-									<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+				{items.map((section) => {
+					// If no items array is provided and url exists, render a direct link
+					if (!section.items && section.to) {
+						return (
+							<SidebarMenuItem key={section.title}>
+								<SidebarMenuButton asChild tooltip={section.title}>
+									<Link to={section.to}>
+										<section.icon className="size-4" />
+										<span>{section.title}</span>
+									</Link>
 								</SidebarMenuButton>
-							</CollapsibleTrigger>
+							</SidebarMenuItem>
+						);
+					}
 
-							<CollapsibleContent>
-								<SidebarMenuSub>
-									{section.items?.map((item) => (
-										<SidebarMenuSubItem key={item.title}>
-											<SidebarMenuSubButton asChild>
-												<Link
-													to={item.url}
-													data-active={item.isActive}
-													data-notification={item.hasNotification}
-													data-notification-count={item.notificationCount}
-												>
-													{item.icon && <item.icon className="size-4" />}
-													<span>{item.title}</span>
-												</Link>
-											</SidebarMenuSubButton>
-										</SidebarMenuSubItem>
-									))}
-								</SidebarMenuSub>
-							</CollapsibleContent>
-						</SidebarMenuItem>
-					</Collapsible>
-				))}
+					// Otherwise render the collapsible menu
+					return (
+						<Collapsible
+							key={section.title}
+							asChild
+							defaultOpen={section.items?.some((item) => item.isActive)}
+							className="group/collapsible"
+						>
+							<SidebarMenuItem>
+								<CollapsibleTrigger asChild>
+									<SidebarMenuButton tooltip={section.title}>
+										<section.icon className="size-4" />
+										<span>{section.title}</span>
+										<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+									</SidebarMenuButton>
+								</CollapsibleTrigger>
+
+								<CollapsibleContent>
+									<SidebarMenuSub>
+										{section.items?.map((item) => (
+											<SidebarMenuSubItem key={item.title}>
+												<SidebarMenuSubButton asChild>
+													<Link
+														to={item.to}
+														data-active={item.isActive}
+														data-notification={item.hasNotification}
+														data-notification-count={item.notificationCount}
+													>
+														{item.icon && <item.icon className="size-4" />}
+														<span>{item.title}</span>
+													</Link>
+												</SidebarMenuSubButton>
+											</SidebarMenuSubItem>
+										))}
+									</SidebarMenuSub>
+								</CollapsibleContent>
+							</SidebarMenuItem>
+						</Collapsible>
+					);
+				})}
 			</SidebarMenu>
 		</SidebarGroup>
 	);

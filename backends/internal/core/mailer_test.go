@@ -23,6 +23,7 @@ var (
 )
 
 func TestNewMail(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	i18nBundle, err := NewI18nBundle(mailerFS, "testdata/locales")
 	require.NoError(t, err)
@@ -33,7 +34,7 @@ func TestNewMail(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid options",
+			name: "should initialize with valid configuration",
 			opts: &MailTemplateOptions{
 				FS:  mailerFS,
 				Dir: "testdata/templates",
@@ -50,12 +51,12 @@ func TestNewMail(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "nil options",
+			name:    "should reject nil options",
 			opts:    nil,
 			wantErr: true,
 		},
 		{
-			name: "missing filesystem",
+			name: "should reject missing filesystem",
 			opts: &MailTemplateOptions{
 				Dir:    "testdata/templates",
 				Layout: "layouts/test",
@@ -63,7 +64,7 @@ func TestNewMail(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "missing path",
+			name: "should reject missing path",
 			opts: &MailTemplateOptions{
 				FS:     mailerFS,
 				Layout: "layouts/test",
@@ -71,7 +72,7 @@ func TestNewMail(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "missing layout",
+			name: "should reject missing layout",
 			opts: &MailTemplateOptions{
 				FS:  mailerFS,
 				Dir: "testdata/templates",
@@ -106,6 +107,7 @@ func TestNewMail(t *testing.T) {
 }
 
 func TestMailer_Render(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	i18nBundle, err := NewI18nBundle(mailerFS, "testdata/locales")
 	require.NoError(t, err)
@@ -134,7 +136,7 @@ func TestMailer_Render(t *testing.T) {
 	tests := []struct {
 		name         string
 		templateName string
-		data         map[string]interface{}
+		data         map[string]any
 		opts         *RenderOptions
 		wantHTML     string
 		wantText     string
@@ -143,7 +145,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "basic template",
 			templateName: "basic",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"Name": "John",
 			},
 			wantHTML: "<p>Hello, John!</p>",
@@ -153,7 +155,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "with i18n",
 			templateName: "welcome",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"AppName": "TestApp",
 				"Name":    "John",
 			},
@@ -164,7 +166,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "with custom locale",
 			templateName: "welcome",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"AppName": "TestApp",
 				"Name":    "John",
 			},
@@ -178,7 +180,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "with pluralization",
 			templateName: "notifications",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"NotificationCount": 5,
 			},
 			wantHTML: "You have 5 notifications",
@@ -188,7 +190,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "with single notification",
 			templateName: "notifications",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"NotificationCount": 1,
 			},
 			wantHTML: "You have 1 notification",
@@ -198,7 +200,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "with custom layout",
 			templateName: "basic",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"Name": "John",
 			},
 			opts: &RenderOptions{
@@ -211,7 +213,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "with extra template functions",
 			templateName: "with-functions",
-			data: map[string]interface{}{
+			data: map[string]any{
 				"Text": "hello",
 			},
 			wantHTML: "HELLO",
@@ -221,7 +223,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "template not found",
 			templateName: "nonexistent",
-			data:         map[string]interface{}{},
+			data:         map[string]any{},
 			wantErr:      true,
 		},
 		{
@@ -233,7 +235,7 @@ func TestMailer_Render(t *testing.T) {
 		{
 			name:         "missing required template data",
 			templateName: "basic",
-			data:         map[string]interface{}{},
+			data:         map[string]any{},
 			wantErr:      true,
 		},
 	}
@@ -259,6 +261,7 @@ func TestMailer_Render(t *testing.T) {
 }
 
 func TestMailer_Send(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	i18nBundle, err := NewI18nBundle(mailerFS, "testdata/locales")
 	require.NoError(t, err)
@@ -277,7 +280,7 @@ func TestMailer_Send(t *testing.T) {
 				From:    "test@example.com",
 				To:      []string{"recipient@example.com"},
 				Subject: "Test Email",
-				Data: map[string]interface{}{
+				Data: map[string]any{
 					"Name": "John",
 				},
 			},
@@ -290,7 +293,7 @@ func TestMailer_Send(t *testing.T) {
 				From:    "test@example.com",
 				To:      []string{"recipient@example.com"},
 				Subject: "Test Email with Attachment",
-				Data: map[string]interface{}{
+				Data: map[string]any{
 					"Name": "John",
 				},
 				Attachments: []*mail.File{
@@ -312,7 +315,7 @@ func TestMailer_Send(t *testing.T) {
 			msg: EmailMessage{
 				To:      []string{"recipient@example.com"},
 				Subject: "Test Email",
-				Data: map[string]interface{}{
+				Data: map[string]any{
 					"Name": "John",
 				},
 			},
@@ -324,7 +327,7 @@ func TestMailer_Send(t *testing.T) {
 			msg: EmailMessage{
 				From:    "test@example.com",
 				Subject: "Test Email",
-				Data: map[string]interface{}{
+				Data: map[string]any{
 					"Name": "John",
 				},
 			},
@@ -337,7 +340,7 @@ func TestMailer_Send(t *testing.T) {
 				From:    "test@example.com",
 				To:      []string{"recipient@example.com"},
 				Subject: "Test Email",
-				Data:    map[string]interface{}{},
+				Data:    map[string]any{},
 			},
 			wantErr: true,
 		},
@@ -377,6 +380,7 @@ func TestMailer_Send(t *testing.T) {
 }
 
 func TestMailer_ConcurrentRender(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	i18nBundle, err := NewI18nBundle(mailerFS, "testdata/locales")
 	require.NoError(t, err)
@@ -407,7 +411,7 @@ func TestMailer_ConcurrentRender(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			_, _, err := mailer.Render("basic", map[string]interface{}{
+			_, _, err := mailer.Render("basic", map[string]any{
 				"Name": "John",
 			}, nil)
 			assert.NoError(t, err)
@@ -417,6 +421,7 @@ func TestMailer_ConcurrentRender(t *testing.T) {
 }
 
 func TestMailer_BulkSend(t *testing.T) {
+	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	i18nBundle, err := NewI18nBundle(mailerFS, "testdata/locales")
 	require.NoError(t, err)
@@ -436,7 +441,7 @@ func TestMailer_BulkSend(t *testing.T) {
 					From:    "test@example.com",
 					To:      []string{"recipient1@example.com"},
 					Subject: "Test Email 1",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"Name": "John",
 					},
 					Attachments: []*mail.File{
@@ -454,7 +459,7 @@ func TestMailer_BulkSend(t *testing.T) {
 					From:    "test@example.com",
 					To:      []string{"recipient2@example.com"},
 					Subject: "Test Email 2",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"Name": "Jane",
 					},
 					Attachments: []*mail.File{
@@ -485,7 +490,7 @@ func TestMailer_BulkSend(t *testing.T) {
 					From:    "test@example.com",
 					To:      []string{"recipient@example.com"},
 					Subject: "Test Email",
-					Data:    map[string]interface{}{},
+					Data:    map[string]any{},
 				},
 			},
 			wantErr: true,
@@ -497,7 +502,7 @@ func TestMailer_BulkSend(t *testing.T) {
 				{
 					To:      []string{"recipient@example.com"},
 					Subject: "Test Email",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"Name": "John",
 					},
 				},

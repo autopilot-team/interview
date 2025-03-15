@@ -1,13 +1,23 @@
 {
 	"email": {
-		"title": "欢迎使用 {{.AppName}}",
 		"preview": "欢迎使用 {{.AppName}} - 您的全球支付编排平台",
 		"header": "标题",
 		"footer": "© {{.CurrentYear}} {{.AppName}}。保留所有权利。"
 	},
+	"password_reset": {
+		"title": "重置您的 {{.AppName}} 密码",
+		"header": "您好 {{.Name}}，",
+		"body": "我们收到了重置您{{.AppName}}账户密码的请求。",
+		"reset_prompt": "要重置密码，请点击下面的按钮。此链接将在{{t \"duration.hours\" .Duration}}后过期。",
+		"reset_button": "重置密码",
+		"reset_alternative_prompt": "如果上面的按钮无法使用，您可以复制并粘贴此链接到浏览器：",
+		"expiry_notice": "出于安全考虑，此密码重置链接将在{{t \"duration.hours\" .Duration}}后过期。如果您需要在此之后重置密码，请重新申请重置链接。",
+		"disclaimer": "如果您没有请求重置密码，请忽略此邮件。如果您对账户安全有任何疑虑，请联系客服。"
+	},
 	"welcome": {
 		"header": "{{.Name}}，欢迎您！",
 		"body": "感谢您加入 {{.AppName}}。我们很高兴有您的加入。",
+		"title": "欢迎使用 {{.AppName}}",
 		"verify_email_prompt": "请验证您的电子邮箱地址，以确保账户安全并访问所有功能。",
 		"verify_button": "验证电子邮箱",
 		"verify_expiry_notice": "出于安全考虑，此验证链接将在{{t \"duration.hours\" .Duration}}后过期。",

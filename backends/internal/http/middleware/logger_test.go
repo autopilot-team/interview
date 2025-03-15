@@ -16,6 +16,7 @@ import (
 )
 
 func TestLogger(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name           string
 		mode           types.Mode
@@ -26,7 +27,7 @@ func TestLogger(t *testing.T) {
 		unexpectedLogs []string
 	}{
 		{
-			name:   "debug mode with headers",
+			name:   "should log headers in debug mode",
 			mode:   types.DebugMode,
 			method: "GET",
 			path:   "/api/v1/test",
@@ -90,6 +91,7 @@ func TestLogger(t *testing.T) {
 }
 
 func TestLoggerWithPanic(t *testing.T) {
+	t.Parallel()
 	// Create a buffer to capture logs
 	var buf bytes.Buffer
 
@@ -127,6 +129,7 @@ func TestLoggerWithPanic(t *testing.T) {
 }
 
 func TestLoggerWithCustomStatus(t *testing.T) {
+	t.Parallel()
 	// Create a buffer to capture logs
 	var buf bytes.Buffer
 

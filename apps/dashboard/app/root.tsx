@@ -1,4 +1,22 @@
 import {
+	AuthState,
+	IdentityProvider,
+	useIdentity,
+} from "@/components/identity-provider";
+import { ModeSwitcherProvider } from "@/components/mode-switcher";
+import { QueryClientProvider, asset } from "@autopilot/api";
+import {
+	MessageCard,
+	type MessageCardVariant,
+} from "@autopilot/ui/components/message-card";
+import { Toaster as SonnerToaster } from "@autopilot/ui/components/sonner";
+import { Toaster } from "@autopilot/ui/components/toaster";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import NProgress from "nprogress";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigation } from "react-router";
+import {
 	Links,
 	Meta,
 	Outlet,
@@ -6,17 +24,11 @@ import {
 	ScrollRestoration,
 	isRouteErrorResponse,
 } from "react-router";
-import "@autopilot/ui/globals.css";
-import { IdentityProvider, useIdentity } from "@/components/identity-provider";
-import { QueryClientProvider } from "@autopilot/api";
-import {
-	MessageCard,
-	type MessageCardVariant,
-} from "@autopilot/ui/components/message-card";
-import { Toaster as SonnerToaster } from "@autopilot/ui/components/sonner";
-import { Toaster } from "@autopilot/ui/components/toaster";
-import { useTranslation } from "react-i18next";
 import type { Route } from "./+types/root";
+
+import "@autopilot/ui/globals.css";
+import "nprogress/nprogress.css";
+import "@/root.css";
 
 export const links: Route.LinksFunction = () => [
 	{
@@ -31,6 +43,11 @@ export const links: Route.LinksFunction = () => [
 	{
 		rel: "stylesheet",
 		href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+	},
+	{
+		rel: "icon",
+		type: "image/png",
+		href: asset("/logo.png"),
 	},
 ];
 
@@ -57,9 +74,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<body>
 				<QueryClientProvider>
 					<IdentityProvider>
-						{children}
-						<SonnerToaster />
-						<Toaster />
+						<ModeSwitcherProvider>
+							{children}
+							<SonnerToaster />
+							<Toaster />
+							<ReactQueryDevtools initialIsOpen={false} />
+						</ModeSwitcherProvider>
 					</IdentityProvider>
 				</QueryClientProvider>
 				<ScrollRestoration />
@@ -70,18 +90,56 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-	const { isInitializing, user } = useIdentity();
-	const { t, ready } = useTranslation(["common"]);
+	const { authState } = useIdentity();
+	const { t } = useTranslation(["common"]);
+	const navigation = useNavigation();
 
-	if (isInitializing || typeof user === "undefined") {
-		return (
-			<LoadingScreen
-				message={ready ? t("common:loading.initializing") : "Initializing..."}
-			/>
-		);
+	useEffect(() => {
+		if (navigation.state === "loading") {
+			NProgress.start();
+		} else {
+			NProgress.done();
+		}
+	}, [navigation.state]);
+
+	// Handle different auth states
+	switch (authState) {
+		case AuthState.INITIALIZING:
+		case AuthState.CHECKING_SESSION:
+			return <LoadingScreen message="Initializing..." />;
+
+		case AuthState.ERROR:
+			return (
+				<MessageCard
+					title={t("error.notFound.title")}
+					description={t("error.notFound.description")}
+					variant="error"
+					homeButton={{
+						show: true,
+						label: t("error.notFound.title"),
+						to: "/",
+					}}
+				/>
+			);
+
+		case AuthState.AUTHENTICATED:
+		case AuthState.UNAUTHENTICATED:
+			return <Outlet />;
+
+		default:
+			return (
+				<MessageCard
+					title={t("error.unexpected.title")}
+					description={t("error.unexpected.description")}
+					variant="error"
+					homeButton={{
+						show: true,
+						label: t("error.unexpected.title"),
+						to: "/",
+					}}
+				/>
+			);
 	}
-
-	return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -168,15 +226,5 @@ function LoadingScreen({ message }: { message: string }) {
 }
 
 export function HydrateFallback() {
-	if (typeof window === "undefined") {
-		return <LoadingScreen message="Initializing..." />;
-	}
-
-	const { t, ready } = useTranslation(["common"]);
-
-	return (
-		<LoadingScreen
-			message={ready ? t("common:loading.initializing") : "Initializing..."}
-		/>
-	);
+	return <LoadingScreen message="Initializing..." />;
 }

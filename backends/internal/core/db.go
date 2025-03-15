@@ -4,6 +4,7 @@ import (
 	"autopilot/backends/internal/types"
 	"context"
 	"database/sql"
+	"embed"
 	"fmt"
 	"log/slog"
 	"math/rand"
@@ -13,8 +14,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"embed"
 
 	"github.com/amacneil/dbmate/v2/pkg/dbmate"
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/postgres"
@@ -32,25 +31,25 @@ const (
 // Querier is an interface for database queries
 type Querier interface {
 	// Exec executes a query without returning any rows
-	Exec(query string, args ...interface{}) (sql.Result, error)
+	Exec(query string, args ...any) (sql.Result, error)
 
 	// ExecContext executes a query without returning any rows
-	ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error)
+	ExecContext(ctx context.Context, query string, args ...any) (sql.Result, error)
 
 	// PrepareContext creates a prepared statement for later queries or executions
 	PrepareContext(ctx context.Context, query string) (*sql.Stmt, error)
 
 	// Query executes a query that returns rows, typically a SELECT
-	Query(query string, args ...interface{}) (*sql.Rows, error)
+	Query(query string, args ...any) (*sql.Rows, error)
 
 	// QueryContext executes a query that returns rows, typically a SELECT
-	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
+	QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error)
 
 	// QueryRow executes a query that is expected to return at most one row
-	QueryRow(query string, args ...interface{}) *sql.Row
+	QueryRow(query string, args ...any) *sql.Row
 
 	// QueryRowContext executes a query that is expected to return at most one row
-	QueryRowContext(ctx context.Context, query string, args ...interface{}) *sql.Row
+	QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row
 }
 
 // DBer is a database connection pool
@@ -114,6 +113,9 @@ type DBOptions struct {
 	// Logger is used for database-related logging
 	Logger *slog.Logger
 
+	// DisableLogQueries determines whether queries are logged.
+	DisableLogQueries bool
+
 	// MainFile is the path to the main application file
 	MainFile string
 
@@ -145,9 +147,17 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 	if opts.Logger == nil {
 		return nil, fmt.Errorf("logger is required")
 	}
+	level := tracelog.LogLevelInfo
+	if opts.DisableLogQueries {
+		level = tracelog.LogLevelWarn
+	}
 
 	if opts.MainFile == "" {
 		return nil, fmt.Errorf("main file is required")
+	}
+
+	if opts.Mode == "" {
+		return nil, fmt.Errorf("mode is required")
 	}
 
 	if opts.Identifier == "" {
@@ -167,7 +177,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		return nil, fmt.Errorf("failed to parse writer URL: %w", err)
 	}
 	writerPoolConfig.ConnConfig.Tracer = &tracelog.TraceLog{
-		LogLevel: tracelog.LogLevelInfo,
+		LogLevel: level,
 		Logger: &DbLogger{
 			opts.Logger,
 			opts.Mode,
@@ -187,7 +197,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 			return nil, fmt.Errorf("failed to parse reader URL: %w", err)
 		}
 		readerPoolConfig.ConnConfig.Tracer = &tracelog.TraceLog{
-			LogLevel: tracelog.LogLevelInfo,
+			LogLevel: level,
 			Logger: &DbLogger{
 				opts.Logger,
 				opts.Mode,
@@ -198,7 +208,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		if err != nil {
 			opts.Logger.WarnContext(ctx, "failed to create reader pool",
 				"url", readerURL,
-				"error", err.Error())
+				"error", err)
 			continue
 		}
 		readers = append(readers, sqlx.NewDb(stdlib.OpenDBFromPool(readerPool), "pgx"))
@@ -223,6 +233,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 	}
 
 	migrator := dbmate.New(parsedUrl)
+	migrator.AutoDumpSchema = false
 	migrator.FS = opts.MigrationsFS
 	migrator.MigrationsDir = []string{filepath.Join(opts.MigrationsDir, opts.Identifier)}
 	migrator.Log = NewDbMigrateLogger(opts.Logger)
@@ -403,8 +414,9 @@ type DbLogger struct {
 }
 
 // Log logs a database query
-func (l *DbLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]interface{}) {
-	if msg != "Query" {
+func (l *DbLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]any) {
+	isDebuggingRequest := GetDebugContext(ctx)
+	if !isDebuggingRequest {
 		return
 	}
 
@@ -415,7 +427,7 @@ func (l *DbLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string,
 		executionTime = color.MagentaString(fmt.Sprintf(" (%s)", duration.String()))
 	}
 
-	if l.mode == types.DebugMode {
+	if l.mode == types.ReleaseMode {
 		l.InfoContext(ctx, "SQL Query", "query", data["sql"], "duration", duration.String())
 		return
 	}
@@ -426,8 +438,8 @@ func (l *DbLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string,
 	}
 
 	// Filter out type maps from args if it's a slice
-	var cleanArgs interface{}
-	if argSlice, ok := data["args"].([]interface{}); ok && len(argSlice) > 0 {
+	var cleanArgs any
+	if argSlice, ok := data["args"].([]any); ok && len(argSlice) > 0 {
 		// Check if first element is the type information
 		if _, ok := argSlice[0].(map[uint32]int); ok {
 			cleanArgs = argSlice[1:]
@@ -447,13 +459,13 @@ func (l *DbLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string,
 	l.Logger.InfoContext(ctx, color.CyanString("SQL")+executionTime+"\n\n\t\t"+formatQuery(query)+"\n"+formatArgs(cleanArgs))
 }
 
-func formatArgs(args interface{}) string {
+func formatArgs(args any) string {
 	if args == nil {
 		return ""
 	}
 
 	switch v := args.(type) {
-	case []interface{}:
+	case []any:
 		parts := make([]string, len(v))
 
 		if len(parts) == 0 {
@@ -470,7 +482,7 @@ func formatArgs(args interface{}) string {
 	}
 }
 
-func formatArg(arg interface{}) string {
+func formatArg(arg any) string {
 	switch v := arg.(type) {
 	case string:
 		return color.GreenString("%q", v)

@@ -12,6 +12,18 @@ import (
 	"github.com/riverqueue/river/rivertype"
 )
 
+// Worker implements the River worker client
+type Worker interface {
+	GetClient() *river.Client[pgx.Tx]
+	GetDbPool() *pgxpool.Pool
+	Insert(ctx context.Context, args river.JobArgs, opts *river.InsertOpts) (*rivertype.JobInsertResult, error)
+	Queues() *river.QueueBundle
+	Start(ctx context.Context) error
+	Stop(ctx context.Context) error
+	StopAndCancel(ctx context.Context) error
+	Stopped() <-chan struct{}
+}
+
 // WorkerOptions contains configuration options for the worker
 type WorkerOptions struct {
 	// DbURL is the database connection string
@@ -24,15 +36,16 @@ type WorkerOptions struct {
 	Config *river.Config
 }
 
-// Worker is a River worker client
-type Worker struct {
+// BackgroundWorker is a River worker client
+type BackgroundWorker struct {
 	*river.Client[pgx.Tx]
+	dbPool *pgxpool.Pool
 	Config *river.Config
 	DbURL  string
 }
 
 // NewWorker creates a new River worker client
-func NewWorker(ctx context.Context, opts WorkerOptions) (*Worker, error) {
+func NewWorker(ctx context.Context, opts WorkerOptions) (*BackgroundWorker, error) {
 	if opts.Logger == nil {
 		return nil, fmt.Errorf("logger is required")
 	}
@@ -54,8 +67,9 @@ func NewWorker(ctx context.Context, opts WorkerOptions) (*Worker, error) {
 		return nil, err
 	}
 
-	return &Worker{
+	return &BackgroundWorker{
 		client,
+		dbPool,
 		opts.Config,
 		opts.DbURL,
 	}, nil
@@ -68,10 +82,24 @@ type errorHandler struct {
 
 // HandleError processes errors that occur during job execution.
 func (h *errorHandler) HandleError(ctx context.Context, job *rivertype.JobRow, err error) *river.ErrorHandlerResult {
+	h.logger.Error("Job failed", "job", job, "error", err)
+
 	return nil
 }
 
 // HandlePanic processes panics that occur during job execution.
 func (h *errorHandler) HandlePanic(ctx context.Context, job *rivertype.JobRow, panicVal any, trace string) *river.ErrorHandlerResult {
+	h.logger.Error("Job panic", "job", job, "panic", panicVal, "trace", trace)
+
 	return nil
+}
+
+// GetClient returns the underlying River client
+func (w *BackgroundWorker) GetClient() *river.Client[pgx.Tx] {
+	return w.Client
+}
+
+// GetDbPool returns the underlying database pool
+func (w *BackgroundWorker) GetDbPool() *pgxpool.Pool {
+	return w.dbPool
 }

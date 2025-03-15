@@ -4,12 +4,15 @@ import createClient from "openapi-react-query";
 import type { paths as V1Paths } from "./contracts/v1.ts";
 
 export * as v1 from "./contracts/v1.ts";
-export { QueryClientProvider } from "./query-client-provider.tsx";
+export * from "./query-client-provider.tsx";
 
 export const API_BASE_URL =
 	import.meta.env.VITE_API_URL || "http://localhost:3001";
 export const ASSETS_BASE_URL =
 	import.meta.env.VITE_ASSETS_URL || "http://localhost:2998";
+
+export type OperationMode = "test" | "live";
+export type { UseQueryResult } from "@tanstack/react-query";
 
 /**
  * Returns the full URL for an asset path based on the environment.
@@ -21,6 +24,34 @@ export const ASSETS_BASE_URL =
 export function asset(path: string): string {
 	const cleanPath = path.startsWith("/") ? path.slice(1) : path;
 	return `${ASSETS_BASE_URL}/${cleanPath}`;
+}
+
+/**
+ * Returns the operation mode for the current environment.
+ * Uses localStorage if available, otherwise defaults to "test".
+ *
+ * @returns The operation mode
+ */
+export function getOperationMode(): OperationMode {
+	if (typeof window !== "undefined") {
+		return (
+			(localStorage.getItem("x-operation-mode") as OperationMode) || "test"
+		);
+	}
+
+	return "test";
+}
+
+/**
+ * Sets the operation mode for the current environment.
+ * Uses localStorage if available.
+ *
+ * @param mode - The operation mode to set
+ */
+export function setOperationMode(mode: OperationMode): void {
+	if (typeof window !== "undefined") {
+		localStorage.setItem("x-operation-mode", mode);
+	}
 }
 
 // Track if we're currently refreshing to prevent multiple refresh calls
@@ -61,7 +92,19 @@ const retry = async (request: Request): Promise<Response> => {
 // Create a custom fetch function that handles token refresh
 const createCustomFetch = () => {
 	return async (input: Request): Promise<Response> => {
-		const response = await fetch(input);
+		let response: Response = new Response();
+
+		try {
+			const entity = localStorage.getItem("entityID");
+			if (entity) {
+				input.headers.append("X-Entity-Id", entity);
+			}
+
+			input.headers.append("X-Operation-Mode", getOperationMode());
+			response = await fetch(input);
+		} catch (err) {
+			// TODO: Check what's causing the requests to get aborted
+		}
 
 		// Return early for successful responses or identity endpoints
 		if (response.ok || input.url.includes("/v1/identity")) {
@@ -78,8 +121,8 @@ const createCustomFetch = () => {
 					const refreshResponse = await fetch(
 						`${API_BASE_URL}/v1/identity/refresh-session`,
 						{
-							method: "POST",
 							credentials: "include",
+							method: "POST",
 						},
 					);
 

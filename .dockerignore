@@ -12,8 +12,12 @@
 .env*
 !.env.example
 .editorconfig
-.pre-commit-config.yaml
 .cursorrules
+.task
+.terraform
+.terraform.lock.hcl
+.wrangler
+lefthook.yml
 
 # Dependencies - keep package files but ignore installed modules
 node_modules
@@ -25,6 +29,7 @@ vendor
 # Build artifacts
 .react-router
 build
+dist
 tmp
 coverage
 *.log

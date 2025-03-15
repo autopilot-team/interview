@@ -96,6 +96,7 @@ export function SignUpForm({
 	const [currentSuccess, setCurrentSuccess] = useState(successMessage);
 	const signUpSchema = z
 		.object({
+			cfTurnstileToken: z.string().optional(),
 			name: z
 				.string()
 				.min(1, t.errors.nameRequired)
@@ -123,14 +124,19 @@ export function SignUpForm({
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<SignUpFormData>({
+	} = useForm({
 		resolver: zodResolver(signUpSchema),
 	});
 	const onSubmit = handleSubmit(async (data) => {
 		data.cfTurnstileToken = turnstileRef.current?.getResponse() || "";
 		setPassword("");
-		await handleSignUp?.(data, reset);
+		await handleSignUp?.(
+			data as SignUpFormData,
+			reset as UseFormReset<SignUpFormData>,
+		);
 	});
+	const [isCfTurnstileLoading, setIsCfTurnstileLoading] = useState(true);
+	const isFormLoading = isLoading || isCfTurnstileLoading;
 
 	// Update messages when props change
 	useEffect(() => {
@@ -278,9 +284,14 @@ export function SignUpForm({
 									className="text-center"
 									options={{ size: "invisible" }}
 									siteKey={cfTurnstileSiteKey}
+									onSuccess={() => setIsCfTurnstileLoading(false)}
 								/>
 
-								<Button type="submit" className="w-full" disabled={isLoading}>
+								<Button
+									type="submit"
+									className="w-full"
+									disabled={isFormLoading}
+								>
 									{t.signUp}
 								</Button>
 							</div>
