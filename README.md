@@ -177,6 +177,7 @@ $ task reset # Setup docker services (databases, migrations)
 
 # Start Development servers (auto restart)
 $ task dev
+```
 
 ### **Development**
 
