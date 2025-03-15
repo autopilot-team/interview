@@ -6,8 +6,8 @@
 	"private": true,
 	"dependencies": {
 		"@tanstack/react-query": "^5.68.0",
-		"openapi-fetch": "^0.13.4",
-		"openapi-react-query": "^0.3.0"
+		"openapi-fetch": "^0.13.5",
+		"openapi-react-query": "^0.3.1"
 	},
 	"devDependencies": {
 		"@autopilot/typescript-config": "workspace:*",

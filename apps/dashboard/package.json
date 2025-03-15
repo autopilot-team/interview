@@ -14,7 +14,7 @@
 		"@autopilot/ui": "workspace:*",
 		"@react-router/node": "^7.3.0",
 		"@react-router/serve": "^7.3.0",
-		"@scalar/api-reference-react": "^0.5.1",
+		"@scalar/api-reference-react": "^0.6.0",
 		"i18next": "^24.2.3",
 		"i18next-browser-languagedetector": "^8.0.4",
 		"i18next-http-backend": "^3.0.2",
@@ -25,7 +25,7 @@
 		"react-dom": "^19.0.0",
 		"react-i18next": "^15.4.1",
 		"react-router": "^7.3.0",
-		"ua-parser-js": "^2.0.2"
+		"ua-parser-js": "^2.0.3"
 	},
 	"devDependencies": {
 		"@react-router/dev": "^7.3.0",
