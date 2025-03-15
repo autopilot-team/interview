@@ -35,7 +35,7 @@
             </td>
             <td width="25%">
                 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" height="48" alt="Go"><br>
-                <strong>Go 1.23.4</strong><br>
+                <strong>Go 1.24</strong><br>
                 Backend Services
             </td>
             <td width="25%">
