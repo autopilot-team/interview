@@ -4,10 +4,9 @@ import I18nextHttpBackend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 import type common from "../../public/locales/en/common.json";
 import type identity from "../../public/locales/en/identity.json";
-import type payout from "../../public/locales/en/payout.json";
 
 const defaultNS = "common";
-const ns = [defaultNS, "identity", "payout"];
+const ns = [defaultNS, "identity"];
 const supportedLngs = ["en", "zh-CN", "zh-TW"];
 
 declare module "i18next" {
@@ -16,7 +15,6 @@ declare module "i18next" {
 		resources: {
 			common: typeof common;
 			identity: typeof identity;
-			payout: typeof payout;
 		};
 	}
 }

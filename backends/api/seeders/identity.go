@@ -37,9 +37,8 @@ func Identity(ctx context.Context, db core.DBer) error {
 	}
 
 	type seedData struct {
-		entity   model.Entity
-		users    []seedUser
-		children []seedData
+		entity model.Entity
+		users  []seedUser
 	}
 
 	seeds := []seedData{

@@ -76,12 +76,6 @@ func mkErr(message string, status int) Error {
 	return NewError(message).WithStatus(status)
 }
 
-func mkErrf(message, format string, status int) Error {
-	err := NewError(message).WithStatus(status)
-	err.msgf = format
-	return err
-}
-
 // ErrorCode represents a unique error code that can be used for localization
 type ErrorCode int
 

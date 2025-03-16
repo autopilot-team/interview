@@ -55,8 +55,7 @@ export default function AppLayout() {
 	const params = useParams();
 	const entityPath = (path: string) =>
 		entity?.slug ? `/${entity.slug}${path}` : "#";
-	const navigation: NavMainItem[] = [
-	];
+	const navigation: NavMainItem[] = [];
 	const filterSub = (item: NavMainItem): NavMainItem => {
 		if (!item.items) return item;
 		const filtered = item.items.filter((subItem) => {
