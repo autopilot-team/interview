@@ -148,15 +148,17 @@ our interviewer within 90 minutes, which might include:
 
 - Linux:
    - Install Docker and Docker Compose
-- MacOS: 
+- MacOS:
    - Install [OrbStack](https://orbstack.dev/download)
 
 ## Setup
 
 ```sh
 # Install `mise`
-# Installation options: https://mise.jdx.dev/installing-mise.html
 $ curl https://mise.run | sh
+
+# Add this to your shell profile if `mise` is not in your PATH
+$ export PATH="$HOME/.local/bin:$PATH"
 
 # Activate `mise` in your .profile
 # Activation options: https://mise.jdx.dev/installing-mise.html#shells
@@ -169,11 +171,14 @@ $ echo 'mise activate fish | source' >> ~/.config/fish/config.fish
 # Open and validate `mise.toml` before trusting (inside repository root)
 $ mise trust
 
-$ mise install # Install dependencies`
+# Install the toolings
+$ mise install
 
-# Setup the development environment
-$ task setup # Install dependencies
-$ task reset # Setup docker services (databases, migrations)
+# Install projects' dependencies
+$ task setup
+
+# Setup docker services (databases, migrations)
+$ task reset
 
 # Start Development servers (auto restart)
 $ task dev

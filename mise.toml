@@ -1,5 +1,4 @@
 [tools]
-
 go = "1.24.1"
 node = "23.9.0"
 "aqua:pnpm/pnpm" = "10.6.1"
