@@ -139,19 +139,6 @@ type Config struct {
 			UsePathStyle    bool   `env:"S3_USE_PATH_STYLE" envDefault:"true"`
 		}
 	}
-
-	// Payout holds payment module configuration
-	Payout struct {
-		// Database holds database configuration
-		Database struct {
-			LivePrimaryWriter  string   `env:"PAYOUT_LIVE_PRIMARY_WRITER_DB_URL" envDefault:"postgres://postgres:postgres@localhost:5432/payout_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m"`
-			LivePrimaryReaders []string `env:"PAYOUT_LIVE_PRIMARY_READER_DB_URLS" envDefault:""`
-			TestPrimaryWriter  string   `env:"PAYOUT_TEST_PRIMARY_WRITER_DB_URL" envDefault:"postgres://postgres:postgres@localhost:5432/payout_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m"`
-			TestPrimaryReaders []string `env:"PAYOUT_TEST_PRIMARY_READER_DB_URLS" envDefault:""`
-		}
-
-		Processors struct{}
-	}
 }
 
 // NewConfig creates a new Config instance with values from environment variables
