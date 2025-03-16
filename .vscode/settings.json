@@ -1,5 +1,4 @@
 {
-	"buf.binaryPath": "${env:HOME}/.pkgx/buf/v1.47.2/bin/buf",
 	"editor.codeActionsOnSave": {
 		"quickfix.biome": "explicit",
 		"source.organizeImports.biome": "explicit",
@@ -12,11 +11,11 @@
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
-	"go.goroot": "${env:HOME}/.pkgx/go.dev/v1.23.4",
-	"go.useLanguageServer": true,
+	"go.formatTool": "goimports",
+	"go.goroot": "${env:HOME}/.local/share/mise/installs/go/1.24.1",
 	"go.lintFlags": ["--fast"],
 	"go.lintTool": "golangci-lint",
-	"go.formatTool": "goimports",
+	"go.useLanguageServer": true,
 	"javascript.format.enable": false,
 	"javascript.preferences.importModuleSpecifier": "non-relative",
 	"makefile.configureOnOpen": false,
@@ -30,5 +29,11 @@
 	},
 	"[html]": {
 		"editor.defaultFormatter": "vscode.html-language-features"
+	},
+	"debug.javascript.defaultRuntimeExecutable": {
+		"pwa-node": "/Users/cayter/.local/share/mise/shims/node"
+	},
+	"go.alternateTools": {
+		"go": "/Users/cayter/.local/share/mise/shims/go"
 	}
 }
