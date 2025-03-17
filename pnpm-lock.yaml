@@ -83,8 +83,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       radashi:
-        specifier: ^12.3.4
-        version: 12.3.4
+        specifier: ^12.4.0
+        version: 12.4.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -4439,8 +4439,8 @@ packages:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
 
-  radashi@12.3.4:
-    resolution: {integrity: sha512-EC+EhNBJItMLo/D3GR87raHf7W1hkbHUT7Y3Y7/3O+cwMOulRfuZ3g+EU0KT9eikaj8vwLA4ia+bdaXkBGuT4Q==}
+  radashi@12.4.0:
+    resolution: {integrity: sha512-kFJ5Q9B1svHamYfHRQ2EhfLOJRCr+0S9xvluGESadGAs3UvLSaYyxClL+fm/t2H4WPIwWJ0q0eRaZdghovsl2A==}
     engines: {node: '>=16.0.0'}
 
   radix-vue@1.9.17:
@@ -10012,7 +10012,7 @@ snapshots:
     dependencies:
       side-channel: 1.1.0
 
-  radashi@12.3.4: {}
+  radashi@12.4.0: {}
 
   radix-vue@1.9.17(vue@3.5.13(typescript@5.8.2)):
     dependencies:
