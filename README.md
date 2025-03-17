@@ -208,72 +208,91 @@ isn't much there - but you can use it to verify everything is working right.
 
 ## Architecture
 
-Our system follows a microservices architecture with clean, layered patterns in each service. Here's how requests flow through our system:
+Our system follows a modular monolith architecture with clean, layered patterns
+in each module. The modular design allows for clear boundaries between business
+domains while maintaining the simplicity and reliability of a monolithic deployment.
+Here's how requests flow through our system:
 
 ```mermaid
 graph TB
-    subgraph "Dashboard App"
+    subgraph "Frontend Apps"
         direction TB
-        client["React Client"]-->|"HTTP/REST"|api_client["API Client Library"]
+        dashboard["Dashboard App"]-->|"HTTP/REST"|api_client["API Client Library"]
+        checkout["Checkout Portal"]-->|"HTTP/REST"|api_client
     end
 
-    subgraph "API Gateway"
+    subgraph "Modular Monolith"
         direction TB
-        subgraph "12-Factor Integration"
-            config_api["Config"]-->|"Env Vars"|handlers_api
-            deps_api["Dependencies"]-->|"Imports"|services_api
+        subgraph "Infrastructure Layer"
+            config["Configuration"]-->|"Env Vars"|modules
+            di["DI Container"]-->|"Dependencies"|modules
+            middleware["Middleware"]-->|"HTTP Pipeline"|modules
         end
 
-        subgraph "Request Flow"
-            api_client-->|"HTTP/REST"|handlers_api["Handlers"]
-            handlers_api-->|"Domain Models"|services_api["Services"]
-            services_api-->|"Data Ops"|stores_api["Stores"]
-            stores_api-->|"Cache/DB"|data_api[("Data Layer")]
+        subgraph "Modules"
+            direction TB
+            api_client-->|"HTTP/REST"|modules["HTTP Router"]
+
+            subgraph "Identity Module"
+                direction TB
+                modules-->|"Route"|identity_h["Identity Handlers"]
+                identity_h-->|"Domain Models"|identity_s["Identity Services"]
+                identity_s-->|"Data Ops"|identity_store["Identity Store"]
+                identity_store-->|"Read/Write"|identity_db[("Identity DB")]
+                identity_store-->|"Cache"|identity_cache["Identity Cache"]
+                identity_store-->|"Files"|identity_s3["Identity Storage"]
+            end
+
+            subgraph "Payment Module"
+                direction TB
+                modules-->|"Route"|payment_h["Payment Handlers"]
+                payment_h-->|"Domain Models"|payment_s["Payment Services"]
+                payment_s-->|"Data Ops"|payment_store["Payment Store"]
+                payment_store-->|"Read/Write"|payment_db[("Payment DB")]
+                payment_store-->|"Cache"|payment_cache["Payment Cache"]
+                payment_store-->|"Files"|payment_s3["Payment Storage"]
+                payment_s-->|"Integration"|payment_proc["Payment Processors"]
+                payment_proc-->|"External"|adyen["Adyen"]
+                payment_proc-->|"External"|stripe["Stripe"]
+            end
+
+            subgraph "Payout Module"
+                direction TB
+                modules-->|"Route"|payout_h["Payout Handlers"]
+                payout_h-->|"Domain Models"|payout_s["Payout Services"]
+                payout_s-->|"Data Ops"|payout_store["Payout Store"]
+                payout_store-->|"Read/Write"|payout_db[("Payout DB")]
+                payout_store-->|"Cache"|payout_cache["Payout Cache"]
+                payout_store-->|"Files"|payout_s3["Payout Storage"]
+                payout_s-->|"Methods"|payout_methods["Payout Methods"]
+                payout_s-->|"Integration"|payout_proc["Payout Processors"]
+                payout_proc-->|"External"|fiatpe["FiatPE"]
+                payout_proc-->|"External"|xflow["XpressFlow"]
+            end
+        end
+
+        subgraph "Shared Infrastructure"
+            direction TB
+            monitoring["Monitoring"]
+            logging["Logging"]
+            metrics["Metrics"]
+            tracing["Tracing"]
         end
     end
 
-    subgraph "Payment Service"
-        direction TB
-        subgraph "12-Factor Integration"
-            config_pay["Config"]-->|"Env Vars"|handlers_pay
-            deps_pay["Dependencies"]-->|"Imports"|services_pay
-        end
-
-        subgraph "Request Flow"
-            services_api-->|"gRPC"|handlers_pay["Handlers"]
-            handlers_pay-->|"Domain Models"|services_pay["Services"]
-            services_pay-->|"Data Ops"|stores_pay["Stores"]
-            stores_pay-->|"Cache/DB"|data_pay[("Data Layer")]
-        end
-    end
-
-    classDef client fill:#f9f9f9,stroke:#333,stroke-width:2px
-    classDef layer fill:#dae8fc,stroke:#333,stroke-width:2px
-    classDef factor fill:#e1f3d8,stroke:#333,stroke-width:2px
-    classDef data fill:#ffe6cc,stroke:#333,stroke-width:2px
-    class client client
-    class handlers_api,services_api,stores_api,handlers_pay,services_pay,stores_pay layer
-    class config_api,deps_api,config_pay,deps_pay factor
-    class data_api,data_pay data
+    classDef frontend fill:#f9f9f9,stroke:#333,stroke-width:2px
+    classDef module fill:#dae8fc,stroke:#333,stroke-width:2px
+    classDef infra fill:#e1f3d8,stroke:#333,stroke-width:2px
+    classDef store fill:#ffe6cc,stroke:#333,stroke-width:2px
+    classDef external fill:#f8cecc,stroke:#333,stroke-width:2px
+    classDef data fill:#d5e8d4,stroke:#333,stroke-width:2px
+    class dashboard,checkout frontend
+    class identity_h,identity_s,payment_h,payment_s,payout_h,payout_s module
+    class config,di,middleware,modules,monitoring,logging,metrics,tracing infra
+    class identity_store,payment_store,payout_store store
+    class identity_db,payment_db,payout_db,identity_cache,payment_cache,payout_cache,identity_s3,payment_s3,payout_s3 data
+    class adyen,stripe,fiatpe,xflow external
 ```
-
-Each service implements:
-
-1. **12-Factor Integration**
-   - Configuration via environment variables
-   - Explicit dependency management
-   - Stateless design
-
-2. **Clean Architecture Layers**
-   - **Handlers**: Request validation, auth and routing
-   - **Services**: Business logic and workflow orchestration
-   - **Stores**: Data persistence and caching
-
-This architecture ensures:
-- Clear separation of concerns
-- Independent scalability
-- Consistent development patterns
-- Reliable data flow
 
 ## CI/CD Workflow
 
