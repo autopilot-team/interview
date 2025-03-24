@@ -331,8 +331,8 @@ importers:
         specifier: ^8.6.6
         version: 8.6.6(storybook@8.6.6(prettier@3.5.3))
       '@storybook/addon-themes':
-        specifier: ^8.6.6
-        version: 8.6.6(storybook@8.6.6(prettier@3.5.3))
+        specifier: ^8.6.9
+        version: 8.6.9(storybook@8.6.6(prettier@3.5.3))
       '@storybook/blocks':
         specifier: ^8.6.6
         version: 8.6.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.6(prettier@3.5.3))
@@ -2072,10 +2072,10 @@ packages:
     peerDependencies:
       storybook: ^8.6.6
 
-  '@storybook/addon-themes@8.6.6':
-    resolution: {integrity: sha512-yTx40/vyCw3lv56Tn3MSGgyjrqL+0P0P9m83S1YMlDApnC+MDBQMlq6pgFM+HmJ7qO0muNl2qKQuib/iYR4uKQ==}
+  '@storybook/addon-themes@8.6.9':
+    resolution: {integrity: sha512-2kilW6sOhRzgkzU9RmMbRBErlb/RtYdq3eJxC4rVN5+qZaTJiVytXDn7dz1XgA+VB2Qpsd1IKrfqJ2ybp8UvlA==}
     peerDependencies:
-      storybook: ^8.6.6
+      storybook: ^8.6.9
 
   '@storybook/addon-toolbars@8.6.6':
     resolution: {integrity: sha512-xdmCIJQXY8V8bmVcK0VcKx79doHe3LEZ/PUKaH3cnd8IZ/Lltp3hySDH0oLK1JrSGEouVcIDCboSOhJZZ/Qbsg==}
@@ -5027,6 +5027,10 @@ packages:
     resolution: {integrity: sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==}
     engines: {node: '>=14.0'}
 
+  undici@5.29.0:
+    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
+    engines: {node: '>=14.0'}
+
   undici@6.21.2:
     resolution: {integrity: sha512-uROZWze0R0itiAKVPsYhFov9LxrPMHLMEQFszeI2gCN6bnIIZ8twzBCJcN2LJrBBLfrP0t1FW0g+JmKVl8Vk1g==}
     engines: {node: '>=18.17'}
@@ -7465,7 +7469,7 @@ snapshots:
       storybook: 8.6.6(prettier@3.5.3)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-themes@8.6.6(storybook@8.6.6(prettier@3.5.3))':
+  '@storybook/addon-themes@8.6.9(storybook@8.6.6(prettier@3.5.3))':
     dependencies:
       storybook: 8.6.6(prettier@3.5.3)
       ts-dedent: 2.2.0
@@ -9695,7 +9699,7 @@ snapshots:
       exit-hook: 2.2.1
       glob-to-regexp: 0.4.1
       stoppable: 1.1.0
-      undici: 5.28.5
+      undici: 5.29.0
       workerd: 1.20250310.0
       ws: 8.18.0
       youch: 3.2.3
@@ -10685,6 +10689,11 @@ snapshots:
   undici@5.28.5:
     dependencies:
       '@fastify/busboy': 2.1.1
+
+  undici@5.29.0:
+    dependencies:
+      '@fastify/busboy': 2.1.1
+    optional: true
 
   undici@6.21.2: {}
 
