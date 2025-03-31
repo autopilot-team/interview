@@ -10,6 +10,6 @@
 		"typegen": "echo 'No typegen for assets'"
 	},
 	"devDependencies": {
-		"vite": "^6.2.2"
+		"vite": "^6.2.4"
 	}
 }
