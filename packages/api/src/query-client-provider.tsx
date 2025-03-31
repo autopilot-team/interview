@@ -20,7 +20,7 @@ export function QueryClientProvider({
 						retry: false, // Retry failed requests twice
 						retryDelay: (attemptIndex) =>
 							Math.min(1000 * 2 ** attemptIndex, 30000),
-						refetchOnWindowFocus: true, // Refetch when user returns to the app
+						refetchOnWindowFocus: false, // Refetch when user returns to the app
 						refetchOnReconnect: true, // Refetch on network reconnection
 						refetchOnMount: true, // Always refetch on component mount
 						staleTime: 0, // Consider data stale immediately
