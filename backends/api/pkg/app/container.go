@@ -193,6 +193,32 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 		return nil, err
 	}
 
+	// Initialize RateLimiter (Valkey client)
+	rateLimiter, err := core.NewRedis(ctx, core.RedisOptions{
+		URL:       config.App.RateLimiter.ValkeyURLs,
+		IsCluster: true,
+	})
+	if err != nil {
+		logger.ErrorContext(ctx, "failed to connect to api rate limiter", "error", err)
+		return nil, err
+	}
+	cleanUp = append(cleanUp, func() error {
+		return rateLimiter.Close()
+	})
+
+	// Initialize the identity cache
+	identityCache, err := core.NewRedis(ctx, core.RedisOptions{
+		URL:       config.Identity.Cache.ValkeyURLs,
+		IsCluster: true,
+	})
+	if err != nil {
+		logger.ErrorContext(ctx, "failed to connect to identity cache", "error", err)
+		return nil, err
+	}
+	cleanUp = append(cleanUp, func() error {
+		return identityCache.Close()
+	})
+
 	// Initialize the identity database
 	identityDB, err := core.NewDB(ctx, core.DBOptions{
 		Identifier:   "identity",
@@ -264,7 +290,9 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 	})
 
 	return &Container{
-		Cache:   ContainerCache{},
+		Cache: ContainerCache{
+			Identity: identityCache,
+		},
 		CleanUp: cleanUp,
 		Config:  config,
 		DB: ContainerDB{
@@ -279,10 +307,11 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 			Migrations: opts.FS.Migrations,
 			Templates:  opts.FS.Templates,
 		},
-		I18nBundle: i18nBundle,
-		Logger:     logger,
-		Mailer:     mailer,
-		Mode:       opts.Mode,
+		I18nBundle:  i18nBundle,
+		Logger:      logger,
+		Mailer:      mailer,
+		Mode:        opts.Mode,
+		RateLimiter: rateLimiter,
 		Storage: ContainerS3{
 			Identity: identityStorage,
 		},
