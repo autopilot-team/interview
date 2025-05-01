@@ -16,7 +16,8 @@ type Module struct {
 // New creates a new payment module
 func New(ctx context.Context, container *app.Container) (*Module, error) {
 	// Initialize the store manager
-	storeManager := store.NewManager(container)
+	dbs := container.DB.Payment
+	storeManager := store.NewManager(dbs.Live.Writer(), dbs.Test.Writer())
 
 	// Initialize the service manager
 	serviceManager := service.NewManager(container, storeManager)

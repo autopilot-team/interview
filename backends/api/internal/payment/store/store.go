@@ -1,7 +1,7 @@
 package store
 
 import (
-	"autopilot/backends/api/pkg/app"
+	"autopilot/backends/internal/core"
 	"autopilot/backends/internal/types"
 	"context"
 )
@@ -13,20 +13,18 @@ type ModeStore struct {
 
 // Manager is a collection of stores used by the services.
 type Manager struct {
-	*app.Container
 	Live *ModeStore
 	Test *ModeStore
 }
 
 // NewManager creates a new Manager.
-func NewManager(container *app.Container) *Manager {
+func NewManager(live, test core.Querier) *Manager {
 	return &Manager{
-		Container: container,
 		Live: &ModeStore{
-			Payment: NewPayment(container.DB.Payment.Live.Writer()),
+			Payment: NewPayment(live),
 		},
 		Test: &ModeStore{
-			Payment: NewPayment(container.DB.Payment.Test.Writer()),
+			Payment: NewPayment(test),
 		},
 	}
 }
@@ -39,8 +37,5 @@ func (m *Manager) WithMode(ctx context.Context) *ModeStore {
 	case types.OperationModeTest:
 		return m.Test
 	}
-
-	m.Logger.Error("invalid database connection mode", "mode", mode)
-
 	return m.Test
 }
