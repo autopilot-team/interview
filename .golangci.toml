@@ -1,4 +1,0 @@
-[issues]
-                 # copied from x/tools
-exclude-files = ["tools/cmd/stringer.go"]
-

@@ -19,7 +19,7 @@ type Verification struct {
 	core.Querier
 }
 
-func (v Verification) WithQuerier(q core.Querier) Verificationer {
+func (s Verification) WithQuerier(q core.Querier) Verificationer {
 	return &Verification{q}
 }
 

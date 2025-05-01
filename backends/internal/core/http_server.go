@@ -133,7 +133,7 @@ func NewHttpServer(opts HttpServerOptions) (*HttpServer, error) {
 func (s *HttpServer) ServeStaticFiles(path string) {
 	subFs, err := fs.Sub(s.spaFS, path)
 	if err != nil {
-		panic(fmt.Errorf("Failed to get the sub tree for the static files: %w", err))
+		panic(fmt.Errorf("failed to get the sub tree for the static files: %w", err))
 	}
 
 	s.Handle("/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
