@@ -180,6 +180,7 @@ tasks:
   down:
     desc: Teardown the infrastructure
     cmds:
+      - docker compose down --remove-orphans --volumes
       - docker compose --profile=infra down --remove-orphans --timeout 0
 
   gen:
