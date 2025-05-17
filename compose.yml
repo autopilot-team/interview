@@ -45,30 +45,6 @@ services:
 
   db:
     image: postgres:16.6
-    command: >
-      bash -c '
-        create_db() {
-          local db_name=$$1
-          local suffix=$$2
-          local full_name=$$db_name
-
-          if [ ! -z "$$suffix" ]; then
-            full_name="$${db_name}_$${suffix}"
-          fi
-
-          if ! psql -U postgres -lqt | cut -d "|" -f 1 | grep -qw $$full_name; then
-            psql -U postgres -c "CREATE DATABASE $$full_name"
-          fi
-        }
-
-        /usr/local/bin/docker-entrypoint.sh postgres &
-
-        echo "Creating databases..." &&
-          sleep 3 &&
-          for db in identity worker; do create_db $$db; done &&
-          for db in payment; do create_db $$db "live"; create_db $$db "test"; done &&
-          wait
-      '
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -81,6 +57,8 @@ services:
       - 5432:5432
     profiles:
       - infra
+    volumes:
+      - .compose/postgres/initdb.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
     restart: on-failure
 
   db-ui:
