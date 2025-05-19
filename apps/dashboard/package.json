@@ -20,7 +20,7 @@
 		"i18next-http-backend": "^3.0.2",
 		"isbot": "^5.1.23",
 		"nprogress": "^0.2.0",
-		"radashi": "^12.3.4",
+		"radashi": "^12.5.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-i18next": "^15.4.1",
