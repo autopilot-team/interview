@@ -46,12 +46,20 @@ services:
   db:
     image: postgres:16.6
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # NOTE: we pass from Taskfile envs to compose envs
+      # if you run it manually from compose for init, you need to manually 
+      # specify the DB. 
+      #
+      # but we assume most of init run from Taskfile anyway, but consecutive runs ok from 
+      # compose directly.
+      DATABASES_WITHOUT_LIVE_TEST: ${DATABASES_WITHOUT_LIVE_TEST}
+      DATABASES_WITH_LIVE_TEST: ${DATABASES_WITH_LIVE_TEST}
     healthcheck:
       interval: 3s
       retries: 5
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "/usr/bin/wait_for_ready.sh"]
       timeout: 5s
     ports:
       - 5432:5432
@@ -59,6 +67,7 @@ services:
       - infra
     volumes:
       - .compose/postgres/initdb.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
+      - .compose/postgres/checkdb.sh:/usr/bin/wait_for_ready.sh:ro
     restart: on-failure
 
   db-ui:

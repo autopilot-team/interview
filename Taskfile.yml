@@ -245,9 +245,11 @@ tasks:
 
   up:
     desc: Setup the infrastructure with a fresh database/storage state
+    env:
+      DATABASES_WITH_LIVE_TEST: "{{.DATABASES_WITH_LIVE_TEST}}"
+      DATABASES_WITHOUT_LIVE_TEST: "{{.DATABASES_WITHOUT_LIVE_TEST}}"
     cmds:
-      - docker compose --profile=infra up --wait
-      - docker compose exec -it db /bin/bash -c 'until pg_isready -U postgres > /dev/null 2>&1; do sleep 1; done'
+      - docker compose --verbose --profile=infra up --wait
       - docker compose --profile=infra stop db-ui
       - docker compose exec -it cache /bin/bash -c 'printf "yes\nyes\n" | valkey-cli --cluster create cache:6379 cache-node-2:6379 --cluster-replicas 0'
       - task: db:migrate
