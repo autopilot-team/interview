@@ -105,9 +105,10 @@ that closely resembles our production stack, allowing you to:
 ### How To Apply
 
 1. Read the repository, familiarize yourself with the project.
-2. If you are comfortable/productive working with our tech stack, please
-proceed to our [Software Engineer JD](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
-3. We will get back to you within 72 hours to schedule an interview if your
+2. Ensure that you know how the flow works from frontend to backend.
+3. Once you are comfortable/productive working with our tech stack, please
+proceed to apply for [Software Engineer](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
+4. We will get back to you within 72 hours to schedule an interview if your
 profile matches our requirements.
 
 ### What To Expect
@@ -131,15 +132,61 @@ our interviewer within 90 minutes, which might include:
 ## Project Structure
 
 ```
-├── apps/                        # Frontend applications
-│    └── dashboard/              # Main dashboard app
-├── backends/                    # Backend services
-│    ├── api/                    # API gateway
-│    ├── internal/               # Common libraries
-└── packages/                    # Shared packages
-     ├── api/                    # API client library
-     ├── ui/                     # UI component library
-     └── typescript-config/      # Shared TS configs
+├── apps/                      # Frontend applications
+│   └── dashboard/             # Main dashboard app
+├── backends/                  # Backend services
+│   ├── api/                   # API Gateway & Modular Monolith
+│   │   ├── internal/          # Internal modules
+│   │   │   ├── identity/      # Identity & Authentication module
+│   │   │   │   ├── handler/   # HTTP handlers
+│   │   │   │   │   └── v1/    # v1 API endpoints
+│   │   │   │   │       ├── apikey.go        # API key management
+│   │   │   │   │       ├── connection.go    # OAuth connections
+│   │   │   │   │       ├── provider.go      # Auth providers
+│   │   │   │   │       ├── session.go       # Session management
+│   │   │   │   │       ├── twofactor.go     # 2FA implementation
+│   │   │   │   │       ├── user.go          # User management
+│   │   │   │   │       └── v1.go            # v1 API endpoints
+│   │   │   │   ├── model/    # Domain models
+│   │   │   │   ├── service/  # Business logic
+│   │   │   │   ├── store/    # Data persistence
+│   │   │   │   ├── auth.go   # Core auth logic
+│   │   │   │   └── module.go # Module config
+│   │   │   │
+│   │   │   └── payment/      # Payment processing module
+│   │   │       ├── ...
+│   │   │       └── module.go # Module config
+│   │   │
+│   │   ├── pkg/              # Public packages
+│   │   │   ├── app/          # Application core
+│   │   │   │   ├── mocks/    # Mock implementations
+│   │   │   │   ├── config.go     # Config management
+│   │   │   │   ├── container.go  # DI container
+│   │   │   │   └── turnstile.go  # Turnstile security
+│   │   │   ├── httpx/        # HTTP utilities
+│   │   │   ├── middleware/   # HTTP middleware
+│   │   │   └── testutil/     # Testing utilities
+│   │   │
+│   │   ├── seeders/          # Database seeders
+│   │   ├── migrations/       # Database migrations
+│   │   ├── templates/        # Email templates
+│   │   ├── locales/          # i18n translations
+│   │   ├── main.go           # Entry point
+│   │   ├── debug.go          # Debug config
+│   │   └── release.go        # Release config
+│   │
+│   └── internal/             # Shared backend packages
+│       ├── cmd/              # CLI commands
+│       ├── core/             # Core services (DB, HTTP, etc)
+│       ├── grpc/             # gRPC utilities
+│       ├── http/             # HTTP utilities
+│       ├── pb/               # Protocol Buffer definitions
+│       ├── pbgen/            # Generated gRPC code
+│       └── types/            # Shared types
+└── packages/                 # Shared packages
+    ├── api/                  # API client library
+    ├── ui/                   # UI component library
+    └── typescript-config/    # Shared TS configs
 ```
 
 ## Quick Start
