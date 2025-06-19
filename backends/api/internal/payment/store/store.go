@@ -8,13 +8,17 @@ import (
 
 // ModeStore is a collection of stores for a specific operation mode.
 type ModeStore struct {
+	db      core.DBer
 	Payment Paymenter
+	Refund  Refunder
 }
 
 // Manager is a collection of stores used by the services.
 type Manager struct {
-	Live *ModeStore
-	Test *ModeStore
+	liveDB core.DBer
+	testDB core.DBer
+	Live   *ModeStore
+	Test   *ModeStore
 }
 
 // NewManager creates a new Manager.

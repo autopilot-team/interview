@@ -13,6 +13,7 @@ import (
 // V1 is the v1 API handler
 type V1 struct {
 	*app.Container
+	payment *service.Manager
 }
 
 var TagPayment = huma.Tag{
@@ -31,16 +32,73 @@ func AddRoutes(container *app.Container, humaAPI huma.API, service *service.Mana
 
 	v1 := &V1{
 		Container: container,
+		payment:   service,
 	}
 
-	// Payments Endpoints
+	// Payment Endpoints
 	httpx.Register(api, huma.Operation{
 		Method:      http.MethodPost,
 		OperationID: "create-payment",
 		Path:        BasePath("/payments"),
 		Summary:     "Create payment",
+		Description: "Create a new payment with idempotency support",
 		Tags:        []string{TagPayment.Name},
-	}, v1.CreatePayment, api.WithUnauthenticated())
+	}, v1.CreatePayment)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodGet,
+		OperationID: "get-payment",
+		Path:        BasePath("/payments/{payment_id}"),
+		Summary:     "Get payment details",
+		Description: "Get details of a specific payment",
+		Tags:        []string{TagPayment.Name},
+	}, v1.GetPayment)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodGet,
+		OperationID: "list-payments",
+		Path:        BasePath("/payments"),
+		Summary:     "List payments",
+		Description: "List payments with filtering options",
+		Tags:        []string{TagPayment.Name},
+	}, v1.ListPayments)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodPatch,
+		OperationID: "update-payment-status",
+		Path:        BasePath("/payments/{payment_id}/status"),
+		Summary:     "Update payment status",
+		Description: "Update payment status (webhook endpoint)",
+		Tags:        []string{TagPayment.Name},
+	}, v1.UpdatePaymentStatus, api.WithUnauthenticated())
+
+	// Refund Endpoints
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodPost,
+		OperationID: "initiate-refund",
+		Path:        BasePath("/refunds"),
+		Summary:     "Initiate refund",
+		Description: "Create a new refund with validation and idempotency support",
+		Tags:        []string{TagPayment.Name},
+	}, v1.InitiateRefund)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodGet,
+		OperationID: "get-refund",
+		Path:        BasePath("/refunds/{refund_id}"),
+		Summary:     "Get refund details",
+		Description: "Get details of a specific refund",
+		Tags:        []string{TagPayment.Name},
+	}, v1.GetRefund)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodGet,
+		OperationID: "list-refunds",
+		Path:        BasePath("/refunds"),
+		Summary:     "List refunds",
+		Description: "List refunds with filtering options",
+		Tags:        []string{TagPayment.Name},
+	}, v1.ListRefunds)
 
 	return nil
 }

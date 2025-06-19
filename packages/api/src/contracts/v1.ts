@@ -301,10 +301,101 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * List payments
+         * @description List payments with filtering options
+         */
+        get: operations["list-payments"];
+        put?: never;
+        /**
+         * Create payment
+         * @description Create a new payment with idempotency support
+         */
+        post: operations["create-payment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/payments/{payment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get payment details
+         * @description Get details of a specific payment
+         */
+        get: operations["get-payment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/payments/{payment_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         get?: never;
         put?: never;
-        /** Create payment */
-        post: operations["create-payment"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update payment status
+         * @description Update payment status (webhook endpoint)
+         */
+        patch: operations["update-payment-status"];
+        trace?: never;
+    };
+    "/v1/refunds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List refunds
+         * @description List refunds with filtering options
+         */
+        get: operations["list-refunds"];
+        put?: never;
+        /**
+         * Initiate refund
+         * @description Create a new refund with validation and idempotency support
+         */
+        post: operations["initiate-refund"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/refunds/{refund_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get refund details
+         * @description Get details of a specific refund
+         */
+        get: operations["get-refund"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -351,22 +442,36 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         CreatePaymentRequestBody: {
-            /** @description All monetary amounts should be provided in the minor unit. For example:
-             *       - 1000 to charge 10 USD (or any other two-decimal currency)
-             *       - 10 to charge 10 JPY (or any other zero-decimal currency) */
-            Amount: number | string;
             /**
-             * Format: currency
-             * @description The currency code in ISO 4217 format.
+             * Format: int64
+             * @description Amount in smallest currency unit (e.g., cents)
              */
-            Currency: string;
-            Description: string;
-            MerchantID: string;
-            Metadata: {
+            amount: number;
+            /** @description ISO 4217 currency code */
+            currency: string;
+            /**
+             * Format: email
+             * @description Customer email address
+             */
+            customer_email?: string;
+            /** @description Customer ID from identity system */
+            customer_id?: string;
+            /** @description Customer name */
+            customer_name?: string;
+            /** @description Payment description */
+            description?: string;
+            /** @description ID of the merchant receiving payment */
+            merchant_id: string;
+            /** @description Custom metadata for the payment */
+            metadata?: {
                 [key: string]: unknown;
             };
-            Method: string;
-            Provider: string;
+            /** @description Payment method type */
+            payment_method: string;
+            /** @description Payment method specific details */
+            payment_method_details?: {
+                [key: string]: unknown;
+            };
         };
         DisableTwoFactorResponseBody: {
             /** @description Whether two-factor authentication is enabled */
@@ -447,6 +552,41 @@ export interface components {
             /** @description The current active user sessions */
             sessions: components["schemas"]["Session"][] | null;
         };
+        InitiateRefundRequestBody: {
+            /**
+             * Format: int64
+             * @description Amount to refund in smallest currency unit
+             */
+            amount: number;
+            /** @description Custom metadata for the refund */
+            metadata?: {
+                [key: string]: unknown;
+            };
+            /** @description ID of the payment to refund */
+            payment_id: string;
+            /** @description Reason for the refund */
+            reason: string;
+            /** @description Additional details about the refund reason */
+            reason_description?: string;
+        };
+        ListPaymentsResponseBody: {
+            /** Format: int64 */
+            limit: number;
+            /** Format: int64 */
+            offset: number;
+            payments: components["schemas"]["Payment"][] | null;
+            /** Format: int64 */
+            total: number;
+        };
+        ListRefundsResponseBody: {
+            /** Format: int64 */
+            limit: number;
+            /** Format: int64 */
+            offset: number;
+            refunds: components["schemas"]["Refund"][] | null;
+            /** Format: int64 */
+            total: number;
+        };
         MeResponseBody: {
             /** @description The currently active entity */
             activeEntity?: components["schemas"]["Entity"];
@@ -471,18 +611,76 @@ export interface components {
             /** Format: int64 */
             amount: number;
             /** Format: date-time */
-            completed_at?: string;
+            cancelled_at?: string;
             /** Format: date-time */
             created_at: string;
             currency: string;
-            description: string;
+            customer_email?: string;
+            customer_id?: string;
+            customer_name?: string;
+            description?: string;
+            external_payment_id?: string;
+            /** Format: date-time */
+            failed_at?: string;
             id: string;
+            idempotency_key: string;
+            /** Format: date-time */
+            initiated_at: string;
             merchant_id: string;
             metadata: {
                 [key: string]: unknown;
             };
-            method: string;
-            provider: string;
+            payment_method: string;
+            payment_method_details: {
+                [key: string]: unknown;
+            };
+            /** Format: date-time */
+            processed_at?: string;
+            provider_error_code?: string;
+            provider_error_message?: string;
+            provider_response: {
+                [key: string]: unknown;
+            };
+            /** Format: int64 */
+            refund_count: number;
+            /** Format: int64 */
+            refundable_amount: number;
+            /** Format: int64 */
+            refunded_amount: number;
+            status: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        Refund: {
+            /** Format: int64 */
+            amount: number;
+            /** Format: date-time */
+            cancelled_at?: string;
+            /** Format: date-time */
+            created_at: string;
+            currency: string;
+            external_refund_id?: string;
+            /** Format: date-time */
+            failed_at?: string;
+            id: string;
+            idempotency_key: string;
+            /** Format: date-time */
+            initiated_at: string;
+            initiated_by?: string;
+            initiated_by_email?: string;
+            metadata: {
+                [key: string]: unknown;
+            };
+            payment_id: string;
+            /** Format: date-time */
+            processed_at?: string;
+            provider_error_code?: string;
+            provider_error_message?: string;
+            provider_response: {
+                [key: string]: unknown;
+            };
+            reason: string;
+            reason_description?: string;
             status: string;
             /** Format: date-time */
             updated_at: string;
@@ -596,6 +794,20 @@ export interface components {
             currentPassword: string;
             /** @description The new password */
             newPassword: string;
+        };
+        UpdatePaymentStatusRequestBody: {
+            /** @description External payment ID from provider */
+            external_payment_id?: string;
+            /** @description Provider error code */
+            provider_error_code?: string;
+            /** @description Provider error message */
+            provider_error_message?: string;
+            /** @description Provider response data */
+            provider_response?: {
+                [key: string]: unknown;
+            };
+            /** @description New payment status */
+            status: string;
         };
         UpdateUserRequestBody: {
             /** @description The user's full name */
@@ -1160,6 +1372,28 @@ export interface operations {
             429: components["responses"]["TooManyRequests"];
         };
     };
+    "list-payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListPaymentsResponseBody"];
+                };
+            };
+            /** @description Too many requests - rate limit exceeded */
+            429: components["responses"]["TooManyRequests"];
+        };
+    };
     "create-payment": {
         parameters: {
             query?: never;
@@ -1180,6 +1414,133 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Payment"];
+                };
+            };
+            /** @description Too many requests - rate limit exceeded */
+            429: components["responses"]["TooManyRequests"];
+        };
+    };
+    "get-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Payment ID */
+                payment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Payment"];
+                };
+            };
+            /** @description Too many requests - rate limit exceeded */
+            429: components["responses"]["TooManyRequests"];
+        };
+    };
+    "update-payment-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Payment ID */
+                payment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePaymentStatusRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Payment"];
+                };
+            };
+            /** @description Too many requests - rate limit exceeded */
+            429: components["responses"]["TooManyRequests"];
+        };
+    };
+    "list-refunds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListRefundsResponseBody"];
+                };
+            };
+            /** @description Too many requests - rate limit exceeded */
+            429: components["responses"]["TooManyRequests"];
+        };
+    };
+    "initiate-refund": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InitiateRefundRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refund"];
+                };
+            };
+            /** @description Too many requests - rate limit exceeded */
+            429: components["responses"]["TooManyRequests"];
+        };
+    };
+    "get-refund": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Refund ID */
+                refund_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refund"];
                 };
             };
             /** @description Too many requests - rate limit exceeded */
