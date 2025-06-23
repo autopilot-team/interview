@@ -26,6 +26,8 @@ type Paymenter interface {
 	GetRefundByID(ctx context.Context, id uuid.UUID) (*model.Refund, error)
 	GetRefundByIdempotencyKey(ctx context.Context, paymentID uuid.UUID, idempotencyKey string) (*model.Refund, error)
 	ListRefunds(ctx context.Context, filter *model.RefundFilter) ([]model.Refund, int64, error)
+	CancelRefund(ctx context.Context, id uuid.UUID, reason *string) (*model.Refund, error)
+	UpdateRefundStatus(ctx context.Context, id uuid.UUID, update *model.RefundStatusUpdate) (*model.Refund, error)
 }
 
 // Payment implements the Paymenter interface
@@ -231,4 +233,87 @@ func (s *Payment) ListRefunds(ctx context.Context, filter *model.RefundFilter) (
 	}
 
 	return refunds, total, nil
+}
+
+// CancelRefund cancels a pending or processing refund
+func (s *Payment) CancelRefund(ctx context.Context, id uuid.UUID, reason *string) (*model.Refund, error) {
+	// Get current refund
+	refund, err := s.GetRefundByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Validate refund can be cancelled
+	if refund.Status != model.RefundStatusPending && refund.Status != model.RefundStatusProcessing {
+		return nil, httpx.ErrUnknown.WithInternal(fmt.Errorf("refund cannot be cancelled in current status"))
+	}
+
+	// Cancel refund
+	cancelledRefund, err := s.store.WithMode(ctx).Payment.CancelRefund(ctx, id, reason)
+	if err != nil {
+		return nil, httpx.ErrUnknown.WithInternal(err)
+	}
+
+	// Create payment event
+	event := &model.PaymentEvent{
+		ID:        uuid.New(),
+		PaymentID: refund.PaymentID,
+		EventType: "refund_cancelled",
+		EventData: map[string]any{
+			"refund_id": id,
+			"reason":    reason,
+		},
+	}
+	_ = s.store.WithMode(ctx).Payment.CreatePaymentEvent(ctx, event)
+
+	return cancelledRefund, nil
+}
+
+// UpdateRefundStatus updates the status of a refund
+func (s *Payment) UpdateRefundStatus(ctx context.Context, id uuid.UUID, update *model.RefundStatusUpdate) (*model.Refund, error) {
+	// Get current refund
+	refund, err := s.GetRefundByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Update refund
+	updatedRefund, err := s.store.WithMode(ctx).Payment.UpdateRefundStatus(ctx, id, update)
+	if err != nil {
+		return nil, httpx.ErrUnknown.WithInternal(err)
+	}
+
+	// Create payment event
+	event := &model.PaymentEvent{
+		ID:        uuid.New(),
+		PaymentID: refund.PaymentID,
+		EventType: fmt.Sprintf("refund_status_changed_%s", update.Status),
+		EventData: map[string]any{
+			"refund_id":  id,
+			"old_status": refund.Status,
+			"new_status": update.Status,
+		},
+	}
+	_ = s.store.WithMode(ctx).Payment.CreatePaymentEvent(ctx, event)
+
+	// If refund succeeded, update payment status
+	if update.Status == model.RefundStatusSucceeded {
+		payment, err := s.GetPaymentByID(ctx, refund.PaymentID)
+		if err == nil && payment != nil {
+			// Check if fully refunded
+			if payment.RefundedAmount+refund.Amount >= payment.Amount {
+				paymentUpdate := &model.PaymentStatusUpdate{
+					Status: model.PaymentStatusRefunded,
+				}
+				_, _ = s.UpdatePaymentStatus(ctx, payment.ID, paymentUpdate)
+			} else if payment.RefundedAmount+refund.Amount > 0 {
+				paymentUpdate := &model.PaymentStatusUpdate{
+					Status: model.PaymentStatusPartiallyRefunded,
+				}
+				_, _ = s.UpdatePaymentStatus(ctx, payment.ID, paymentUpdate)
+			}
+		}
+	}
+
+	return updatedRefund, nil
 }

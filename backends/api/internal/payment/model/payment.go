@@ -102,6 +102,7 @@ type PaymentFilter struct {
 
 // RefundFilter represents filter options for listing refunds
 type RefundFilter struct {
+	MerchantID  *uuid.UUID
 	PaymentID   *uuid.UUID
 	Status      *RefundStatus
 	InitiatedBy *uuid.UUID

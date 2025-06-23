@@ -55,3 +55,12 @@ type Refund struct {
 	CreatedAt   time.Time  `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at" db:"updated_at"`
 }
+
+// RefundStatusUpdate represents data for updating refund status
+type RefundStatusUpdate struct {
+	Status               RefundStatus
+	ExternalRefundID     *string
+	ProviderResponse     map[string]any
+	ProviderErrorCode    *string
+	ProviderErrorMessage *string
+}

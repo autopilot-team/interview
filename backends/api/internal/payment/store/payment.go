@@ -30,6 +30,8 @@ type Paymenter interface {
 	GetRefundByID(ctx context.Context, id uuid.UUID) (*model.Refund, error)
 	GetRefundByIdempotencyKey(ctx context.Context, paymentID uuid.UUID, idempotencyKey string) (*model.Refund, error)
 	ListRefunds(ctx context.Context, filter *model.RefundFilter) ([]model.Refund, int64, error)
+	CancelRefund(ctx context.Context, id uuid.UUID, reason *string) (*model.Refund, error)
+	UpdateRefundStatus(ctx context.Context, id uuid.UUID, update *model.RefundStatusUpdate) (*model.Refund, error)
 	
 	// Payment event operations
 	CreatePaymentEvent(ctx context.Context, event *model.PaymentEvent) error
@@ -567,43 +569,62 @@ func (s *Payment) ListRefunds(ctx context.Context, filter *model.RefundFilter) (
 	var args []interface{}
 	argIndex := 1
 
+	// Base query parts
+	baseSelect := `
+		SELECT r.id, r.payment_id, r.idempotency_key, r.external_refund_id, r.amount, r.currency,
+		       r.status, r.reason, r.reason_description, r.metadata, r.provider_response,
+		       r.provider_error_code, r.provider_error_message, r.initiated_by,
+		       r.initiated_by_email, r.initiated_at, r.processed_at, r.failed_at,
+		       r.cancelled_at, r.created_at, r.updated_at
+		FROM refunds r`
+	
+	joins := ""
+	
+	// If filtering by merchant, we need to join with payments table
+	if filter.MerchantID != nil {
+		joins = " INNER JOIN payments p ON r.payment_id = p.id"
+		conditions = append(conditions, fmt.Sprintf("p.merchant_id = $%d", argIndex))
+		args = append(args, *filter.MerchantID)
+		argIndex++
+	}
+
 	if filter.PaymentID != nil {
-		conditions = append(conditions, fmt.Sprintf("payment_id = $%d", argIndex))
+		conditions = append(conditions, fmt.Sprintf("r.payment_id = $%d", argIndex))
 		args = append(args, *filter.PaymentID)
 		argIndex++
 	}
 
 	if filter.Status != nil {
-		conditions = append(conditions, fmt.Sprintf("status = $%d", argIndex))
+		conditions = append(conditions, fmt.Sprintf("r.status = $%d", argIndex))
 		args = append(args, *filter.Status)
 		argIndex++
 	}
 
 	if filter.InitiatedBy != nil {
-		conditions = append(conditions, fmt.Sprintf("initiated_by = $%d", argIndex))
+		conditions = append(conditions, fmt.Sprintf("r.initiated_by = $%d", argIndex))
 		args = append(args, *filter.InitiatedBy)
 		argIndex++
 	}
 
 	if filter.FromDate != nil {
-		conditions = append(conditions, fmt.Sprintf("created_at >= $%d", argIndex))
+		conditions = append(conditions, fmt.Sprintf("r.created_at >= $%d", argIndex))
 		args = append(args, *filter.FromDate)
 		argIndex++
 	}
 
 	if filter.ToDate != nil {
-		conditions = append(conditions, fmt.Sprintf("created_at <= $%d", argIndex))
+		conditions = append(conditions, fmt.Sprintf("r.created_at <= $%d", argIndex))
 		args = append(args, *filter.ToDate)
 		argIndex++
 	}
 
 	where := ""
 	if len(conditions) > 0 {
-		where = "WHERE " + strings.Join(conditions, " AND ")
+		where = " WHERE " + strings.Join(conditions, " AND ")
 	}
 
 	// Count query
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM refunds %s", where)
+	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM refunds r%s%s", joins, where)
 	var total int64
 	err := s.QueryRowContext(ctx, countQuery, args...).Scan(&total)
 	if err != nil {
@@ -611,17 +632,10 @@ func (s *Payment) ListRefunds(ctx context.Context, filter *model.RefundFilter) (
 	}
 
 	// List query
-	query := fmt.Sprintf(`
-		SELECT id, payment_id, idempotency_key, external_refund_id, amount, currency,
-		       status, reason, reason_description, metadata, provider_response,
-		       provider_error_code, provider_error_message, initiated_by,
-		       initiated_by_email, initiated_at, processed_at, failed_at,
-		       cancelled_at, created_at, updated_at
-		FROM refunds
-		%s
-		ORDER BY created_at DESC
+	query := fmt.Sprintf(`%s%s%s
+		ORDER BY r.created_at DESC
 		LIMIT $%d OFFSET $%d
-	`, where, argIndex, argIndex+1)
+	`, baseSelect, joins, where, argIndex, argIndex+1)
 
 	args = append(args, filter.Limit, filter.Offset)
 
@@ -664,4 +678,123 @@ func (s *Payment) ListRefunds(ctx context.Context, filter *model.RefundFilter) (
 	}
 
 	return refunds, total, nil
+}
+
+// CancelRefund cancels a pending or processing refund
+func (s *Payment) CancelRefund(ctx context.Context, id uuid.UUID, reason *string) (*model.Refund, error) {
+	query := `
+		UPDATE refunds
+		SET status = $1,
+		    cancelled_at = $2,
+		    metadata = CASE 
+		        WHEN $3::text IS NOT NULL 
+		        THEN jsonb_set(COALESCE(metadata, '{}'::jsonb), '{cancellation_reason}', to_jsonb($3::text))
+		        ELSE metadata
+		    END,
+		    updated_at = CURRENT_TIMESTAMP
+		WHERE id = $4 AND status IN ('pending', 'processing')
+		RETURNING id, payment_id, idempotency_key, external_refund_id, amount, currency,
+		          status, reason, reason_description, metadata, provider_response,
+		          provider_error_code, provider_error_message, initiated_by,
+		          initiated_by_email, initiated_at, processed_at, failed_at,
+		          cancelled_at, created_at, updated_at`
+
+	refund := &model.Refund{}
+	err := s.QueryRowContext(ctx, query, model.RefundStatusCancelled, time.Now(), reason, id).Scan(
+		&refund.ID,
+		&refund.PaymentID,
+		&refund.IdempotencyKey,
+		&refund.ExternalRefundID,
+		&refund.Amount,
+		&refund.Currency,
+		&refund.Status,
+		&refund.Reason,
+		&refund.ReasonDescription,
+		&refund.Metadata,
+		&refund.ProviderResponse,
+		&refund.ProviderErrorCode,
+		&refund.ProviderErrorMessage,
+		&refund.InitiatedBy,
+		&refund.InitiatedByEmail,
+		&refund.InitiatedAt,
+		&refund.ProcessedAt,
+		&refund.FailedAt,
+		&refund.CancelledAt,
+		&refund.CreatedAt,
+		&refund.UpdatedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, fmt.Errorf("refund not found or cannot be cancelled")
+	}
+
+	return refund, err
+}
+
+// UpdateRefundStatus updates the status of a refund
+func (s *Payment) UpdateRefundStatus(ctx context.Context, id uuid.UUID, update *model.RefundStatusUpdate) (*model.Refund, error) {
+	var processedAt, failedAt *time.Time
+	now := time.Now()
+
+	switch update.Status {
+	case model.RefundStatusSucceeded:
+		processedAt = &now
+	case model.RefundStatusFailed:
+		failedAt = &now
+	}
+
+	query := `
+		UPDATE refunds
+		SET status = $1,
+		    external_refund_id = COALESCE($2, external_refund_id),
+		    provider_response = COALESCE($3, provider_response),
+		    provider_error_code = COALESCE($4, provider_error_code),
+		    provider_error_message = COALESCE($5, provider_error_message),
+		    processed_at = COALESCE($6, processed_at),
+		    failed_at = COALESCE($7, failed_at),
+		    updated_at = CURRENT_TIMESTAMP
+		WHERE id = $8
+		RETURNING id, payment_id, idempotency_key, external_refund_id, amount, currency,
+		          status, reason, reason_description, metadata, provider_response,
+		          provider_error_code, provider_error_message, initiated_by,
+		          initiated_by_email, initiated_at, processed_at, failed_at,
+		          cancelled_at, created_at, updated_at`
+
+	refund := &model.Refund{}
+	err := s.QueryRowContext(
+		ctx,
+		query,
+		update.Status,
+		update.ExternalRefundID,
+		update.ProviderResponse,
+		update.ProviderErrorCode,
+		update.ProviderErrorMessage,
+		processedAt,
+		failedAt,
+		id,
+	).Scan(
+		&refund.ID,
+		&refund.PaymentID,
+		&refund.IdempotencyKey,
+		&refund.ExternalRefundID,
+		&refund.Amount,
+		&refund.Currency,
+		&refund.Status,
+		&refund.Reason,
+		&refund.ReasonDescription,
+		&refund.Metadata,
+		&refund.ProviderResponse,
+		&refund.ProviderErrorCode,
+		&refund.ProviderErrorMessage,
+		&refund.InitiatedBy,
+		&refund.InitiatedByEmail,
+		&refund.InitiatedAt,
+		&refund.ProcessedAt,
+		&refund.FailedAt,
+		&refund.CancelledAt,
+		&refund.CreatedAt,
+		&refund.UpdatedAt,
+	)
+
+	return refund, err
 }

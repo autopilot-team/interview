@@ -100,5 +100,32 @@ func AddRoutes(container *app.Container, humaAPI huma.API, service *service.Mana
 		Tags:        []string{TagPayment.Name},
 	}, v1.ListRefunds)
 
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodGet,
+		OperationID: "list-merchant-refunds",
+		Path:        BasePath("/merchants/{merchant_id}/refunds"),
+		Summary:     "List merchant refunds",
+		Description: "List all refunds associated with a particular merchant",
+		Tags:        []string{TagPayment.Name},
+	}, v1.ListMerchantRefunds)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodPost,
+		OperationID: "cancel-refund",
+		Path:        BasePath("/refunds/{refund_id}/cancel"),
+		Summary:     "Cancel refund",
+		Description: "Cancel a pending or processing refund",
+		Tags:        []string{TagPayment.Name},
+	}, v1.CancelRefund)
+
+	httpx.Register(api, huma.Operation{
+		Method:      http.MethodPatch,
+		OperationID: "update-refund-status",
+		Path:        BasePath("/refunds/{refund_id}/status"),
+		Summary:     "Update refund status",
+		Description: "Update refund status (webhook endpoint for async processing)",
+		Tags:        []string{TagPayment.Name},
+	}, v1.UpdateRefundStatus, api.WithUnauthenticated())
+
 	return nil
 }
