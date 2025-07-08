@@ -14,7 +14,7 @@ export default function Component() {
 			</p>
 			<a
 				className="underline"
-				href="https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463"
+				href="https://app.dover.com/apply/Autopilot/313a9962-2230-48bd-b22d-6abc119f1ea6"
 			>
 				Apply to Autopilot
 			</a>
