@@ -107,7 +107,7 @@ that closely resembles our production stack, allowing you to:
 1. Read the repository, familiarize yourself with the project.
 2. Ensure that you know how the flow works from frontend to backend.
 3. Once you are comfortable/productive working with our tech stack, please
-proceed to apply for [Software Engineer](https://confirmed-hardhat-da1.notion.site/Software-Engineer-17e83cad2ee181169d5ae3d6033c7463).
+proceed to apply for [Product Engineer](https://app.dover.com/apply/Autopilot/313a9962-2230-48bd-b22d-6abc119f1ea6).
 4. We will get back to you within 72 hours to schedule an interview if your
 profile matches our requirements.
 
