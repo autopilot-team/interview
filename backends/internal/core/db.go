@@ -168,10 +168,6 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		return nil, fmt.Errorf("writer URL is required")
 	}
 
-	if opts.WriterURL == "" {
-		return nil, fmt.Errorf("writer URL is required")
-	}
-
 	writerPoolConfig, err := pgxpool.ParseConfig(opts.WriterURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse writer URL: %w", err)
