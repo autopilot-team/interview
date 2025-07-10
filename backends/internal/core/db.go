@@ -25,7 +25,8 @@ import (
 )
 
 const (
-	DbUrlTemplate = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
+	DbUrlTemplate        = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
+	defaultMigrationsDir = "migrations"
 )
 
 // Querier is an interface for database queries
@@ -168,10 +169,6 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		return nil, fmt.Errorf("writer URL is required")
 	}
 
-	if opts.WriterURL == "" {
-		return nil, fmt.Errorf("writer URL is required")
-	}
-
 	writerPoolConfig, err := pgxpool.ParseConfig(opts.WriterURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse writer URL: %w", err)
@@ -220,7 +217,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 	}
 
 	if opts.MigrationsDir == "" {
-		opts.MigrationsDir = "migrations"
+		opts.MigrationsDir = defaultMigrationsDir
 	}
 
 	if _, err := opts.MigrationsFS.ReadDir(opts.MigrationsDir); err != nil {
