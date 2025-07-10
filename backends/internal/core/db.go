@@ -25,7 +25,8 @@ import (
 )
 
 const (
-	DbUrlTemplate = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
+	DbUrlTemplate        = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
+	defaultMigrationsDir = "migrations"
 )
 
 // Querier is an interface for database queries
@@ -216,7 +217,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 	}
 
 	if opts.MigrationsDir == "" {
-		opts.MigrationsDir = "migrations"
+		opts.MigrationsDir = defaultMigrationsDir
 	}
 
 	if _, err := opts.MigrationsFS.ReadDir(opts.MigrationsDir); err != nil {
