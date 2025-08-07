@@ -53,7 +53,7 @@ CREATE TABLE "stored_payment_methods" (
     "customer_id" UUID NOT NULL,
     "type" TEXT NOT NULL,
     "provider_id" TEXT NOT NULL,
-    "last4" TEXT NOT NULL,
+    "last4" VARCHAR(4) NOT NULL,
     "expiry_month" INTEGER NOT NULL,
     "expiry_year" INTEGER NOT NULL,
     "metadata" JSONB DEFAULT '{}',
