@@ -5,6 +5,8 @@ import (
 	"autopilot/backends/api/pkg/httpx"
 	"context"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Payment struct {
@@ -42,5 +44,36 @@ type CreatePaymentResponse struct {
 
 // UpdateUser is the handler for the update user endpoint.
 func (v *V1) CreatePayment(ctx context.Context, input *CreatePaymentRequest) (*CreatePaymentResponse, error) {
+	inputPayment := &model.Payment{
+		MerchantID:   uuid.MustParse(input.Body.MerchantID),
+		Amount:       int64(input.Body.Amount),
+		Currency:     input.Body.Currency.Code,
+		Provider:     input.Body.Provider,
+		Method:       model.PaymentMethodType(input.Body.Method),
+		Description:  input.Body.Description,
+		Metadata:     input.Body.Metadata,
+		Status:       model.PaymentStatusPending,
+		ErrorMessage: nil,
+		CompletedAt:  nil,
+	}
+	payment, err := v.paymentService.Payment.Create(ctx, inputPayment)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreatePaymentResponse{
+		Body: Payment{
+			ID:         payment.ID.String(),
+			MerchantID: payment.MerchantID.String(),
+			Amount:     payment.Amount,
+			Currency:   payment.Currency,
+			CreatedAt:  payment.CreatedAt,
+			UpdatedAt:  payment.UpdatedAt,
+			Status:     payment.Status,
+		},
+	}
+	return response, nil
+}
+
 	return nil, nil
 }

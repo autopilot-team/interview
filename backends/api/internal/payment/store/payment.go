@@ -35,7 +35,9 @@ func (s *Payment) WithQuerier(q core.Querier) Paymenter {
 func (s *Payment) Create(ctx context.Context, transaction *model.Payment) (*model.Payment, error) {
 	query := `
 		INSERT INTO payments (
+			merchant_id, amount, currency, status, provider, method, description, error_message, metadata, completed_at
 		) VALUES (
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 		)
 		RETURNING
 			id, created_at, updated_at
@@ -45,6 +47,16 @@ func (s *Payment) Create(ctx context.Context, transaction *model.Payment) (*mode
 	err := s.QueryRowContext(
 		ctx,
 		query,
+		transaction.MerchantID,
+		transaction.Amount,
+		transaction.Currency,
+		transaction.Status,
+		transaction.Provider,
+		transaction.Method,
+		transaction.Description,
+		transaction.ErrorMessage,
+		transaction.Metadata,
+		transaction.CompletedAt,
 	).Scan(
 		&created.ID,
 		&created.CreatedAt,
