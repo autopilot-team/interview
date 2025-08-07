@@ -10,7 +10,7 @@ import (
 
 // Paymenter defines the interface for payment operations
 type Paymenter interface {
-	Create(ctx context.Context, id string) (*model.Payment, error)
+	Create(ctx context.Context, input *model.Payment) (*model.Payment, error)
 	Get(ctx context.Context, id string) (*model.Payment, error)
 }
 
@@ -29,9 +29,10 @@ func NewPayment(container *app.Container, store *store.Manager) Paymenter {
 }
 
 // GetByID retrieves a payment by ID or slug
-func (s *Payment) Create(ctx context.Context, id string) (*model.Payment, error) {
-	entity, err := s.store.WithMode(ctx).Payment.Get(ctx, id)
+func (s *Payment) Create(ctx context.Context, input *model.Payment) (*model.Payment, error) {
+	entity, err := s.store.WithMode(ctx).Payment.Create(ctx, input)
 	if err != nil {
+		s.Logger.Error(`error creating payment`, `error`, err)
 		return nil, httpx.ErrUnknown.WithInternal(err)
 	}
 

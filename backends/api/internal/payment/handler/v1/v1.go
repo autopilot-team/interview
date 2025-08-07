@@ -13,6 +13,7 @@ import (
 // V1 is the v1 API handler
 type V1 struct {
 	*app.Container
+	paymentService *service.Manager
 }
 
 var TagPayment = huma.Tag{
@@ -30,7 +31,8 @@ func AddRoutes(container *app.Container, humaAPI huma.API, service *service.Mana
 	api.AddTags(&TagPayment)
 
 	v1 := &V1{
-		Container: container,
+		Container:      container,
+		paymentService: service,
 	}
 
 	// Payments Endpoints
