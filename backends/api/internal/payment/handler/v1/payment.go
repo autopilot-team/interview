@@ -63,13 +63,17 @@ func (v *V1) CreatePayment(ctx context.Context, input *CreatePaymentRequest) (*C
 
 	response := &CreatePaymentResponse{
 		Body: Payment{
-			ID:         payment.ID.String(),
-			MerchantID: payment.MerchantID.String(),
-			Amount:     payment.Amount,
-			Currency:   payment.Currency,
-			CreatedAt:  payment.CreatedAt,
-			UpdatedAt:  payment.UpdatedAt,
-			Status:     payment.Status,
+			ID:          payment.ID.String(),
+			MerchantID:  payment.MerchantID.String(),
+			Amount:      payment.Amount,
+			Currency:    payment.Currency,
+			Status:      payment.Status,
+			Provider:    payment.Provider,
+			Method:      payment.Method,
+			Description: payment.Description,
+			Metadata:    payment.Metadata,
+			CreatedAt:   payment.CreatedAt,
+			UpdatedAt:   payment.UpdatedAt,
 		},
 	}
 	return response, nil
