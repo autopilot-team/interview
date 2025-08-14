@@ -113,21 +113,34 @@ profile matches our requirements.
 
 ### What To Expect
 
-During the interview, you'll be using this interview to implement a mini feature end-to-end with
-our interviewer within 90 minutes, which might include:
+During this 90-minute technical interview, we'll cover the following phases:
 
-- API implementation
-- Database schema changes
-- Testing and documentation
-- Frontend component development
+- Self-Introduction (5 minutes)
+- Requirements Clarification & Discussion (10 minutes)
+- Database Schema Implementation (15 minutes)
+- API Development & Integration Testing (50 minutes)
+- Closing Discussion (10 minutes)
 
-### Evaluation
+### Evaluation & Requirements
+Please ensure you have a reliable development environment set up and are
+comfortable working within the allocated timeframes. **Effective time management across each phase**
+is a key component of this assessment. We'll be evaluating your performance
+across the following areas:
 
-- Your problem-solving approach
-- Code quality and architecture decisions
-- Testing strategies, i.e. mocks/stubs/spies
-- Communication skills
-- Ability to work with new technologies
+#### Problem-solving approach
+How you break down requirements and tackle complex challenges.
+
+#### Code quality and architecture decisions
+Clean, maintainable code with sound design principles.
+
+#### Testing strategies
+Effective use of mocks, stubs, spies, and comprehensive test coverage.
+
+#### Communication skills
+Clear articulation of your thought process and technical decisions.
+
+#### Adaptability with new technologies
+Ability to learn and work effectively with unfamiliar tools or frameworks.
 
 ## Project Structure
 
