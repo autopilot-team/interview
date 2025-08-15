@@ -1,10 +1,10 @@
-import { useIdentity } from "@/components/identity-provider";
-import { config } from "@/libs/config";
 import { Brand } from "@autopilot/ui/components/brand";
 import { ResetPasswordForm } from "@autopilot/ui/components/reset-password-form";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
+import { useIdentity } from "@/components/identity-provider";
+import { config } from "@/libs/config";
 
 interface ResetPasswordFormData {
 	cfTurnstileToken: string;

@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewDbMigrateCmd(ctx context.Context, logger *slog.Logger, databases []core.DBer, workers []core.Worker) *cobra.Command {
+func NewDBMigrateCmd(ctx context.Context, logger *slog.Logger, databases []core.DBer, workers []core.Worker) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "db:migrate",
 		Short: "Migrate database(s) to the latest version",
@@ -26,15 +26,15 @@ func NewDbMigrateCmd(ctx context.Context, logger *slog.Logger, databases []core.
 			}
 
 			for _, worker := range workers {
-				parsedUrl, err := url.Parse(worker.GetDbPool().Config().ConnString())
+				parsedURL, err := url.Parse(worker.GetDBPool().Config().ConnString())
 				if err != nil {
 					return fmt.Errorf("failed to parse worker database URL: %w", err)
 				}
 
-				msg := fmt.Sprintf("Migrating worker schema for '%s' database...", strings.TrimPrefix(parsedUrl.Path, "/"))
+				msg := fmt.Sprintf("Migrating worker schema for '%s' database...", strings.TrimPrefix(parsedURL.Path, "/"))
 				logger.Info(msg)
 
-				dbPool, err := pgxpool.New(ctx, worker.GetDbPool().Config().ConnString())
+				dbPool, err := pgxpool.New(ctx, worker.GetDBPool().Config().ConnString())
 				if err != nil {
 					return fmt.Errorf("failed to create 'worker' database pool: %w", err)
 				}

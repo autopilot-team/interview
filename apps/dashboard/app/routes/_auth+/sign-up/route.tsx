@@ -1,9 +1,9 @@
-import { useIdentity } from "@/components/identity-provider";
-import { config } from "@/libs/config";
 import { Brand } from "@autopilot/ui/components/brand";
 import { SignUpForm } from "@autopilot/ui/components/sign-up-form";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useIdentity } from "@/components/identity-provider";
+import { config } from "@/libs/config";
 
 export default function Component() {
 	const { t } = useTranslation(["identity"]);

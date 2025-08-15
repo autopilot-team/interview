@@ -1,5 +1,3 @@
-import { useIdentity } from "@/components/identity-provider";
-import type { RouteHandle } from "@/routes/_app+/_layout";
 import { api } from "@autopilot/api";
 import { Button } from "@autopilot/ui/components/button";
 import { Input } from "@autopilot/ui/components/input";
@@ -9,6 +7,8 @@ import { useForm } from "@autopilot/ui/lib/react-hook-form";
 import { toast } from "@autopilot/ui/lib/sonner";
 import { z } from "@autopilot/ui/lib/zod";
 import { useTranslation } from "react-i18next";
+import { useIdentity } from "@/components/identity-provider";
+import type { RouteHandle } from "@/routes/_app+/_layout";
 
 interface UpdateProfileData {
 	name: string;
@@ -104,8 +104,8 @@ export default function Component() {
 							<Label htmlFor="email">
 								{t("common:settings.profile.email")}
 							</Label>
+
 							<Input
-								id="email"
 								type="email"
 								value={user?.email}
 								disabled
@@ -115,8 +115,8 @@ export default function Component() {
 
 						<div className="space-y-2">
 							<Label htmlFor="name">{t("common:settings.profile.name")}</Label>
+
 							<Input
-								id="name"
 								{...register("name")}
 								className={errors.name ? "ring-2 ring-destructive" : ""}
 							/>
@@ -131,8 +131,8 @@ export default function Component() {
 							<Label htmlFor="image">
 								{t("common:settings.profile.picture")}
 							</Label>
+
 							<Input
-								id="image"
 								{...register("image")}
 								className="pt-1.5"
 								type="file"

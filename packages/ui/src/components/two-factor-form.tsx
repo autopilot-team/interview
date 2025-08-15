@@ -125,7 +125,6 @@ export function TwoFactorForm({
 									<div className="flex justify-center">
 										{isUsingBackupCode ? (
 											<Input
-												id="code"
 												className="text-center"
 												placeholder={t.backupCodePlaceholder}
 												maxLength={10}

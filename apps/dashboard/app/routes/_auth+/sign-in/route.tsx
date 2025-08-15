@@ -1,11 +1,11 @@
-import { useIdentity } from "@/components/identity-provider";
-import { config } from "@/libs/config";
 import type { v1 } from "@autopilot/api";
 import { Brand } from "@autopilot/ui/components/brand";
 import { SignInForm } from "@autopilot/ui/components/sign-in-form";
 import { TwoFactorForm } from "@autopilot/ui/components/two-factor-form";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useIdentity } from "@/components/identity-provider";
+import { config } from "@/libs/config";
 
 type ApiError = v1.components["schemas"]["Error"];
 

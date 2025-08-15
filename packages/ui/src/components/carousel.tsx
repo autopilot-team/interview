@@ -1,13 +1,12 @@
 "use client";
 
+import { Button } from "@autopilot/ui/components/button";
+import { cn } from "@autopilot/ui/lib/utils";
 import useEmblaCarousel, {
 	type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import * as React from "react";
-
-import { Button } from "@autopilot/ui/components/button";
-import { cn } from "@autopilot/ui/lib/utils";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -118,10 +117,10 @@ function Carousel({
 				canScrollNext,
 			}}
 		>
+			{/** biome-ignore lint/a11y/useSemanticElements: biome can't handle this */}
 			<div
 				onKeyDownCapture={handleKeyDown}
 				className={cn("relative", className)}
-				// biome-ignore lint/a11y/useSemanticElements: <explanation>
 				role="region"
 				aria-roledescription="carousel"
 				data-slot="carousel"
@@ -158,6 +157,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 	const { orientation } = useCarousel();
 
 	return (
+		// biome-ignore lint/a11y/useSemanticElements: biome can't handle this
 		<div
 			role="group"
 			aria-roledescription="slide"

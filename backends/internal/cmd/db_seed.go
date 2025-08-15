@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewDbSeedCmd(ctx context.Context, logger *slog.Logger, databases []core.DBer) *cobra.Command {
+func NewDBSeedCmd(ctx context.Context, logger *slog.Logger, databases []core.DBer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "db:seed",
 		Short: "Seed databases",

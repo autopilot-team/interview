@@ -3,23 +3,20 @@
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
 	"devDependencies": {
 		"@autopilot/typescript-config": "workspace:*",
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "^2.2.0",
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
-		"@types/node": "^22.15.21",
-		"@types/react": "^19.1.5",
-		"@types/react-dom": "^19.1.5",
-		"chokidar-cli": "^3.0.0",
-		"typescript": "^5.8.3",
-		"wrangler": "^4.16.0"
-	},
-	"pnpm": {
-		"overrides": {
-			"cookie@<0.7.0": ">=0.7.0",
-			"esbuild@<0.25.0": ">=0.25.0",
-			"nanoid@<3.3.8": ">=3.3.8"
-		}
+		"@types/node": "^24.2.1",
+		"@types/react": "^19.1.10",
+		"@types/react-dom": "^19.1.7",
+		"typescript": "^5.9.2",
+		"wrangler": "^4.30.0"
 	}
 }

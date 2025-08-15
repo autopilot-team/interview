@@ -1,16 +1,169 @@
+[env]
+FORCE_COLOR = 1
+NODE_OPTIONS = "--no-warnings"
+MISE_EXPERIMENTAL = true
+
+[settings]
+quiet = true
+
+[tasks.api]
+description = "Run the CLI for API gateway"
+run = ["go run ./backends/api"]
+
+[tasks.check]
+description = "Run all code checks"
+depends = ["check:apps", "check:packages", "check:backends", "check:biome"]
+
+[tasks."check:apps"]
+hide = true
+run = ["pnpm -F ./apps/dashboard typecheck"]
+
+[tasks."check:packages"]
+hide = true
+run = ["pnpm -F ./packages/api typecheck", "pnpm -F ./packages/ui typecheck"]
+
+[tasks."check:backends"]
+hide = true
+run = ["go vet ./...", "golangci-lint fmt", "golangci-lint run"]
+
+[tasks."check:biome"]
+hide = true
+run = ["if [ -z \"$CI\" ]; then pnpm biome check --diagnostic-level=warn --write --unsafe .; else pnpm biome check --diagnostic-level=warn .; fi"]
+
+[tasks.clean]
+description = "Clean the project"
+run = ["rm -rf node_modules **/{,/**/}*.log **/{,/**/}{build,node_modules,.react-router,tsconfig.tsbuildinfo} test-results playwright-report blob-report"]
+
+[tasks.dev]
+description = "Run the development servers and workers"
+depends = ["dev:api", "dev:assets", "dev:dashboard", "dev:openapi"]
+
+[tasks."dev:api"]
+hide = true
+run = ["mise watch --watch=./backends/api --watch=./backends/internal --stop-signal=SIGKILL --stop-timeout=0 --restart api start --worker"]
+
+[tasks."dev:assets"]
+hide = true
+run = ["pnpm --silent -F ./apps/assets dev"]
+
+[tasks."dev:dashboard"]
+hide = true
+run = ["pnpm --silent -F ./apps/dashboard dev"]
+
+[tasks."dev:openapi"]
+hide = true
+run = ["mise watch --filter=main.go --filter=**/handler/**/*.go --watch=./backends/api gen:openapi"]
+
+[tasks.domains]
+description = "Show domains for all services"
+run = ["""
+echo "";
+echo "📱 Frontend Apps";
+echo "   • Dashboard          http://localhost:3000";
+echo "   • Mailer Preview     http://localhost:3001/mailer/preview";
+echo "   • Queue UI           http://localhost:3001/queue";
+echo "";
+echo "🔧 Backend Services";
+echo "   • API                http://localhost:3001";
+echo "";
+echo "🛠️  Infrastructure";
+echo "   • Postgres           localhost:5432";
+echo "   • Postgres UI        http://localhost:8081";
+echo "   • Redis              localhost:6379";
+echo "   • Mailpit            http://localhost:8025";
+echo "   • MinIO              http://localhost:9000";
+echo "   • MinIO Admin        http://localhost:9001";
+echo "";
+"""]
+
+[tasks.down]
+description = "Teardown the development environment"
+run = ["docker compose --profile=infra down --remove-orphans --timeout 0"]
+
+[tasks.gen]
+description = "Generate code"
+depends = ["gen:apps", "gen:packages", "gen:backends", "gen:openapi"]
+
+[tasks."gen:apps"]
+hide = true
+run = ["pnpm --silent -F ./apps/dashboard typegen"]
+
+[tasks."gen:packages"]
+hide = true
+run = [
+  "pnpm --silent -F ./packages/api typegen",
+  "pnpm --silent -F ./packages/ui typegen"
+]
+
+[tasks."gen:backends"]
+hide = true
+run = ["go generate -x ./...", "mockery --config=.mockery.yaml --log-level=error"]
+
+[tasks."gen:openapi"]
+description = "Generate OpenAPI spec and Typescript client"
+run = [
+  "mise api gen:openapi",
+  "pnpm --silent -F ./packages/api gen",
+]
+
+[tasks."commit-msg"]
+description = "Run commit-msg hooks"
+run = ["pnpm commitlint --edit $1"]
+
+[tasks."pre-commit"]
+description = "Run pre-commit hooks"
+run = [
+  "mise run gen",
+  "mise run check",
+  "git diff --exit-code"
+]
+
+[tasks.preview]
+description = "Preview the application in Docker Compose"
+run = ["docker compose --profile=app up --build", "docker compose --profile=app down"]
+
+[tasks.reset]
+description = "Reset the development environment"
+run = ["mise down", "mise run up"]
+
+[tasks.setup]
+description = "Setup the project"
+run = [
+  "go mod download",
+  "pnpm i",
+  "mkdir -p .git/hooks",
+  "mise generate git-pre-commit --write --task=pre-commit",
+  "echo '#!/bin/sh\nexec mise run commit-msg \"$1\"' > .git/hooks/commit-msg && chmod +x .git/hooks/commit-msg",
+]
+
+[tasks.test]
+description = "Run all tests"
+depends = ["test:backends"]
+
+[tasks."test:backends"]
+hide = true
+depends = ["gen:backends"]
+run = ["gotestsum --format=testdox -- -count=1 -race -v ./..."]
+
+[tasks.up]
+description = "Setup the development environment"
+run = [
+  "docker compose --profile=infra up --wait",
+  "docker compose --profile=infra stop db-ui",
+  "docker compose exec -it cache /bin/bash -c 'printf \"yes\\nyes\\n\" | valkey-cli --cluster create cache:6379 cache-node-2:6379 --cluster-replicas 0'",
+  "mise api db:migrate",
+  "mise api db:seed",
+  "docker compose --profile=infra start db-ui",
+  "docker compose exec -it storage /bin/bash -c 'mc alias set local http://localhost:9000 minioadmin minioadmin'",
+  "docker compose exec -it storage /bin/bash -c 'for bucket in autopilot-development-identity autopilot-development-payment autopilot-development-payout; do mc mb local/$bucket; done'"
+]
+
 [tools]
-go = "1.24.2"
-node = "23.11.0"
-"aqua:pnpm/pnpm" = "10.7.1"
-"aqua:air-verse/air" = "1.61.7"
-"aqua:aquasecurity/tfsec" = "1.28.13"
-"aqua:aws" = "2.25.8"
-"aqua:evilmartians/lefthook" = "1.11.6"
-"aqua:golangci/golangci-lint" = "2.0.2"
-"aqua:gotestyourself/gotestsum" = "1.12.1"
-"aqua:hashicorp/terraform" = "1.11.3"
-"aqua:stripe/stripe-cli" = "1.25.1"
-"aqua:terraform-linters/tflint" = "0.56.0"
-"aqua:vektra/mockery" = "2.53.3"
-"aqua:aws/aws-cli" = "2.25.8"
-"ubi:go-task/task" = "3.42.1"
+go = "1.25.0"
+node = "24.5.0"
+watchexec = "2.3.2"
+"aqua:aws/aws-cli" = "2.27.37"
+"aqua:golangci/golangci-lint" = "2.1.6"
+"aqua:gotestyourself/gotestsum" = "1.12.2"
+"aqua:pnpm/pnpm" = "10.14.0"
+"aqua:vektra/mockery" = "3.4.0"

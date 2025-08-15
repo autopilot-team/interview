@@ -51,7 +51,7 @@ func TestHttpServer_ServeStaticFiles(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create a new test server for each test case
-			server, err := NewHttpServer(HttpServerOptions{
+			server, err := NewHTTPServer(HTTPServerOptions{
 				Mode:       types.DebugMode,
 				I18nBundle: &I18nBundle{},
 				Logger:     logger,

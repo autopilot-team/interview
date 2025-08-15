@@ -2,13 +2,11 @@
 	"recommendations": [
 		"biomejs.biome",
 		"bradlc.vscode-tailwindcss",
-		"bufbuild.vscode-buf",
 		"eamodio.gitlens",
 		"editorconfig.editorconfig",
 		"github.vscode-github-actions",
 		"golang.go",
 		"ms-azuretools.vscode-docker",
-		"ms-vscode.makefile-tools",
 		"mtxr.sqltools",
 		"redhat.vscode-yaml",
 		"unifiedjs.vscode-mdx",

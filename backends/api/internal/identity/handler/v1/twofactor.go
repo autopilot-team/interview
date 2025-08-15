@@ -66,7 +66,7 @@ type RegenerateQRCodeRequest struct{}
 // RegenerateQRCodeResponse is the response body for the regenerate QR code endpoint.
 type RegenerateQRCodeResponse struct {
 	Body struct {
-		QRCode string `json:"qr_code" doc:"The QR code for scanning with authenticator apps"`
+		QRCode string `json:"qrCode" doc:"The QR code for scanning with authenticator apps"`
 	}
 }
 

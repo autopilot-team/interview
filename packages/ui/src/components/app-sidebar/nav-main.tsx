@@ -35,11 +35,7 @@ export interface NavMainItem {
 	items?: NavSubItem[];
 }
 
-export function NavMain({
-	items,
-}: {
-	items: NavMainItem[];
-}) {
+export function NavMain({ items }: { items: NavMainItem[] }) {
 	return (
 		<SidebarGroup>
 			<SidebarMenu>

@@ -17,7 +17,9 @@ const ModeContext = createContext<ModeContextType | undefined>(undefined);
 
 export function ModeSwitcherProvider({
 	children,
-}: { children: React.ReactNode }) {
+}: {
+	children: React.ReactNode;
+}) {
 	const [mode, setModeState] = useState<OperationMode>(getOperationMode());
 	const [isTestMode, setIsTestMode] = useState<boolean>(mode === "test");
 

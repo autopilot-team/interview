@@ -1,5 +1,5 @@
-import type { RouteHandle } from "@/routes/_app+/_layout";
 import { type ClientLoaderFunctionArgs, Outlet, redirect } from "react-router";
+import type { RouteHandle } from "@/routes/_app+/_layout";
 
 export const handle = {
 	breadcrumb: "common:breadcrumbs.settings.title",

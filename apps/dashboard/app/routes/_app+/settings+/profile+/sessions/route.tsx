@@ -1,5 +1,3 @@
-import { getCountryFlag } from "@/libs/country";
-import type { RouteHandle } from "@/routes/_app+/_layout";
 import { api, type v1 } from "@autopilot/api";
 import { Button } from "@autopilot/ui/components/button";
 import {
@@ -15,6 +13,8 @@ import { toast } from "@autopilot/ui/lib/sonner";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UAParser } from "ua-parser-js";
+import { getCountryFlag } from "@/libs/country";
+import type { RouteHandle } from "@/routes/_app+/_layout";
 
 export const handle = {
 	breadcrumb: "common:breadcrumbs.settings.profile.sessions",

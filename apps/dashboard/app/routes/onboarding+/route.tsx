@@ -1,6 +1,5 @@
+import { Link, Navigate } from "react-router";
 import { useIdentity } from "@/components/identity-provider";
-import { Link } from "react-router";
-import { Navigate } from "react-router";
 
 export default function Component() {
 	const { user, entity } = useIdentity();

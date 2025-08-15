@@ -14,8 +14,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@autopilot/ui/components/dropdown-menu";
-import { ChevronsUpDown, LogOut } from "@autopilot/ui/components/icons";
 import type { LucideIcon } from "@autopilot/ui/components/icons";
+import { ChevronsUpDown, LogOut } from "@autopilot/ui/components/icons";
 import {
 	SidebarMenu,
 	SidebarMenuButton,

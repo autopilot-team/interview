@@ -1,10 +1,9 @@
 "use client";
 
-import { OTPInput, OTPInputContext } from "input-otp";
-import * as React from "react";
-
 import { cn } from "@autopilot/ui/lib/utils";
+import { OTPInput, OTPInputContext } from "input-otp";
 import { MinusIcon } from "lucide-react";
+import * as React from "react";
 
 function InputOTP({
 	className,
@@ -68,8 +67,9 @@ function InputOTPSlot({
 
 function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
 	return (
-		// biome-ignore lint/a11y/useFocusableInteractive: <explanation>
-		// biome-ignore lint/a11y/useSemanticElements: <explanation>
+		// biome-ignore lint/a11y/useFocusableInteractive: biome can't handle this
+		// biome-ignore lint/a11y/useSemanticElements: biome can't handle this
+		// biome-ignore lint/a11y/useAriaPropsForRole: biome can't handle this
 		<div data-slot="input-otp-separator" role="separator" {...props}>
 			<MinusIcon />
 		</div>

@@ -12,15 +12,15 @@ import (
 
 // NewDB creates a new test database from the template database
 func NewDB(ctx context.Context, dbName string, dbOpts core.DBOptions) (core.DBer, func(), error) {
-	postgresDbUrl := fmt.Sprintf(core.DbUrlTemplate, "postgres")
-	pool, err := pgxpool.New(ctx, postgresDbUrl)
+	postgresDBURL := fmt.Sprintf(core.DBURLTemplate, "postgres")
+	pool, err := pgxpool.New(ctx, postgresDBURL)
 	if err != nil {
 		return nil, nil, err
 	}
 	defer pool.Close()
 
-	testDbName := generateTestDbName(dbName)
-	_, err = pool.Exec(ctx, fmt.Sprintf("CREATE DATABASE %s TEMPLATE template_%s", testDbName, dbName))
+	testDBName := generateTestDBName(dbName)
+	_, err = pool.Exec(ctx, fmt.Sprintf("CREATE DATABASE %s TEMPLATE template_%s", testDBName, dbName))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -28,7 +28,7 @@ func NewDB(ctx context.Context, dbName string, dbOpts core.DBOptions) (core.DBer
 	// Return cleanup function
 	deleteTestDB := func() {
 		cleanupCtx := context.Background()
-		pool, err := pgxpool.New(cleanupCtx, postgresDbUrl)
+		pool, err := pgxpool.New(cleanupCtx, postgresDBURL)
 		if err != nil {
 			return
 		}
@@ -39,15 +39,15 @@ func NewDB(ctx context.Context, dbName string, dbOpts core.DBOptions) (core.DBer
 			SELECT pg_terminate_backend(pid)
 			FROM pg_stat_activity
 			WHERE datname = '%s' AND pid <> pg_backend_pid()
-		`, testDbName))
+		`, testDBName))
 
 		// Drop the test database
-		_, _ = pool.Exec(cleanupCtx, fmt.Sprintf("DROP DATABASE IF EXISTS %s", testDbName))
+		_, _ = pool.Exec(cleanupCtx, fmt.Sprintf("DROP DATABASE IF EXISTS %s", testDBName))
 	}
 
-	dbUrl := fmt.Sprintf(core.DbUrlTemplate, testDbName)
-	dbOpts.WriterURL = dbUrl
-	dbOpts.ReaderURLs = []string{dbUrl}
+	dbURL := fmt.Sprintf(core.DBURLTemplate, testDBName)
+	dbOpts.WriterURL = dbURL
+	dbOpts.ReaderURLs = []string{dbURL}
 	dbOpts.Mode = types.DebugMode
 	db, err := core.NewDB(ctx, dbOpts)
 	if err != nil {
@@ -61,7 +61,7 @@ func NewDB(ctx context.Context, dbName string, dbOpts core.DBOptions) (core.DBer
 }
 
 // generateTestDbName generates a unique database name using timestamp and random suffix
-func generateTestDbName(dbName string) string {
+func generateTestDBName(dbName string) string {
 	randomSuffix := rand.Intn(1_000_000_000_000)
 
 	return fmt.Sprintf("%s_test_%010d", dbName, randomSuffix)

@@ -1,5 +1,3 @@
-import { AuthState, useIdentity } from "@/components/identity-provider";
-import { ModeSwitcher } from "@/components/mode-switcher";
 import { AppSidebar } from "@autopilot/ui/components/app-sidebar/app-sidebar";
 import type { Entity } from "@autopilot/ui/components/app-sidebar/entity-switcher";
 import type { NavMainItem } from "@autopilot/ui/components/app-sidebar/nav-main";
@@ -12,14 +10,7 @@ import {
 	BreadcrumbSeparator,
 } from "@autopilot/ui/components/breadcrumb";
 import { ClientOnly } from "@autopilot/ui/components/client-only";
-import {
-	Activity,
-	Cable,
-	Code2,
-	CreditCard,
-	HandCoins,
-	Settings,
-} from "@autopilot/ui/components/icons";
+import { Activity, CreditCard, Settings } from "@autopilot/ui/components/icons";
 import { Separator } from "@autopilot/ui/components/separator";
 import {
 	SidebarInset,
@@ -37,6 +28,8 @@ import {
 	useNavigate,
 	useParams,
 } from "react-router";
+import { AuthState, useIdentity } from "@/components/identity-provider";
+import { ModeSwitcher } from "@/components/mode-switcher";
 
 export interface RouteHandle {
 	breadcrumb?: ParseKeys<["common"]>;
@@ -192,12 +185,12 @@ export default function AppLayout() {
 											<BreadcrumbItem className="hidden md:block">
 												{index === matches.length - 1 ? (
 													<BreadcrumbPage>
-														{/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+														{/* biome-ignore lint/style/noNonNullAssertion: biome can't handle this */}
 														{t((match.handle as RouteHandle).breadcrumb!)}
 													</BreadcrumbPage>
 												) : (
 													<BreadcrumbLink href={match.pathname}>
-														{/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+														{/* biome-ignore lint/style/noNonNullAssertion: biome can't handle this */}
 														{t((match.handle as RouteHandle).breadcrumb!)}
 													</BreadcrumbLink>
 												)}

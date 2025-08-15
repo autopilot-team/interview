@@ -1,6 +1,6 @@
-import { useIdentity } from "@/components/identity-provider";
 import { Brand } from "@autopilot/ui/components/brand";
 import { Outlet } from "react-router";
+import { useIdentity } from "@/components/identity-provider";
 
 export default function Layout() {
 	const { entity } = useIdentity();

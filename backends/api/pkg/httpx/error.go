@@ -1,36 +1,30 @@
 package httpx
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
-	"io"
 	"log/slog"
 	"slices"
 	"strconv"
 	"strings"
-	"testing"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 // ErrorMetadata contains additional validation error information
 type ErrorMetadata struct {
 	// Length/Count validations (applies to strings, arrays, maps)
-	MinLength *int `json:"min_length,omitempty"` // Minimum length/items
-	MaxLength *int `json:"max_length,omitempty"` // Maximum length/items
+	MinLength *int `json:"minLength,omitempty"` // Minimum length/items
+	MaxLength *int `json:"maxLength,omitempty"` // Maximum length/items
 
 	// Numeric validations
-	MinValue *float64 `json:"min_value,omitempty"` // Minimum allowed value
-	MaxValue *float64 `json:"max_value,omitempty"` // Maximum allowed value
+	MinValue *float64 `json:"minValue,omitempty"` // Minimum allowed value
+	MaxValue *float64 `json:"maxValue,omitempty"` // Maximum allowed value
 
 	// String regex validation
-	Regex *string `json:"regex,omitempty"` // Regex pattern for string validation
+	Regex string `json:"regex,omitempty"` // Regex pattern for string validation
 
 	// Enum validation
-	AllowedValues []string `json:"allowed_values,omitempty"` // List of allowed values
+	AllowedValues []string `json:"allowedValues,omitempty"` // List of allowed values
 }
 
 // Detail represents additional error information
@@ -83,13 +77,20 @@ func NewError(message string) Error {
 
 // Error returns the error message
 func (e Error) Error() string {
-	return e.Message
+	if e.internal == nil {
+		return e.Message
+	}
+	return e.Message + "; internal=" + e.internal.Error()
 }
 
 func (e Error) Is(target error) bool {
 	var ee Error
 	if errors.As(target, &ee) {
 		return ee.Code == e.Code
+	}
+	var ec ErrorCode
+	if errors.As(target, &ec) {
+		return e.Code == ec
 	}
 	return errors.Is(e.internal, target)
 }
@@ -150,7 +151,7 @@ func NewStatusError(status int, message string, errs ...error) huma.StatusError 
 	errors := make([]ErrorDetail, 0)
 	code := ErrInvalidBody
 	if len(errs) > 0 {
-		for _, err := range errs {
+		for i, err := range errs {
 			if err == nil {
 				continue
 			}
@@ -163,6 +164,11 @@ func NewStatusError(status int, message string, errs ...error) huma.StatusError 
 			case Error:
 				code = err.Code
 			case ErrorDetail:
+				if i == 0 && status == 500 {
+					errData := errCodeMap[code]
+					message = errData.Message
+					status = errData.status
+				}
 				errors = append(errors, err)
 			case *huma.ErrorDetail:
 				location := err.Location
@@ -183,6 +189,11 @@ func NewStatusError(status int, message string, errs ...error) huma.StatusError 
 					Metadata: metadata,
 				}
 				errors = append(errors, detail)
+			default:
+				errors = append(errors, ErrorDetail{
+					Code:    ErrUnknown,
+					Message: err.Error(),
+				})
 			}
 		}
 	}
@@ -232,7 +243,7 @@ func parseHumaError(msg string) (ErrorCode, *ErrorMetadata) {
 	// Regex validation
 	if strings.Contains(msg, "expected string to match pattern") {
 		pattern := strings.TrimPrefix(msg, "expected string to match pattern ")
-		metadata = &ErrorMetadata{Regex: &pattern}
+		metadata = &ErrorMetadata{Regex: pattern}
 		return ErrInvalidValue, metadata
 	}
 
@@ -294,28 +305,4 @@ func parseHumaError(msg string) (ErrorCode, *ErrorMetadata) {
 	}
 
 	return ErrUnknown, metadata
-}
-
-func AssertErr(t *testing.T, expected error, actual io.Reader, msgAndArgs ...any) {
-	t.Helper()
-	d := json.NewDecoder(actual)
-	switch expected := expected.(type) {
-	case Error:
-		var err Error
-		dErr := d.Decode(&err)
-		require.NoError(t, dErr)
-		assert.Equal(t, expected.Code, err.Code, msgAndArgs...)
-		assert.Equal(t, expected.Errors, err.Errors)
-	case ErrorCode:
-		var err Error
-		dErr := d.Decode(&err)
-		require.NoError(t, dErr)
-		if expected != err.Code {
-			exp, act := fmt.Sprintf("%d (%s)", expected, expected.String()), fmt.Sprintf("%d (%s)", err.Code, err.Code.String())
-			assert.Equal(t, exp, act, msgAndArgs...)
-		}
-	default:
-		assert.Failf(t, "httpx.AssertErr: invalid usage", "asserting error to invalid type %T", expected)
-
-	}
 }

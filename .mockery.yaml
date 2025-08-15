@@ -1,22 +1,16 @@
 all: true
-dir: "{{.InterfaceDir}}/mocks"
-filename: "{{.InterfaceName}}.go"
-inpackage: false
-issue-845-fix: true
-mockname: "Mock{{.InterfaceName}}"
-outpkg: "mocks"
-resolve-type-alias: false
-with-expecter: true
-
+dir: '{{.InterfaceDir}}/mocks'
+structname: Mock{{.InterfaceName}}
+pkgname: 'mocks'
+template: testify
+filename: 'mocks.go'
 packages:
-  autopilot/backends/internal/core:
+  autopilot/backends/api/internal:
     config:
       recursive: true
-
   autopilot/backends/api/pkg/app:
     config:
       recursive: true
-
-  autopilot/backends/api/internal:
+  autopilot/backends/internal/core:
     config:
       recursive: true

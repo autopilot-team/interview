@@ -1,9 +1,9 @@
-import { useIdentity } from "@/components/identity-provider";
-import { config } from "@/libs/config";
 import { Brand } from "@autopilot/ui/components/brand";
 import { ForgotPasswordForm } from "@autopilot/ui/components/forgot-password-form";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useIdentity } from "@/components/identity-provider";
+import { config } from "@/libs/config";
 
 interface ForgotPasswordFormData {
 	cfTurnstileToken: string;

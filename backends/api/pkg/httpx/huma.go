@@ -15,7 +15,7 @@ var tooManyRequestsRef = &huma.Response{
 	Ref:         "#/components/responses/TooManyRequests",
 }
 
-var securityApiKey = map[string][]string{"API Key Authentication": {}}
+var securityAPIKey = map[string][]string{"API Key Authentication": {}}
 
 type API struct {
 	huma.API
@@ -130,7 +130,7 @@ func Register[I, O any](api API, op huma.Operation, handler func(context.Context
 	// Default authenticated endpoint
 	if len(op.Middlewares) == 0 {
 		op.Middlewares = append(op.Middlewares, api.authenticator.RequireAuthenticated)
-		op.Security = append(op.Security, securityApiKey)
+		op.Security = append(op.Security, securityAPIKey)
 	}
 
 	huma.Register(api, op, handler)
@@ -166,7 +166,7 @@ func (a API) WithUserSession() HandlerOption {
 func (a API) WithSecretKey() HandlerOption {
 	return func(op *huma.Operation) {
 		op.Middlewares = append(op.Middlewares, a.authenticator.RequireSecretKey)
-		op.Security = append(op.Security, securityApiKey)
+		op.Security = append(op.Security, securityAPIKey)
 	}
 }
 
@@ -174,7 +174,7 @@ func (a API) WithPermission(resource types.Resource, action types.Action) Handle
 	return func(op *huma.Operation) {
 		if len(op.Middlewares) == 0 {
 			op.Middlewares = append(op.Middlewares, a.authenticator.RequireAuthenticated)
-			op.Security = append(op.Security, securityApiKey)
+			op.Security = append(op.Security, securityAPIKey)
 		}
 
 		op.Middlewares = append(op.Middlewares, func(ctx huma.Context, next func(huma.Context)) {

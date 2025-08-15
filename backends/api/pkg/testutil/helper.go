@@ -45,8 +45,8 @@ func (m *MockWorker) GetClient() *river.Client[pgx.Tx] {
 	return nil
 }
 
-// GetDbPool implements core.Worker
-func (m *MockWorker) GetDbPool() *pgxpool.Pool {
+// GetDBPool implements core.Worker
+func (m *MockWorker) GetDBPool() *pgxpool.Pool {
 	// Return nil or a mock client depending on your testing needs
 	return nil
 }
@@ -126,7 +126,7 @@ func Container(t *testing.T) (humatest.TestAPI, *app.Container, *internal.Module
 				"VerificationURL": fmt.Sprintf("%s/verify-email?token=01948450-988e-7976-a454-7163b6f1c6c6", config.App.DashboardURL),
 			},
 		},
-		SmtpUrl: config.App.Mailer.SmtpUrl,
+		SMTPURL: config.App.Mailer.SMTPURL,
 		TemplateOptions: &core.MailTemplateOptions{
 			Dir: "templates",
 			ExtraFuncs: []template.FuncMap{

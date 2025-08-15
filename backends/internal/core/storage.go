@@ -22,16 +22,16 @@ type ObjectMetadata struct {
 	Size int64 `json:"size"`
 
 	// ContentType of the object
-	ContentType string `json:"content_type"`
+	ContentType string `json:"contentType"`
 
 	// ETag for object versioning
 	ETag string `json:"etag,omitempty"`
 
 	// LastModified timestamp
-	LastModified time.Time `json:"last_modified"`
+	LastModified time.Time `json:"lastModified"`
 
 	// Custom metadata as key-value pairs
-	CustomMetadata map[string]string `json:"custom_metadata,omitempty"`
+	CustomMetadata map[string]string `json:"customMetadata,omitempty"`
 }
 
 // UploadInfo contains information needed for direct uploads
@@ -46,7 +46,7 @@ type UploadInfo struct {
 	Headers map[string]string `json:"headers,omitempty"`
 
 	// ExpiresAt indicates when the upload URL expires
-	ExpiresAt time.Time `json:"expires_at"`
+	ExpiresAt time.Time `json:"expiresAt"`
 }
 
 // DownloadInfo contains information needed for direct downloads
@@ -58,7 +58,7 @@ type DownloadInfo struct {
 	Headers map[string]string `json:"headers,omitempty"`
 
 	// ExpiresAt indicates when the download URL expires
-	ExpiresAt time.Time `json:"expires_at"`
+	ExpiresAt time.Time `json:"expiresAt"`
 }
 
 // Storage defines the interface for object storage operations

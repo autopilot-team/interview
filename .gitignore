@@ -23,8 +23,6 @@ internal/core/testdata/migrations/test/*_table.sql
 tmp
 .mise.local.toml
 
-*storybook.log
-
 # Playwright
 node_modules/
 **/test-results/

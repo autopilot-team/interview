@@ -2,12 +2,16 @@ package httpx
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"testing"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/humatest"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // testValidation is a helper function to test various validation scenarios
@@ -30,7 +34,25 @@ func testValidation[T any](t *testing.T, _ T, payload map[string]any, err error)
 	resp := api.Post(path, payload)
 
 	assert.Equal(t, http.StatusUnprocessableEntity, resp.Code)
-	AssertErr(t, err, resp.Body)
+	assertErr(t, err, resp.Body)
+}
+
+func assertErr(t *testing.T, expected error, actual io.Reader, msgAndArgs ...any) {
+	t.Helper()
+	d := json.NewDecoder(actual)
+	switch expected := expected.(type) {
+	case ErrorCode:
+		var err Error
+		dErr := d.Decode(&err)
+		require.NoError(t, dErr)
+		if expected != err.Code {
+			exp, act := fmt.Sprintf("%d (%s)", expected, expected.String()), fmt.Sprintf("%d (%s)", err.Code, err.Code.String())
+			assert.Equal(t, exp, act, msgAndArgs...)
+		}
+	default:
+		assert.Failf(t, "testutil.AssertErr: invalid usage", "asserting error to invalid type %T", expected)
+
+	}
 }
 
 func TestDateValidation(t *testing.T) {
@@ -50,9 +72,9 @@ func TestDateTimeValidation(t *testing.T) {
 	testValidation(
 		t,
 		struct {
-			DateTime string `json:"date_time" format:"date-time"`
+			DateTime string `json:"dateTime" format:"date-time"`
 		}{},
-		map[string]any{"date_time": "invalid-date-time"},
+		map[string]any{"dateTime": "invalid-date-time"},
 		ErrInvalidBody,
 	)
 }

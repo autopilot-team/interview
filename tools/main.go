@@ -29,6 +29,6 @@ func run(ctx context.Context) error {
 }
 
 func addCommands(ctx context.Context, rootCmd *cobra.Command) {
-	rootCmd.AddCommand(cmd.NewSyncLocaleCmd(ctx))
 	rootCmd.AddCommand(cmd.NewStringerCmd(ctx))
+	rootCmd.AddCommand(cmd.NewSyncLocaleCmd(ctx))
 }

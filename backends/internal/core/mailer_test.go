@@ -19,7 +19,7 @@ import (
 var (
 	//go:embed all:testdata
 	mailerFS embed.FS
-	smtpUrl  = "smtp://localhost:1025"
+	smtpURL  = "smtp://localhost:1025"
 )
 
 func TestNewMail(t *testing.T) {
@@ -87,7 +87,7 @@ func TestNewMail(t *testing.T) {
 				I18nBundle:      i18nBundle,
 				Logger:          logger,
 				Mode:            types.DebugMode,
-				SmtpUrl:         smtpUrl,
+				SMTPURL:         smtpURL,
 				TemplateOptions: tt.opts,
 			})
 			if tt.wantErr {
@@ -116,7 +116,7 @@ func TestMailer_Render(t *testing.T) {
 		I18nBundle: i18nBundle,
 		Logger:     logger,
 		Mode:       types.DebugMode,
-		SmtpUrl:    smtpUrl,
+		SMTPURL:    smtpURL,
 		TemplateOptions: &MailTemplateOptions{
 			FS:  mailerFS,
 			Dir: "testdata/templates",
@@ -352,7 +352,7 @@ func TestMailer_Send(t *testing.T) {
 				I18nBundle: i18nBundle,
 				Logger:     logger,
 				Mode:       types.DebugMode,
-				SmtpUrl:    smtpUrl,
+				SMTPURL:    smtpURL,
 				TemplateOptions: &MailTemplateOptions{
 					FS:  mailerFS,
 					Dir: "testdata/templates",
@@ -389,7 +389,7 @@ func TestMailer_ConcurrentRender(t *testing.T) {
 		I18nBundle: i18nBundle,
 		Logger:     logger,
 		Mode:       types.DebugMode,
-		SmtpUrl:    smtpUrl,
+		SMTPURL:    smtpURL,
 		TemplateOptions: &MailTemplateOptions{
 			FS:     mailerFS,
 			Dir:    "testdata/templates",
@@ -517,7 +517,7 @@ func TestMailer_BulkSend(t *testing.T) {
 				I18nBundle: i18nBundle,
 				Logger:     logger,
 				Mode:       types.DebugMode,
-				SmtpUrl:    smtpUrl,
+				SMTPURL:    smtpURL,
 				TemplateOptions: &MailTemplateOptions{
 					FS:  mailerFS,
 					Dir: "testdata/templates",

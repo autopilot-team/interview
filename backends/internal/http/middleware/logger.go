@@ -46,7 +46,7 @@ func LoggerWithExemptPaths(mode types.Mode, logger *core.Logger, exemptPaths []s
 				"X-Request-ID",
 			}
 
-			headers := core.HttpHeaders{}
+			headers := core.HTTPHeaders{}
 			for _, name := range importantHeaders {
 				if value := r.Header.Get(name); value != "" {
 					headers[name] = value

@@ -471,7 +471,7 @@ func TestDB_WithTxTimeout(t *testing.T) {
 func TestDbLogger_Log(t *testing.T) {
 	t.Parallel()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	dbLogger := &DbLogger{
+	dbLogger := &DBLogger{
 		Logger: logger,
 		mode:   types.DebugMode,
 	}

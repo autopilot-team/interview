@@ -1,96 +1,8 @@
-<table align="center">
-    <tbody>
-        <tr align="center">
-            <td width="25%">
-                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" height="48" alt="React"><br>
-                <strong>React 19</strong><br>
-                Modern UI Library
-            </td>
-            <td width="25%">
-                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" height="48" alt="TypeScript"><br>
-                <strong>TypeScript</strong><br>
-                Type-safe Dev
-            </td>
-            <td width="25%">
-                <img src="https://static-00.iconduck.com/assets.00/react-router-icon-1024x559-m9r1k9t4.png" height="48" alt="React Router"><br>
-                <strong>React Router v7</strong><br>
-                Single Page Apps
-            </td>
-            <td width="25%">
-                <img src="https://w7.pngwing.com/pngs/293/485/png-transparent-tailwind-css-hd-logo.png" height="48" alt="TailwindCSS"><br>
-                <strong>TailwindCSS v4</strong><br>
-                Utility-first CSS
-            </td>
-        </tr>
-        <tr align="center">
-            <td width="25%">
-                <img src="https://www.pngfind.com/pngs/m/493-4934627_storybook-icon-ddf01037-storybook-js-hd-png-download.png" height="48" alt="Storybook"><br>
-                <strong>Storybook</strong><br>
-                Component Dev
-            </td>
-            <td width="25%">
-                <img src="https://raw.githubusercontent.com/vitejs/vite/main/docs/public/logo.svg" height="48" alt="Vite"><br>
-                <strong>Vite</strong><br>
-                Frontend Tooling
-            </td>
-            <td width="25%">
-                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" height="48" alt="Go"><br>
-                <strong>Go 1.24</strong><br>
-                Backend Services
-            </td>
-            <td width="25%">
-                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg" height="48" alt="PostgreSQL"><br>
-                <strong>PostgreSQL 17</strong><br>
-                Reliable Database
-            </td>
-        </tr>
-        <tr align="center">
-            <td width="25%">
-                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redis/redis-original.svg" height="48" alt="Redis"><br>
-                <strong>Redis</strong><br>
-                In-memory Caching
-            </td>
-            <td width="25%">
-                <img src="https://opentelemetry.io/img/logos/opentelemetry-horizontal-color.svg" height="48" alt="OpenTelemetry"><br>
-                <strong>OpenTelemetry</strong><br>
-                Observability
-            </td>
-            <td width="25%">
-                <img src="https://avatars.githubusercontent.com/u/136755925?v=4" height="48" alt="River"><br>
-                <strong>River</strong><br>
-                Background Worker
-            </td>
-            <td width="25%"></td>
-        </tr>
-    </tbody>
-</table>
-
 # Autopilot Interview
 
 Welcome to Autopilot's interview! This repository is a production-grade
 environment that mirrors our internal development stack, designed to give you a
 real taste of what it's like to work with us.
-
-
-## ✨ Features
-
-### 🛠️ Production-Grade Environment
-- **Microservices Architecture** with API Gateway pattern
-- **Comprehensive Monitoring** via OpenTelemetry
-- **Background Job Processing** using River
-- **Type-Safe API Contracts** across all services
-
-### 🔄 Enterprise-Level CI/CD
-- **Automated Quality Gates** for every pull request
-- **Comprehensive Testing** including unit and E2E tests
-- **Linear Canary Deployments** with automated rollbacks
-- **Security-First Approach** with dependency audits
-
-### 👩‍💻 Developer Experience
-- **Instant Setup** with one-command development environment
-- **Hot Reload** for both frontend and backend changes
-- **Component Library** with Storybook integration
-- **Clear Documentation** and best practices
 
 ## Our Interview Process
 
@@ -235,21 +147,24 @@ $ mise trust
 $ mise install
 
 # Install projects' dependencies
-$ task setup
+$ mise setup
 
 # Setup docker services (databases, migrations)
-$ task reset
+$ mise reset
 
 # Start Development servers (auto restart)
-$ task dev
+$ mise dev
+
+# Run API binary's subcommands (e.g. generate migration files, run pending migrations, etc.)
+$ mise api --help
 ```
 
 ### **Development**
 
- The `task dev` command will start all necessary services. After starting,
+ The `mise dev` command will start all necessary services. After starting,
  run the command in another terminal to view the local development URLs:
  ```sh
- $ task domains
+ $ mise domains
  ```
 
 ### Testing the Frontend

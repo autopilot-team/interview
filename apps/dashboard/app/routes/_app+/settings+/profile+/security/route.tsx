@@ -1,6 +1,3 @@
-import { useIdentity } from "@/components/identity-provider";
-import { VerifyPassword } from "@/components/verify-password";
-import type { RouteHandle } from "@/routes/_app+/_layout";
 import { api, type v1 } from "@autopilot/api";
 import { Button } from "@autopilot/ui/components/button";
 import {
@@ -28,6 +25,9 @@ import { cn } from "@autopilot/ui/lib/utils";
 import { z } from "@autopilot/ui/lib/zod";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useIdentity } from "@/components/identity-provider";
+import { VerifyPassword } from "@/components/verify-password";
+import type { RouteHandle } from "@/routes/_app+/_layout";
 
 export const handle = {
 	breadcrumb: "common:breadcrumbs.settings.profile.security",
@@ -514,7 +514,6 @@ function TwoFactorSection() {
 								</Label>
 
 								<Input
-									id="enable-code"
 									{...registerEnable2FA("code")}
 									className={cn("mt-1", {
 										"ring-2 ring-destructive": enable2FAErrors.code,

@@ -17,9 +17,6 @@ import {
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
-	type SortingState,
-	type Table as TableType,
-	type VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFacetedRowModel,
@@ -27,10 +24,12 @@ import {
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
+	type SortingState,
+	type Table as TableType,
 	useReactTable,
+	type VisibilityState,
 } from "@tanstack/react-table";
-import { LayoutGridIcon } from "lucide-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGridIcon } from "lucide-react";
 import * as React from "react";
 import {
 	DataTablePagination,

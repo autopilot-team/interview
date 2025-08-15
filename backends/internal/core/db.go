@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	DbUrlTemplate = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
+	DBURLTemplate = "postgres://postgres:postgres@localhost:5432/%s?sslmode=disable"
 )
 
 // Querier is an interface for database queries
@@ -178,7 +178,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 	}
 	writerPoolConfig.ConnConfig.Tracer = &tracelog.TraceLog{
 		LogLevel: level,
-		Logger: &DbLogger{
+		Logger: &DBLogger{
 			opts.Logger,
 			opts.Mode,
 		},
@@ -198,7 +198,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		}
 		readerPoolConfig.ConnConfig.Tracer = &tracelog.TraceLog{
 			LogLevel: level,
-			Logger: &DbLogger{
+			Logger: &DBLogger{
 				opts.Logger,
 				opts.Mode,
 			},
@@ -227,16 +227,16 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		return nil, fmt.Errorf("migrations directory '%s' not found in filesystem: %w", opts.MigrationsDir, err)
 	}
 
-	parsedUrl, err := url.Parse(sanitizeDBURLForMigrator(opts.WriterURL))
+	parsedURL, err := url.Parse(sanitizeDBURLForMigrator(opts.WriterURL))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse writer URL: %w", err)
 	}
 
-	migrator := dbmate.New(parsedUrl)
+	migrator := dbmate.New(parsedURL)
 	migrator.AutoDumpSchema = false
 	migrator.FS = opts.MigrationsFS
 	migrator.MigrationsDir = []string{filepath.Join(opts.MigrationsDir, opts.Identifier)}
-	migrator.Log = NewDbMigrateLogger(opts.Logger)
+	migrator.Log = NewDBMigrateLogger(opts.Logger)
 
 	db := &DB{
 		opts:       opts,
@@ -244,7 +244,7 @@ func NewDB(ctx context.Context, opts DBOptions) (DBer, error) {
 		identifier: opts.Identifier,
 		mainFile:   opts.MainFile,
 		migrator:   migrator,
-		name:       strings.TrimPrefix(parsedUrl.Path, "/"),
+		name:       strings.TrimPrefix(parsedURL.Path, "/"),
 		writer:     writer,
 		readers:    readers,
 		seeder:     opts.Seeder,
@@ -267,7 +267,7 @@ func (d *DB) Close() {
 // GenMigration creates a new migration file
 func (d *DB) GenMigration(name string) error {
 	newMigrator := dbmate.New(&url.URL{})
-	newMigrator.Log = NewDbMigrateLogger(d.logger)
+	newMigrator.Log = NewDBMigrateLogger(d.logger)
 	newMigrator.MigrationsDir = []string{
 		filepath.Join(filepath.Dir(d.mainFile), d.migrator.MigrationsDir[0]),
 	}
@@ -407,14 +407,14 @@ func (d *DB) WithTxTimeout(ctx context.Context, timeout time.Duration, fn func(c
 	return d.WithTx(ctx, fn)
 }
 
-// DbLogger implements tracelog.Logger interface
-type DbLogger struct {
+// DBLogger implements tracelog.Logger interface
+type DBLogger struct {
 	*slog.Logger
 	mode types.Mode
 }
 
 // Log logs a database query
-func (l *DbLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]any) {
+func (l *DBLogger) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]any) {
 	isDebuggingRequest := GetDebugContext(ctx)
 	if !isDebuggingRequest {
 		return
@@ -527,18 +527,18 @@ func formatQuery(query string) string {
 	return query
 }
 
-// DbMigrateLogger implements io.Writer interface
-type DbMigrateLogger struct {
+// DBMigrateLogger implements io.Writer interface
+type DBMigrateLogger struct {
 	logger *slog.Logger
 }
 
-// NewDbMigrateLogger creates a new DbMigrateLogger
-func NewDbMigrateLogger(logger *slog.Logger) *DbMigrateLogger {
-	return &DbMigrateLogger{logger: logger}
+// NewDBMigrateLogger creates a new DbMigrateLogger
+func NewDBMigrateLogger(logger *slog.Logger) *DBMigrateLogger {
+	return &DBMigrateLogger{logger: logger}
 }
 
 // Write writes a message to the logger
-func (l *DbMigrateLogger) Write(p []byte) (n int, err error) {
+func (l *DBMigrateLogger) Write(p []byte) (n int, err error) {
 	msg := strings.TrimSpace(string(p))
 	if msg != "" {
 		l.logger.InfoContext(context.Background(), msg)

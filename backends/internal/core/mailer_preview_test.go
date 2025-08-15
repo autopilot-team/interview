@@ -30,7 +30,7 @@ func setupTestMailerPreview(t *testing.T) (*MailerPreview, Mailer) {
 		I18nBundle: i18nBundle,
 		Logger:     logger,
 		Mode:       types.DebugMode,
-		SmtpUrl:    smtpUrl,
+		SMTPURL:    smtpURL,
 		TemplateOptions: &MailTemplateOptions{
 			FS:     mailerPreviewFS,
 			Dir:    "testdata/templates",

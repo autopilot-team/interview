@@ -1,9 +1,8 @@
 "use client";
 
+import { cn } from "@autopilot/ui/lib/utils";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import type * as React from "react";
-
-import { cn } from "@autopilot/ui/lib/utils";
 
 function Tabs({
 	className,

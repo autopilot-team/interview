@@ -54,7 +54,7 @@ type Config struct {
 
 		// Mailer holds mailer configuration
 		Mailer struct {
-			SmtpUrl string `env:"SMTP_URL" envDefault:"smtp://localhost:1025"`
+			SMTPURL string `env:"SMTP_URL" envDefault:"smtp://localhost:1025"`
 		}
 
 		// Name holds the application name
@@ -62,7 +62,7 @@ type Config struct {
 
 		// Observability holds monitoring and logging configuration
 		Observability struct {
-			ApiEndpoint string `env:"OTEL_API_ENDPOINT" envDefault:"localhost:4317"`
+			APIEndpoint string `env:"OTEL_API_ENDPOINT" envDefault:"localhost:4317"`
 		}
 
 		// RateLimiter holds rate limiter configuration

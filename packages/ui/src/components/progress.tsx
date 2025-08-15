@@ -1,9 +1,8 @@
 "use client";
 
+import { cn } from "@autopilot/ui/lib/utils";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import type * as React from "react";
-
-import { cn } from "@autopilot/ui/lib/utils";
 
 function Progress({
 	className,

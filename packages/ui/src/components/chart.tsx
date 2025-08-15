@@ -1,9 +1,12 @@
-"use client";
-
-import * as React from "react";
-import * as RechartsPrimitive from "recharts";
-
 import { cn } from "@autopilot/ui/lib/utils";
+import * as React from "react";
+import type { LegendPayload, LegendProps, TooltipContentProps } from "recharts";
+import * as RechartsPrimitive from "recharts";
+import type {
+	NameType,
+	Payload,
+	ValueType,
+} from "recharts/types/component/DefaultTooltipContent.js";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
@@ -80,22 +83,22 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
 	return (
 		<style
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: biome isn't smart enough to know that this is safe
 			dangerouslySetInnerHTML={{
 				__html: Object.entries(THEMES)
 					.map(
 						([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-	.map(([key, itemConfig]) => {
-		const color =
-			itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-			itemConfig.color;
-		return color ? `  --color-${key}: ${color};` : null;
-	})
-	.join("\n")}
-}
-`,
+            ${prefix} [data-chart=${id}] {
+            ${colorConfig
+							.map(([key, itemConfig]) => {
+								const color =
+									itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+									itemConfig.color;
+								return color ? `  --color-${key}: ${color};` : null;
+							})
+							.join("\n")}
+            }
+            `,
 					)
 					.join("\n"),
 			}}
@@ -105,28 +108,43 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+type CustomTooltipProps = TooltipContentProps<ValueType, NameType> & {
+	className?: string;
+	hideLabel?: boolean;
+	hideIndicator?: boolean;
+	indicator?: "line" | "dot" | "dashed";
+	nameKey?: string;
+	labelKey?: string;
+	labelFormatter?: (
+		label: TooltipContentProps<number, string>["label"],
+		payload: TooltipContentProps<number, string>["payload"],
+	) => React.ReactNode;
+	formatter?: (
+		value: number | string,
+		name: string,
+		item: Payload<number | string, string>,
+		index: number,
+		payload: ReadonlyArray<Payload<number | string, string>>,
+	) => React.ReactNode;
+	labelClassName?: string;
+	color?: string;
+};
+
 function ChartTooltipContent({
 	active,
 	payload,
+	label,
 	className,
 	indicator = "dot",
 	hideLabel = false,
 	hideIndicator = false,
-	label,
 	labelFormatter,
-	labelClassName,
 	formatter,
+	labelClassName,
 	color,
 	nameKey,
 	labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-	React.ComponentProps<"div"> & {
-		hideLabel?: boolean;
-		hideIndicator?: boolean;
-		indicator?: "line" | "dot" | "dashed";
-		nameKey?: string;
-		labelKey?: string;
-	}) {
+}: CustomTooltipProps) {
 	const { config } = useChart();
 
 	const tooltipLabel = React.useMemo(() => {
@@ -251,17 +269,21 @@ function ChartTooltipContent({
 
 const ChartLegend = RechartsPrimitive.Legend;
 
+type ChartLegendContentProps = {
+	className?: string;
+	hideIcon?: boolean;
+	verticalAlign?: LegendProps["verticalAlign"];
+	payload?: LegendPayload[];
+	nameKey?: string;
+};
+
 function ChartLegendContent({
 	className,
 	hideIcon = false,
 	payload,
 	verticalAlign = "bottom",
 	nameKey,
-}: React.ComponentProps<"div"> &
-	Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-		hideIcon?: boolean;
-		nameKey?: string;
-	}) {
+}: ChartLegendContentProps) {
 	const { config } = useChart();
 
 	if (!payload?.length) {

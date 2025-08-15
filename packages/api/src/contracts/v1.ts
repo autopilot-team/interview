@@ -373,7 +373,10 @@ export interface components {
             enabled: boolean;
         };
         EnableTwoFactorRequestBody: {
-            /** @description The verification code to confirm setup */
+            /**
+             * @description The verification code to confirm setup
+             * @example 123456
+             */
             code: string;
         };
         EnableTwoFactorResponseBody: {
@@ -423,23 +426,27 @@ export interface components {
             metadata?: components["schemas"]["ErrorMetadata"];
         };
         ErrorMetadata: {
-            allowed_values?: string[] | null;
+            allowedValues?: string[] | null;
             /** Format: int64 */
-            max_length?: number;
+            maxLength?: number;
             /** Format: double */
-            max_value?: number;
+            maxValue?: number;
             /** Format: int64 */
-            min_length?: number;
+            minLength?: number;
             /** Format: double */
-            min_value?: number;
+            minValue?: number;
             regex?: string;
         };
         ForgotPasswordRequestBody: {
-            /** @description The Cloudflare Turnstile token */
+            /**
+             * @description The Cloudflare Turnstile token
+             * @example XXX.DUMMY.TOKEN
+             */
             cfTurnstileToken: string;
             /**
              * Format: email
              * @description The user's email address
+             * @example user@example.com
              */
             email: string;
         };
@@ -471,13 +478,13 @@ export interface components {
             /** Format: int64 */
             amount: number;
             /** Format: date-time */
-            completed_at?: string;
+            completedAt?: string;
             /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             currency: string;
             description: string;
             id: string;
-            merchant_id: string;
+            merchantId: string;
             metadata: {
                 [key: string]: unknown;
             };
@@ -485,18 +492,22 @@ export interface components {
             provider: string;
             status: string;
             /** Format: date-time */
-            updated_at: string;
+            updatedAt: string;
         };
         RegenerateQRCodeResponseBody: {
             /** @description The QR code for scanning with authenticator apps */
-            qr_code: string;
+            qrCode: string;
         };
         ResetPasswordRequestBody: {
-            /** @description The new password */
+            /**
+             * @description The new password
+             * @example NewStrongPass123!
+             */
             newPassword: string;
             /**
              * Format: uuid
              * @description The password reset token
+             * @example abc123
              */
             token: string;
         };
@@ -564,14 +575,21 @@ export interface components {
             secret: string;
         };
         SignInRequestBody: {
-            /** @description The Cloudflare Turnstile token */
+            /**
+             * @description The Cloudflare Turnstile token
+             * @example XXX.DUMMY.TOKEN
+             */
             cfTurnstileToken: string;
             /**
              * Format: email
              * @description The user's email address
+             * @example john_doe@example.com
              */
             email: string;
-            /** @description The user's password */
+            /**
+             * @description The user's password
+             * @example password123
+             */
             password: string;
         };
         SignInResponseBody: {
@@ -579,26 +597,45 @@ export interface components {
             isTwoFactorPending: boolean;
         };
         SignUpRequestBody: {
-            /** @description The Cloudflare Turnstile token */
+            /**
+             * @description The Cloudflare Turnstile token
+             * @example XXX.DUMMY.TOKEN
+             */
             cfTurnstileToken: string;
             /**
              * Format: email
              * @description The user's email address
+             * @example user@example.com
              */
             email: string;
-            /** @description The user's full name */
+            /**
+             * @description The user's full name
+             * @example John Doe
+             */
             name: string;
-            /** @description The user's password */
+            /**
+             * @description The user's password
+             * @example StrongPass123!
+             */
             password: string;
         };
         UpdatePasswordRequestBody: {
-            /** @description The current password */
+            /**
+             * @description The current password
+             * @example CurrentPass123!
+             */
             currentPassword: string;
-            /** @description The new password */
+            /**
+             * @description The new password
+             * @example NewStrongPass123!
+             */
             newPassword: string;
         };
         UpdateUserRequestBody: {
-            /** @description The user's full name */
+            /**
+             * @description The user's full name
+             * @example John Doe
+             */
             name: string;
         };
         User: {
@@ -625,7 +662,10 @@ export interface components {
             token: string;
         };
         VerifyPasswordRequestBody: {
-            /** @description The current password to verify */
+            /**
+             * @description The current password to verify
+             * @example current-password
+             */
             password: string;
         };
         VerifyPasswordResponseBody: {
@@ -633,7 +673,10 @@ export interface components {
             verified: boolean;
         };
         VerifyTwoFactorRequestBody: {
-            /** @description The two-factor authentication code */
+            /**
+             * @description The two-factor authentication code
+             * @example 123456
+             */
             code: string;
         };
     };
@@ -651,7 +694,10 @@ export interface components {
             };
             content: {
                 "application/json": {
-                    /** @description Error message */
+                    /**
+                     * @description Error message
+                     * @example Rate limit exceeded for API operations
+                     */
                     error?: string;
                 };
             };

@@ -32,7 +32,7 @@ func TestDebugLogHandler(t *testing.T) {
 			Mode:   types.DebugMode,
 			Writer: &buf,
 		})
-		headers := HttpHeaders{
+		headers := HTTPHeaders{
 			"Accept":     "*/*",
 			"User-Agent": "Mozilla/5.0",
 			"Referer":    "http://localhost:3000",
@@ -89,7 +89,7 @@ func TestReleaseLogHandler(t *testing.T) {
 			Mode:   types.ReleaseMode,
 			Writer: &buf,
 		})
-		headers := HttpHeaders{
+		headers := HTTPHeaders{
 			"Accept":     "*/*",
 			"User-Agent": "Mozilla/5.0",
 			"Referer":    "http://localhost:3000",

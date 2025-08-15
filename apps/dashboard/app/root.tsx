@@ -1,10 +1,4 @@
-import {
-	AuthState,
-	IdentityProvider,
-	useIdentity,
-} from "@/components/identity-provider";
-import { ModeSwitcherProvider } from "@/components/mode-switcher";
-import { QueryClientProvider, asset } from "@autopilot/api";
+import { asset, QueryClientProvider } from "@autopilot/api";
 import {
 	MessageCard,
 	type MessageCardVariant,
@@ -15,15 +9,21 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigation } from "react-router";
 import {
+	isRouteErrorResponse,
 	Links,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	isRouteErrorResponse,
+	useNavigation,
 } from "react-router";
+import {
+	AuthState,
+	IdentityProvider,
+	useIdentity,
+} from "@/components/identity-provider";
+import { ModeSwitcherProvider } from "@/components/mode-switcher";
 import type { Route } from "./+types/root";
 
 import "@autopilot/ui/globals.css";
@@ -47,7 +47,7 @@ export const links: Route.LinksFunction = () => [
 	{
 		rel: "icon",
 		type: "image/png",
-		href: asset("/logo.png"),
+		href: asset("/icon.png"),
 	},
 ];
 

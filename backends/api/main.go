@@ -75,7 +75,7 @@ func main() {
 	}
 
 	// Initialize the HTTP server
-	httpServer, err := initHttpServer(container, mods)
+	httpServer, err := initHTTPServer(container, mods)
 	if err != nil {
 		log.Fatalf("Failed to initialize HTTP server: %v", err)
 	}
@@ -130,7 +130,7 @@ func initAutopilot(ctx context.Context, container *app.Container) (*internal.Mod
 			},
 			Workers: workers,
 		},
-		DbURL:  container.Config.App.Database.Worker,
+		DBURL:  container.Config.App.Database.Worker,
 		Logger: container.Logger,
 	})
 	if err != nil {
@@ -141,7 +141,7 @@ func initAutopilot(ctx context.Context, container *app.Container) (*internal.Mod
 	return mods, nil
 }
 
-func initHttpServer(container *app.Container, mods *internal.Module) (*core.HttpServer, error) {
+func initHTTPServer(container *app.Container, mods *internal.Module) (*core.HTTPServer, error) {
 	var injectCfg apimdw.InjectCountryConfig
 	if container.Mode == types.DebugMode {
 		injectCfg = apimdw.InjectCountryConfig{
@@ -149,7 +149,7 @@ func initHttpServer(container *app.Container, mods *internal.Module) (*core.Http
 			Country: "SG",
 		}
 	}
-	httpServer, err := core.NewHttpServer(core.HttpServerOptions{
+	httpServer, err := core.NewHTTPServer(core.HTTPServerOptions{
 		Host:       container.Config.App.Server.Host,
 		Port:       container.Config.App.Server.Port,
 		I18nBundle: container.I18nBundle,
@@ -203,7 +203,7 @@ func initHttpServer(container *app.Container, mods *internal.Module) (*core.Http
 	if container.Mode == types.DebugMode {
 		queueUIServer, err := riverui.NewServer(&riverui.ServerOpts{
 			Client: container.Worker.GetClient(),
-			DB:     container.Worker.GetDbPool(),
+			DB:     container.Worker.GetDBPool(),
 			Logger: container.Logger,
 			Prefix: "/queue",
 		})
@@ -225,7 +225,7 @@ func initHttpServer(container *app.Container, mods *internal.Module) (*core.Http
 		fmt.Fprintf(w, `{"name": "%s", "version": "%s"}`, container.Config.App.Name, container.Config.App.Version)
 	})
 
-	apiV1 := initApiV1(container, httpServer)
+	apiV1 := initAPIV1(container, httpServer)
 	authenticator := identity.NewAuthentication(container, apiV1, mods.Identity.Service)
 
 	err = identityhandlerv1.AddRoutes(container, apiV1, mods.Identity.Service, authenticator)
@@ -241,7 +241,7 @@ func initHttpServer(container *app.Container, mods *internal.Module) (*core.Http
 	return httpServer, nil
 }
 
-func initApiV1(container *app.Container, httpServer *core.HttpServer) huma.API {
+func initAPIV1(container *app.Container, httpServer *core.HTTPServer) huma.API {
 	apiConfig := huma.DefaultConfig("Autopilot API", "1.0.0")
 	apiConfig.OpenAPI.Info.Description = "The Autopilot Platform API provides a comprehensive suite of endpoints."
 	apiConfig.OpenAPI.Security = []map[string][]string{}
@@ -284,13 +284,13 @@ func initApiV1(container *app.Container, httpServer *core.HttpServer) huma.API {
 	return api
 }
 
-func addCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Container, httpServer *core.HttpServer, _ *internal.Module) {
+func addCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Container, httpServer *core.HTTPServer, _ *internal.Module) {
 	databases := []core.DBer{
 		container.DB.Identity,
 		container.DB.Payment.Live,
 		container.DB.Payment.Test,
 	}
-	rootCmd.AddCommand(cmd.NewDbMigrateCmd(ctx, container.Logger, databases,
+	rootCmd.AddCommand(cmd.NewDBMigrateCmd(ctx, container.Logger, databases,
 		[]core.Worker{
 			container.Worker,
 		},
@@ -303,13 +303,13 @@ func addCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Con
 	}))
 }
 
-func addDebugCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Container, httpServer *core.HttpServer) {
+func addDebugCommands(ctx context.Context, rootCmd *cobra.Command, container *app.Container, httpServer *core.HTTPServer) {
 	databases := []core.DBer{
 		container.DB.Identity,
 		container.DB.Payment.Live,
 		container.DB.Payment.Test,
 	}
-	rootCmd.AddCommand(cmd.NewDbSeedCmd(ctx, container.Logger, databases))
+	rootCmd.AddCommand(cmd.NewDBSeedCmd(ctx, container.Logger, databases))
 	rootCmd.AddCommand(cmd.NewGenMigrationCmd(container.Logger, databases))
 	rootCmd.AddCommand(cmd.NewGenOpenapiCmd(container.Logger, httpServer))
 }

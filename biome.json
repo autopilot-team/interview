@@ -1,28 +1,39 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"ignore": [
-			".cursorrules",
-			".react-router/*",
-			"**/*.d.ts",
-			"backends/internal/pbgen/*",
-			"build/*",
-			"node_modules/*",
-			"packages/api/src/contracts/*.json",
-			"packages/api/src/contracts/*.ts",
-			"packages/sdk/playwright-report/*",
-			"tmp/*"
-		],
-		"ignoreUnknown": true
+		"ignoreUnknown": true,
+		"includes": [
+			"apps/**/*.{json,md,toml,ts,tsx,yaml,yml,astro}",
+			"packages/**/*.{json,md,toml,ts,tsx,yaml,yml}",
+			".github/**/*.{json,md,toml,yaml,yml}",
+			"!apps/checkout/.react-router/**/*",
+			"!apps/dashboard/.react-router/**/*",
+			"!apps/www/.astro/**/*",
+			"!packages/api/src/contracts/**/*",
+			"!packages/ui/src/components/ap-icons/*"
+		]
+	},
+	"vcs": {
+		"useIgnoreFile": true
 	},
 	"formatter": {
-		"enabled": true
+		"enabled": true,
+		"formatWithErrors": true
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
+			"complexity": {
+				"noBannedTypes": "off"
+			},
 			"correctness": {
-				"noEmptyPattern": "off"
+				"noEmptyPattern": "off",
+				"noUnusedFunctionParameters": "off",
+				"noUnusedVariables": "off",
+				"useUniqueElementIds": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
 			}
 		}
 	}

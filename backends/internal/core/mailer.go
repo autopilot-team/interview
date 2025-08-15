@@ -81,7 +81,7 @@ type MailOptions struct {
 	Mode            types.Mode
 	PreviewData     map[string]map[string]any
 	TemplateOptions *MailTemplateOptions
-	SmtpUrl         string
+	SMTPURL         string
 }
 
 // NewMail creates a new mail instance
@@ -112,14 +112,14 @@ func NewMail(opts MailOptions) (*Mail, error) {
 
 	}
 
-	if opts.SmtpUrl == "" {
+	if opts.SMTPURL == "" {
 		return nil, fmt.Errorf("SMTP URL cannot be empty")
 	}
 
 	m := &Mail{
 		i18nBundle:   opts.I18nBundle,
 		logger:       opts.Logger,
-		smtpURL:      opts.SmtpUrl,
+		smtpURL:      opts.SMTPURL,
 		templateOpts: opts.TemplateOptions,
 	}
 

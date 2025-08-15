@@ -104,14 +104,13 @@ export function VerifyPassword({
 					</DialogDescription>
 				</DialogHeader>
 
-				<form id="verify-password-form" onSubmit={onSubmit}>
+				<form onSubmit={onSubmit}>
 					<div className="space-y-2">
 						<Label htmlFor="verify-password">
 							{t("identity:verifyPassword.label")}
 						</Label>
 
 						<Password
-							id="verify-password"
 							autoComplete="current-password"
 							aria-describedby={
 								errors.password ? "verify-password-error" : undefined

@@ -1,5 +1,3 @@
-import type * as React from "react";
-
 import { type Button, buttonVariants } from "@autopilot/ui/components/button";
 import { cn } from "@autopilot/ui/lib/utils";
 import {
@@ -7,12 +5,11 @@ import {
 	ChevronRightIcon,
 	MoreHorizontalIcon,
 } from "lucide-react";
+import type * as React from "react";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
 	return (
 		<nav
-			// biome-ignore lint/a11y/noRedundantRoles: <explanation>
-			role="navigation"
 			aria-label="pagination"
 			data-slot="pagination"
 			className={cn("mx-auto flex w-full justify-center", className)}

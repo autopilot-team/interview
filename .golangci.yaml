@@ -1,5 +1,7 @@
 version: "2"
 linters:
+  enable:
+    - tagliatelle
   exclusions:
     generated: lax
     presets:
@@ -12,13 +14,19 @@ linters:
       - third_party$
       - builtin$
       - examples$
+    rules:
+      - path: backends/internal/providers/
+        linters:
+          - tagliatelle
+      - path: backends/api/internal/payout/handler/v1/createtransaction_test.go
+        linters:
+          - tagliatelle
 
   settings:
     staticcheck:
       checks:
         - all
         - -QF1008
-        - -ST1003
 
     tagliatelle:
       case:
@@ -36,4 +44,3 @@ formatters:
       - third_party$
       - builtin$
       - examples$
-

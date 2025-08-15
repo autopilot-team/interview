@@ -15,7 +15,7 @@ import (
 // Worker implements the River worker client
 type Worker interface {
 	GetClient() *river.Client[pgx.Tx]
-	GetDbPool() *pgxpool.Pool
+	GetDBPool() *pgxpool.Pool
 	Insert(ctx context.Context, args river.JobArgs, opts *river.InsertOpts) (*rivertype.JobInsertResult, error)
 	Queues() *river.QueueBundle
 	Start(ctx context.Context) error
@@ -26,8 +26,8 @@ type Worker interface {
 
 // WorkerOptions contains configuration options for the worker
 type WorkerOptions struct {
-	// DbURL is the database connection string
-	DbURL string
+	// DBURL is the database connection string
+	DBURL string
 
 	// Logger is used for worker-related logging
 	Logger *slog.Logger
@@ -41,7 +41,7 @@ type BackgroundWorker struct {
 	*river.Client[pgx.Tx]
 	dbPool *pgxpool.Pool
 	Config *river.Config
-	DbURL  string
+	DBURL  string
 }
 
 // NewWorker creates a new River worker client
@@ -50,11 +50,11 @@ func NewWorker(ctx context.Context, opts WorkerOptions) (*BackgroundWorker, erro
 		return nil, fmt.Errorf("logger is required")
 	}
 
-	if opts.DbURL == "" {
+	if opts.DBURL == "" {
 		return nil, fmt.Errorf("database URL is required")
 	}
 
-	dbPool, err := pgxpool.New(ctx, opts.DbURL)
+	dbPool, err := pgxpool.New(ctx, opts.DBURL)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func NewWorker(ctx context.Context, opts WorkerOptions) (*BackgroundWorker, erro
 		client,
 		dbPool,
 		opts.Config,
-		opts.DbURL,
+		opts.DBURL,
 	}, nil
 }
 
@@ -100,6 +100,6 @@ func (w *BackgroundWorker) GetClient() *river.Client[pgx.Tx] {
 }
 
 // GetDbPool returns the underlying database pool
-func (w *BackgroundWorker) GetDbPool() *pgxpool.Pool {
+func (w *BackgroundWorker) GetDBPool() *pgxpool.Pool {
 	return w.dbPool
 }

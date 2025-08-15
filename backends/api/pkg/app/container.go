@@ -134,7 +134,7 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 	tracerShutdown, err := core.NewTracer(
 		ctx,
 		config.App.Environment,
-		config.App.Observability.ApiEndpoint,
+		config.App.Observability.APIEndpoint,
 		config.App.Service,
 		config.App.Version,
 	)
@@ -175,7 +175,7 @@ func NewContainer(ctx context.Context, opts ContainerOpts) (*Container, error) {
 				"ResetURL":  fmt.Sprintf("%s/reset-password?token=01948450-988e-7976-a454-7163b6f1c6c6", config.App.DashboardURL),
 			},
 		},
-		SmtpUrl: config.App.Mailer.SmtpUrl,
+		SMTPURL: config.App.Mailer.SMTPURL,
 		TemplateOptions: &core.MailTemplateOptions{
 			Dir: "templates",
 			ExtraFuncs: []template.FuncMap{

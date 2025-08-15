@@ -1,5 +1,5 @@
 import { cn } from "@autopilot/ui/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 const spinnerVariants = cva(
 	"inline-block animate-spin rounded-full border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]",
@@ -43,7 +43,7 @@ export function Spinner({
 	...props
 }: SpinnerProps) {
 	return (
-		<div aria-label={label} className={cn("inline-flex", className)} {...props}>
+		<div className={cn("inline-flex", className)} {...props}>
 			<div className={cn(spinnerVariants({ size, variant }))} />
 			<span className="sr-only">{label}</span>
 		</div>

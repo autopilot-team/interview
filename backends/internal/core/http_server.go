@@ -14,8 +14,8 @@ import (
 	chimdw "github.com/go-chi/chi/v5/middleware"
 )
 
-// HttpHeaders wraps HTTP headers to control their log representation
-type HttpHeaders map[string]string
+// HTTPHeaders wraps HTTP headers to control their log representation
+type HTTPHeaders map[string]string
 
 var sensitiveHeaders = map[string]bool{
 	"authorization":   true,
@@ -25,7 +25,7 @@ var sensitiveHeaders = map[string]bool{
 }
 
 // LogValue implements slog.LogValuer interface
-func (h HttpHeaders) LogValue() slog.Value {
+func (h HTTPHeaders) LogValue() slog.Value {
 	if h == nil {
 		return slog.GroupValue()
 	}
@@ -42,10 +42,10 @@ func (h HttpHeaders) LogValue() slog.Value {
 	return slog.GroupValue(attrs...)
 }
 
-// HttpServerOptions contains configuration options for the HTTP server
-type HttpServerOptions struct {
-	// ApiDocs is a list of API documentation to be served
-	ApiDocs []huma.API
+// HTTPServerOptions contains configuration options for the HTTP server
+type HTTPServerOptions struct {
+	// APIDocs is a list of API documentation to be served
+	APIDocs []huma.API
 
 	// Mode specifies the application mode (debug/release)
 	Mode types.Mode
@@ -77,7 +77,7 @@ type HttpServerOptions struct {
 
 // HttpServer represents a web server instance with static file serving capabilities.
 // It embeds chi.Mux for routing and http.Server for the underlying server.
-type HttpServer struct {
+type HTTPServer struct {
 	*chi.Mux
 	*http.Server
 	APIDocs    []huma.API
@@ -87,8 +87,8 @@ type HttpServer struct {
 	mailer     Mailer
 }
 
-// NewHttpServer creates and initializes a new HttpServer instance.
-func NewHttpServer(opts HttpServerOptions) (*HttpServer, error) {
+// NewHTTPServer creates and initializes a new HttpServer instance.
+func NewHTTPServer(opts HTTPServerOptions) (*HTTPServer, error) {
 	if opts.Logger == nil {
 		return nil, fmt.Errorf("logger is required")
 	}
@@ -104,13 +104,13 @@ func NewHttpServer(opts HttpServerOptions) (*HttpServer, error) {
 	}
 	router.Use(validMiddlewares...)
 
-	server := &HttpServer{
+	server := &HTTPServer{
 		router,
 		&http.Server{
 			Addr:    opts.Host + ":" + opts.Port,
 			Handler: router,
 		},
-		opts.ApiDocs,
+		opts.APIDocs,
 		opts.I18nBundle,
 		opts.Logger,
 		opts.SpaFS,
@@ -130,7 +130,7 @@ func NewHttpServer(opts HttpServerOptions) (*HttpServer, error) {
 
 // ServeStaticFiles configures the server to serve static files from the embedded filesystem.
 // It serves files from the "dist" subdirectory and handles special cases for index.html and 404.html.
-func (s *HttpServer) ServeStaticFiles(path string) {
+func (s *HTTPServer) ServeStaticFiles(path string) {
 	subFs, err := fs.Sub(s.spaFS, path)
 	if err != nil {
 		panic(fmt.Errorf("failed to get the sub tree for the static files: %w", err))

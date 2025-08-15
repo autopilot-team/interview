@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewGenOpenapiCmd(logger *slog.Logger, httpServer *core.HttpServer) *cobra.Command {
+func NewGenOpenapiCmd(logger *slog.Logger, httpServer *core.HTTPServer) *cobra.Command {
 	var outputDir string
 
 	cmd := &cobra.Command{

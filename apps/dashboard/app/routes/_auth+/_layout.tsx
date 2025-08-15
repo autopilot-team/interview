@@ -1,5 +1,5 @@
-import { useIdentity } from "@/components/identity-provider";
 import { Navigate, Outlet } from "react-router";
+import { useIdentity } from "@/components/identity-provider";
 
 export default function Component() {
 	const { user } = useIdentity();
