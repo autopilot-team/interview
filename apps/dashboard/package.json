@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@autopilot/api": "workspace:*",
 		"@autopilot/ui": "workspace:*",
-		"@react-router/node": "^7.8.0",
+		"@react-router/node": "^7.8.2",
 		"@react-router/serve": "^7.8.0",
 		"@scalar/api-reference-react": "^0.7.38",
 		"i18next": "^25.3.6",

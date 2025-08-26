@@ -51,8 +51,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@react-router/node':
-        specifier: ^7.8.0
-        version: 7.8.0(react-router@7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
+        specifier: ^7.8.2
+        version: 7.8.2(react-router@7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
       '@react-router/serve':
         specifier: ^7.8.0
         version: 7.8.0(react-router@7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
@@ -1942,6 +1942,16 @@ packages:
       typescript:
         optional: true
 
+  '@react-router/node@7.8.2':
+    resolution: {integrity: sha512-FNepNg4Aya6V0ZxD/+uObtqxtMXcsBGa0ax9PznUh5qr8g4M6Xo9IN+soLb1tghz6iS/F9djFyhJ/lDkF77dEw==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react-router: 7.8.2
+      typescript: ^5.1.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@react-router/remix-config-routes-adapter@0.0.0-nightly-bf7ecb711-20240911':
     resolution: {integrity: sha512-F4OG29Moiq60sFaP0WZnqhwdVHfzmk2vKb860eYedFrHPSH7LftWvaOry25XUirUUEZql5L8N3PgLboZuOTehA==}
     engines: {node: '>=18.0.0'}
@@ -2179,6 +2189,7 @@ packages:
   '@scalar/use-tooltip@1.1.0':
     resolution: {integrity: sha512-KJConD/JDyGP8GPGpD+TXA6FEcKT9bmHQb/JyBmME+tJoJGHGtNcGy7kcezFakaKCqfKyY7cgPzL1ctUaGIRag==}
     engines: {node: '>=20'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@scalar/workspace-store@0.12.0':
     resolution: {integrity: sha512-e0OMEYTrQ6D/8gg4lAIim5lL5utK+8zLH5mdriYY34L9UszLTbzGTesZBfNA15Eao1mo7f3hbyRJPPBydwo0rw==}
@@ -6696,6 +6707,13 @@ snapshots:
       typescript: 5.9.2
 
   '@react-router/node@7.8.0(react-router@7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)':
+    dependencies:
+      '@mjackson/node-fetch-server': 0.2.0
+      react-router: 7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+    optionalDependencies:
+      typescript: 5.9.2
+
+  '@react-router/node@7.8.2(react-router@7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)':
     dependencies:
       '@mjackson/node-fetch-server': 0.2.0
       react-router: 7.8.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
