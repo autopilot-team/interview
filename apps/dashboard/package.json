@@ -28,7 +28,7 @@
 		"ua-parser-js": "^2.0.4"
 	},
 	"devDependencies": {
-		"@react-router/dev": "^7.8.0",
+		"@react-router/dev": "^7.8.2",
 		"@react-router/remix-config-routes-adapter": "0.0.0-nightly-bf7ecb711-20240911",
 		"@tailwindcss/vite": "4.1.7",
 		"@tanstack/react-query-devtools": "^5.85.3",
