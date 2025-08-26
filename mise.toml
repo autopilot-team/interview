@@ -1,7 +1,7 @@
 [env]
 FORCE_COLOR = 1
+MISE_GITHUB_TOKEN = "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"
 NODE_OPTIONS = "--no-warnings"
-MISE_EXPERIMENTAL = true
 
 [settings]
 quiet = true
@@ -165,5 +165,5 @@ watchexec = "2.3.2"
 "aqua:aws/aws-cli" = "2.27.37"
 "aqua:golangci/golangci-lint" = "2.1.6"
 "aqua:gotestyourself/gotestsum" = "1.12.2"
-"aqua:pnpm/pnpm" = "10.14.0"
+"aqua:pnpm/pnpm" = "10.15.0"
 "aqua:vektra/mockery" = "3.4.0"

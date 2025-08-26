@@ -1,3 +1,7 @@
+secrets:
+  MISE_GITHUB_TOKEN:
+    environment: MISE_GITHUB_TOKEN
+
 services:
   # Infrastructure
   aws-otel-collector:
@@ -44,7 +48,7 @@ services:
     restart: on-failure
 
   db:
-    image: postgres:16.6
+    image: postgres:17.4
     command: >
       bash -c '
         create_db() {
@@ -132,9 +136,12 @@ services:
   assets:
     build:
       context: .
-      dockerfile: Dockerfile.spa
+      dockerfile: Dockerfile
+      target: spa
       args:
         - APP_SERVICE=assets
+      secrets:
+        - MISE_GITHUB_TOKEN
     ports:
       - 2998:80
     profiles:
@@ -144,9 +151,12 @@ services:
   dashboard:
     build:
       context: .
-      dockerfile: Dockerfile.spa
+      dockerfile: Dockerfile
+      target: spa
       args:
         - APP_SERVICE=dashboard
+      secrets:
+        - MISE_GITHUB_TOKEN
     ports:
       - 3000:80
     profiles:
@@ -157,16 +167,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: backend
       args:
         - APP_SERVICE=api
+      secrets:
+        - MISE_GITHUB_TOKEN
     command: /app start --worker
     environment:
-      - API_CACHE_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
-      - API_RATE_LIMITER_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
-      - IDENTITY_CACHE_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
+      - API_CACHE_VALKEY_URLS=redis://cache:6379/0?addr=cache-node-2:6380
+      - API_IDEMPOTENCY_VALKEY_URLS=redis://cache:6379/0?addr=cache-node-2:6380
+      - API_RATE_LIMITER_VALKEY_URLS=redis://cache:6379/0?addr=cache-node-2:6380
+      - IDENTITY_CACHE_VALKEY_URLS=redis://cache:6379/0?addr=cache-node-2:6380
       - IDENTITY_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@db:5432/identity?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
       - OTEL_API_ENDPOINT=aws-otel-collector:4317
-      - PAYMENT_CACHE_VALKEY_URLS=redis://cache:6379/0,redis://cache-node-2:6379/0
+      - PAYMENT_CACHE_VALKEY_URLS=redis://cache:6379/0?addr=cache-node-2:6380
       - PAYMENT_LIVE_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@db:5432/payment_live?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
       - PAYMENT_TEST_PRIMARY_WRITER_DB_URL=postgres://postgres:postgres@db:5432/payment_test?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m
       - WORKER_DB_URL=postgres://postgres:postgres@db:5432/worker?sslmode=disable&search_path=public&pool_max_conns=25&pool_min_conns=2&pool_max_conn_lifetime=1h&pool_max_conn_idle_time=30m&pool_health_check_period=1m

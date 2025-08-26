@@ -33,6 +33,10 @@ During this 90-minute technical interview, we'll cover the following phases:
 - API Development & Integration Testing (50 minutes)
 - Closing Discussion (10 minutes)
 
+> [!NOTE]
+> It's important to understand how API key authentication is done and how to
+> retrieve entity ID from it.
+
 ### Evaluation & Requirements
 Please ensure you have a reliable development environment set up and are
 comfortable working within the allocated timeframes. **Effective time management across each phase**

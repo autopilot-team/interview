@@ -201,11 +201,10 @@ func initHTTPServer(container *app.Container, mods *internal.Module) (*core.HTTP
 
 	// Initialize Queue UI server
 	if container.Mode == types.DebugMode {
-		queueUIServer, err := riverui.NewServer(&riverui.ServerOpts{
-			Client: container.Worker.GetClient(),
-			DB:     container.Worker.GetDBPool(),
-			Logger: container.Logger,
-			Prefix: "/queue",
+		queueUIServer, err := riverui.NewHandler(&riverui.HandlerOpts{
+			Endpoints: riverui.NewEndpoints(container.Worker.GetClient(), nil),
+			Logger:    container.Logger,
+			Prefix:    "/queue",
 		})
 		if err != nil {
 			return nil, fmt.Errorf("failed to initialize River UI server: %w", err)
