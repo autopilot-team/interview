@@ -23,9 +23,9 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.6.0
 	github.com/pquerna/otp v1.5.0
 	github.com/redis/go-redis/v9 v9.12.1
-	github.com/riverqueue/river v0.23.1
-	github.com/riverqueue/river/riverdriver/riverpgxv5 v0.23.1
-	github.com/riverqueue/river/rivertype v0.23.1
+	github.com/riverqueue/river v0.24.0
+	github.com/riverqueue/river/riverdriver/riverpgxv5 v0.24.0
+	github.com/riverqueue/river/rivertype v0.24.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
@@ -90,8 +90,8 @@ require (
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/riverqueue/apiframe v0.0.0-20250708014637-e55c49c01ff7 // indirect
-	github.com/riverqueue/river/riverdriver v0.23.1 // indirect
-	github.com/riverqueue/river/rivershared v0.23.1 // indirect
+	github.com/riverqueue/river/riverdriver v0.24.0 // indirect
+	github.com/riverqueue/river/rivershared v0.24.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/pflag v1.0.7 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
