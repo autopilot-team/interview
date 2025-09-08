@@ -58,7 +58,7 @@ importers:
         version: 7.8.2(react-router@7.8.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
       '@scalar/api-reference-react':
         specifier: ^0.7.42
-        version: 0.7.42(change-case@5.4.4)(nprogress@0.2.0)(react@19.1.1)(tailwindcss@4.1.12)(typescript@5.9.2)
+        version: 0.7.42(change-case@5.4.4)(nprogress@0.2.0)(react@19.1.1)(tailwindcss@4.1.13)(typescript@5.9.2)
       i18next:
         specifier: ^25.4.2
         version: 25.4.2(typescript@5.9.2)
@@ -115,8 +115,8 @@ importers:
         specifier: ^0.8.5
         version: 0.8.5
       tailwindcss:
-        specifier: ^4.1.12
-        version: 4.1.12
+        specifier: ^4.1.13
+        version: 4.1.13
       vite:
         specifier: ^7.1.3
         version: 7.1.3(@types/node@24.3.0)(jiti@2.5.1)(less@4.2.1)(lightningcss@1.30.1)(terser@5.37.0)(yaml@2.8.1)
@@ -323,8 +323,8 @@ importers:
         specifier: ^19.1.8
         version: 19.1.8(@types/react@19.1.11)
       tailwindcss:
-        specifier: ^4.1.12
-        version: 4.1.12
+        specifier: ^4.1.13
+        version: 4.1.13
       vite:
         specifier: ^7.1.3
         version: 7.1.3(@types/node@24.3.0)(jiti@2.5.1)(less@4.2.1)(lightningcss@1.30.1)(terser@5.37.0)(yaml@2.8.1)
@@ -4497,6 +4497,9 @@ packages:
   tailwindcss@4.1.12:
     resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
 
+  tailwindcss@4.1.13:
+    resolution: {integrity: sha512-i+zidfmTqtwquj4hMEwdjshYYgMbOrPzb9a0M3ZgNa0JMoZeFC6bxZvO8yr8ozS6ix2SDz0+mvryPeBs2TFE+w==}
+
   tailwindcss@4.1.7:
     resolution: {integrity: sha512-kr1o/ErIdNhTz8uzAYL7TpaUuzKIE6QPQ4qmSdxnoX/lo+5wmUHQA6h3L5yIqEImSRnAAURDirLu/BgiXGPAhg==}
 
@@ -5628,9 +5631,9 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@headlessui/tailwindcss@0.2.2(tailwindcss@4.1.12)':
+  '@headlessui/tailwindcss@0.2.2(tailwindcss@4.1.13)':
     dependencies:
-      tailwindcss: 4.1.12
+      tailwindcss: 4.1.13
 
   '@headlessui/vue@1.7.23(vue@3.5.20(typescript@5.9.2))':
     dependencies:
@@ -6764,9 +6767,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.48.1':
     optional: true
 
-  '@scalar/api-client@2.5.26(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.12)(typescript@5.9.2)':
+  '@scalar/api-client@2.5.26(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.13)(typescript@5.9.2)':
     dependencies:
-      '@headlessui/tailwindcss': 0.2.2(tailwindcss@4.1.12)
+      '@headlessui/tailwindcss': 0.2.2(tailwindcss@4.1.13)
       '@headlessui/vue': 1.7.23(vue@3.5.20(typescript@5.9.2))
       '@scalar/components': 0.14.27(typescript@5.9.2)
       '@scalar/draggable': 0.2.0(typescript@5.9.2)
@@ -6816,9 +6819,9 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference-react@0.7.42(change-case@5.4.4)(nprogress@0.2.0)(react@19.1.1)(tailwindcss@4.1.12)(typescript@5.9.2)':
+  '@scalar/api-reference-react@0.7.42(change-case@5.4.4)(nprogress@0.2.0)(react@19.1.1)(tailwindcss@4.1.13)(typescript@5.9.2)':
     dependencies:
-      '@scalar/api-reference': 1.34.6(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.12)(typescript@5.9.2)
+      '@scalar/api-reference': 1.34.6(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.13)(typescript@5.9.2)
       '@scalar/types': 0.2.13
       react: 19.1.1
     transitivePeerDependencies:
@@ -6837,11 +6840,11 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference@1.34.6(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.12)(typescript@5.9.2)':
+  '@scalar/api-reference@1.34.6(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.13)(typescript@5.9.2)':
     dependencies:
       '@floating-ui/vue': 1.1.9(vue@3.5.20(typescript@5.9.2))
       '@headlessui/vue': 1.7.23(vue@3.5.20(typescript@5.9.2))
-      '@scalar/api-client': 2.5.26(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.12)(typescript@5.9.2)
+      '@scalar/api-client': 2.5.26(change-case@5.4.4)(nprogress@0.2.0)(tailwindcss@4.1.13)(typescript@5.9.2)
       '@scalar/code-highlight': 0.1.9
       '@scalar/components': 0.14.27(typescript@5.9.2)
       '@scalar/helpers': 0.0.8
@@ -9656,6 +9659,8 @@ snapshots:
   tailwind-merge@3.3.1: {}
 
   tailwindcss@4.1.12: {}
+
+  tailwindcss@4.1.13: {}
 
   tailwindcss@4.1.7: {}
 
