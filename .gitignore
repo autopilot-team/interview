@@ -35,3 +35,8 @@ node_modules/
 *.ipr
 *.iws
 .idea/
+
+# direnv
+.direnv/
+
+.pnpm/
