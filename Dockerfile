@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Base stage for all builds
-FROM jdxcode/mise:2025.8.20 AS base
+FROM jdxcode/mise:2025.10.12 AS base
 
 ARG APP_SERVICE
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
@@ -46,7 +46,7 @@ COPY --from=backend-builder /go/src/app/dist/app /
 CMD ["/app", "start"]
 
 # SPA base stage
-FROM jdxcode/mise:2025.8.20 AS spa-base
+FROM jdxcode/mise:2025.10.12 AS spa-base
 
 ARG APP_SERVICE
 ARG VITE_API_BASE_URL
