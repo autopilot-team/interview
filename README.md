@@ -25,13 +25,13 @@ profile matches our requirements.
 
 ### What To Expect
 
-During this 90-minute technical interview, we'll cover the following phases:
+During this 60-minute technical interview, we'll cover the following phases:
 
 - Self-Introduction (5 minutes)
-- Requirements Clarification & Discussion (10 minutes)
-- Database Schema Implementation (15 minutes)
-- API Development & Integration Testing (50 minutes)
-- Closing Discussion (10 minutes)
+- Requirements Clarification & Discussion (5 minutes)
+- Database Schema Implementation (10 minutes)
+- API Development & Integration Testing (35 minutes)
+- Closing Discussion (5 minutes)
 
 > [!NOTE]
 > It's important to understand how API key authentication is done and how to
