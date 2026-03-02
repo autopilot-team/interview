@@ -23,7 +23,7 @@
 		"@types/pg": "^8.16.0",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
-		"@types/supertest": "^6.0.3",
+		"@types/supertest": "^7.2.0",
 		"@typescript/native-preview": "^7.0.0-dev.20251211.1",
 		"better-auth": "^1.4.6",
 		"class-variance-authority": "^0.7.1",
